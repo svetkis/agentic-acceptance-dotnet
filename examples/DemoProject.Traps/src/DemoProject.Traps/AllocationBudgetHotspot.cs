@@ -2,9 +2,9 @@ namespace DemoProject.Traps;
 
 public sealed class AllocationBudgetHotspot
 {
-    // TRAP: Агент добавил new в [HotPath] метод.
-    // GUARDRAIL: AllocationBudgetTests ловит регресс аллокаций.
-    // NOTE: Этот метод специально аллоцирует, чтобы показать падение guardrail.
+    // TRAP: An agent added new inside a [HotPath] method.
+    // GUARDRAIL: AllocationBudgetTests catch allocation regressions.
+    // NOTE: This method intentionally allocates to demonstrate the guardrail failing.
     [HotPath]
     public int Process(int value)
     {

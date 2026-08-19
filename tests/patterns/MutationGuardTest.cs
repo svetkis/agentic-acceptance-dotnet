@@ -1,14 +1,14 @@
-// TRAP: Тесты проходят, но не проверяют логику — мутанты выживают, а баги просачиваются в прод.
-// GUARDRAIL: Stryker.NET запускается перед релизом; mutation score не падает.
+// TRAP: Tests pass but do not verify logic — mutants survive, and bugs leak into production.
+// GUARDRAIL: Stryker.NET runs before release; the mutation score does not drop.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
 //
-// NOTE: Stryker.NET на момент 2026-06 не поддерживает TUnit / Microsoft Testing Platform.
-//       Используйте этот паттерн как periodic audit или CI job через dotnet test проекта.
+// NOTE: As of 2026-06, Stryker.NET does not support TUnit / Microsoft Testing Platform.
+//       Use this pattern as a periodic audit or a CI job via the project's dotnet test.
 
 using System.Diagnostics;
 using System.Text.Json;
@@ -20,8 +20,8 @@ public class MutationGuardTests
 {
     private static readonly string RepoRoot = FindRepoRoot();
 
-    // TRAP: Покрытие строк высокое, но ассерты слабые — мутанты выживают.
-    // GUARDRAIL: Mutation score для критичной сборки >= baseline (например, 70%).
+    // TRAP: Line coverage is high, but asserts are weak — mutants survive.
+    // GUARDRAIL: The mutation score for a critical assembly is >= baseline (e.g., 70%).
     [Test]
     public void StrykerMutationScore_ShouldMeetBaseline()
     {

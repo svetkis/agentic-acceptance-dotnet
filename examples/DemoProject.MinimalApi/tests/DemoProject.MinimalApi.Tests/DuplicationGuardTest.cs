@@ -1,7 +1,7 @@
-// TRAP: Агент скопировал важную бизнес-логику в новый сервис вместо реюза.
-// GUARDRAIL: Regex-сканирование ловит дублирование критичных бизнес-фрагментов в разных файлах.
+// TRAP: An agent copied critical business logic into a new service instead of reusing it.
+// GUARDRAIL: Regex scanning catches duplication of critical business fragments across files.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(violations).IsEmpty()
 // - xUnit:  [Fact] + Assert.Empty(violations)
 // - NUnit:  [Test] + Assert.That(violations, Is.Empty)
@@ -16,8 +16,8 @@ public class DuplicationGuardTest
     [Test]
     public async Task BusinessRule_ShouldNotBeDuplicatedAcrossServices()
     {
-        // ADAPT: замените паттерны на реальные бизнес-правила вашего проекта.
-        // В MinimalApi-примере валидаций нет — поэтому список пуст.
+        // ADAPT: replace the patterns with your project's real business rules.
+        // The MinimalApi example has no validations — hence the empty list.
         var businessPatterns = Array.Empty<string>();
 
         var srcPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "src");

@@ -10,10 +10,10 @@ using System.Linq;
 
 namespace DemoProject.Analyzers;
 
-// TRAP: Тест собирается и зеленеет, но не проверяет обещанное поведение:
-//       zero-assert, IsNotNull()-only, assertion внутри if, тавтология.
-// GUARDRAIL: Анализатор SAE006-SAE009 ловит не-валидирующие тесты на этапе
-//            компиляции, до запуска. Снижает fault sensitivity риск в CI.
+// TRAP: A test compiles and goes green but does not verify the promised behavior:
+//       zero-assert, IsNotNull()-only, assertion inside if, tautology.
+// GUARDRAIL: Analyzers SAE006-SAE009 catch non-validating tests at compile
+//            time, before any run. Reduces fault sensitivity risk in CI.
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class NonValidatingTestAnalyzer : DiagnosticAnalyzer
 {

@@ -1,13 +1,13 @@
-// TRAP: Перед релизом забывают проверить критичные guardrails: security headers, rate limiting, OpenAPI snapshot, smoke.
-// GUARDRAIL: Композитный тест проверяет наличие обязательных артефактов и прохождение ключевых проверок.
+// TRAP: Before a release, people forget to check critical guardrails: security headers, rate limiting, OpenAPI snapshot, smoke.
+// GUARDRAIL: A composite test verifies that mandatory artifacts exist and key checks pass.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
 //
-// NOTE: Это не замена полным аудитам, а быстрый gate перед релизом. Не дублируйте логику других тестов.
+// NOTE: This is not a replacement for full audits, but a quick gate before release. Do not duplicate the logic of other tests.
 
 using TUnit;
 
@@ -18,8 +18,8 @@ public class ReleaseReadinessTests
     private static readonly string RepoRoot = FindRepoRoot();
     private static readonly HttpClient HttpClient = new() { BaseAddress = new Uri("http://localhost:5000") };
 
-    // TRAP: Релиз уходит без проверки health endpoint.
-    // GUARDRAIL: /health отвечает 200 OK.
+    // TRAP: A release goes out without checking the health endpoint.
+    // GUARDRAIL: /health responds with 200 OK.
     [Test]
     public async Task HealthEndpoint_ShouldBeHealthy()
     {
@@ -27,8 +27,8 @@ public class ReleaseReadinessTests
         Assert.That(response.StatusCode).IsEqualTo(System.Net.HttpStatusCode.OK);
     }
 
-    // TRAP: Security headers не настроены или агент их удалил.
-    // GUARDRAIL: Проверяем наличие базовых security headers.
+    // TRAP: Security headers are not configured, or the agent removed them.
+    // GUARDRAIL: We verify that basic security headers are present.
     [Test]
     public async Task SecurityHeaders_ShouldBePresent()
     {
@@ -40,8 +40,8 @@ public class ReleaseReadinessTests
         Assert.That(headers.Contains("Referrer-Policy")).IsTrue();
     }
 
-    // TRAP: OpenAPI контракт сломался, а фронт не узнал.
-    // GUARDRAIL: /openapi/v1.json доступен и валиден.
+    // TRAP: The OpenAPI contract broke, and the frontend did not find out.
+    // GUARDRAIL: /openapi/v1.json is available and valid.
     [Test]
     public async Task OpenApiContract_ShouldBeAvailable()
     {
@@ -52,8 +52,8 @@ public class ReleaseReadinessTests
         Assert.That(content).Contains("\"openapi\"");
     }
 
-    // TRAP: Важные конфигурационные файлы или документы отсутствуют перед релизом.
-    // GUARDRAIL: Проверяем наличие обязательных артефактов.
+    // TRAP: Important configuration files or documents are missing before the release.
+    // GUARDRAIL: We verify that mandatory artifacts exist.
     [Test]
     public void RequiredReleaseArtifacts_ShouldExist()
     {

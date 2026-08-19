@@ -2,9 +2,9 @@ namespace DemoProject.Traps;
 
 public static class ComplexityHotspot
 {
-    // TRAP: Агент написал метод с множеством вложенных if/switch/loops.
-    // GUARDRAIL: SonarAnalyzer S3776/S1541 + ComplexityRatchetTest ловит превышение порогов.
-    // NOTE: Этот метод специально нарушает thresholds 5/3, чтобы показать падение guardrail.
+    // TRAP: An agent wrote a method with many nested if/switch/loops.
+    // GUARDRAIL: SonarAnalyzer S3776/S1541 + ComplexityRatchetTest catch threshold violations.
+    // NOTE: This method intentionally violates thresholds 5/3 to demonstrate the guardrail failing.
     public static int Calculate(int input)
     {
         if (input < 0)

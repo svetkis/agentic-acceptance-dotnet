@@ -1,5 +1,5 @@
-// TRAP: Агент оптимизирует read через AsNoTracking, но ломает write.
-// GUARDRAIL: NBomber показывает, что $Max$ write-операций деградировал.
+// TRAP: The agent optimizes reads with AsNoTracking but breaks writes.
+// GUARDRAIL: NBomber shows that the $Max$ of write operations has degraded.
 
 using NBomber.Contracts;
 using NBomber.CSharp;
@@ -9,9 +9,9 @@ namespace Tests.Patterns;
 
 public class LoadTests
 {
-    // TRAP: Агент добавил AsNoTracking в GetPendingItems.
-    // InMemory тест проходит, но на проде Status не сохраняется.
-    // GUARDRAIL: Гоняем read + write под нагрузкой. $Max$ write не должен вырасти.
+    // TRAP: The agent added AsNoTracking to GetPendingItems.
+    // The InMemory test passes, but in production Status is not persisted.
+    // GUARDRAIL: Drive read + write under load. The write $Max$ must not grow.
     [Test]
     public void ReadWriteMix_ShouldNotDegradeWriteLatency()
     {
@@ -37,11 +37,11 @@ public class LoadTests
             .RegisterScenarios(readScenario, writeScenario)
             .Run();
 
-        // GUARDRAIL: $Max$ latency write-операций не должен превышать 500ms
+        // GUARDRAIL: The $Max$ write-operation latency must not exceed 500ms
         var writeStats = stats.ScenarioStats.First(s => s.ScenarioName == "write_status");
         Assert.That(writeStats.Ok.Latency.MaxMs).IsLessThanOrEqualTo(500);
 
-        // GUARDRAIL: Не должно быть failed запросов (иначе state machine сломан)
+        // GUARDRAIL: There must be no failed requests (otherwise the state machine is broken)
         Assert.That(writeStats.Fail.Count).IsEqualTo(0);
     }
 }

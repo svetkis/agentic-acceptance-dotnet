@@ -1,6 +1,6 @@
-// TRAP: Агент возвращает Domain Entity из Application-сервиса вместо DTO.
-// GUARDRAIL: NetArchTest custom rule (Mono.Cecil) ловит Entity leak в сигнатурах методов.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/EntityLeakTest.cs
+// TRAP: An agent returns a Domain Entity from an Application service instead of a DTO.
+// GUARDRAIL: A NetArchTest custom rule (Mono.Cecil) catches Entity leaks in method signatures.
+// This file is a working adaptation of the template from tests/patterns/EntityLeakTest.cs
 
 using Mono.Cecil;
 using NetArchTest.Rules;
@@ -11,9 +11,9 @@ namespace DemoProject.Tests;
 
 public class EntityLeakTest
 {
-    // TRAP: Агент написал Task<Booking> вместо Task<BookingDto>.
-    // GUARDRAIL: Application-интерфейсы не возвращают Domain Entity.
-    // NOTE: Сейчас в проекте 2 нарушения (legacy). Тест — ratchet: считает и фиксирует.
+    // TRAP: An agent wrote Task<Booking> instead of Task<BookingDto>.
+    // GUARDRAIL: Application interfaces must not return Domain Entities.
+    // NOTE: There are currently 2 violations (legacy). The test is a ratchet: it counts and pins them.
     [Test]
     public async Task ApplicationInterfaces_EntityLeakCount_ShouldNotGrow()
     {
@@ -23,7 +23,7 @@ public class EntityLeakTest
             excludedSuffixes: new[] { "Dto", "ViewModel", "Request", "Response" });
 
         var violations = CountViolations(appAssembly, entityRule);
-        const int baseline = 2; // Legacy: IBookingService.GetByIdAsync и GetPendingAsync возвращают Booking
+        const int baseline = 2; // Legacy: IBookingService.GetByIdAsync and GetPendingAsync return Booking
 
         await Assert.That(violations).IsLessThanOrEqualTo(baseline)
             .Because($"Entity leaks must not grow. Current: {violations}, baseline: {baseline}. " +
@@ -37,8 +37,8 @@ public class EntityLeakTest
             .Should().MeetCustomRule(rule)
             .GetResult();
 
-        // NetArchTest не даёт count напрямую, поэтому считаем вручную через обратную логику
-        // Или используем рефлексию Mono.Cecil напрямую для точного подсчёта
+        // NetArchTest does not expose a count directly, so we count manually via inverse logic
+        // Or use Mono.Cecil reflection directly for an exact count
         var assemblyPath = appAssembly.Location;
         var module = ModuleDefinition.ReadModule(assemblyPath);
         var count = 0;

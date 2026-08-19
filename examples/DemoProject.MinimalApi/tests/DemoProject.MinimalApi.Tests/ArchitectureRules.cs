@@ -1,9 +1,9 @@
-// TRAP: Агент в single-project нарушает naming, использует banned APIs
-// или забывает CancellationToken в public async методах.
-// GUARDRAIL: NetArchTest + regex-сканирование ловят нарушения конвенций
-// даже когда нет слоёв Clean Architecture.
+// TRAP: In a single-project app, an agent breaks naming conventions, uses banned APIs,
+// or forgets CancellationToken in public async methods.
+// GUARDRAIL: NetArchTest + regex scanning catch convention violations
+// even when there are no Clean Architecture layers.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(result.IsSuccessful).IsTrue()
 // - xUnit:  [Fact] + Assert.True(result.IsSuccessful)
 // - NUnit:  [Test] + Assert.That(result.IsSuccessful, Is.True)
@@ -21,12 +21,12 @@ public class ArchitectureRules
 {
     private static readonly Assembly AppAssembly = typeof(OrderService).Assembly;
 
-    // TRAP: Агент создал сервис с неправильным именем (например, OrderManager).
-    // GUARDRAIL: Все сервисы должны заканчиваться на "Service".
+    // TRAP: An agent created a service with a wrong name (e.g., OrderManager).
+    // GUARDRAIL: All services must end with "Service".
     [Test]
     public async Task Services_ShouldHaveNameEndingWithService()
     {
-        // Альтернативная проверка: найти типы, которые НЕ заканчиваются на Service, но содержат бизнес-логику
+        // Alternative check: find types that do NOT end with Service but contain business logic
         var violations = Types.InAssembly(AppAssembly)
             .That().DoNotHaveNameEndingWith("Service")
             .And().DoNotHaveNameEndingWith("Endpoints")
@@ -39,8 +39,8 @@ public class ArchitectureRules
             .GetTypes()
             .ToList();
 
-        // NetArchTest.GetTypes() возвращает IType, у которого нет IsNested/IsPublic.
-        // Фильтруем через рефлексию после получения имён.
+        // NetArchTest.GetTypes() returns IType, which has no IsNested/IsPublic.
+        // We filter via reflection after retrieving the names.
         var typeNames = violations.Select(v => v.FullName).ToList();
         var reflectedTypes = typeNames
             .Select(name => AppAssembly.GetType(name))
@@ -51,8 +51,8 @@ public class ArchitectureRules
             .Because($"Public classes outside Domain must end with Service, Endpoints, Request, or Response. Violations: {string.Join(", ", reflectedTypes.Select(v => v!.Name))}");
     }
 
-    // TRAP: Агент использовал DateTime.Now вместо UtcNow.
-    // GUARDRAIL: Regex-сканирование ловит banned API.
+    // TRAP: An agent used DateTime.Now instead of UtcNow.
+    // GUARDRAIL: Regex scanning catches banned APIs.
     [Test]
     public async Task SourceCode_ShouldNotUse_DateTimeNow()
     {
@@ -65,8 +65,8 @@ public class ArchitectureRules
             .Because("Use DateTime.UtcNow or IClock abstraction. DateTime.Now causes timezone bugs.");
     }
 
-    // TRAP: Агент добавил public async метод без CancellationToken.
-    // GUARDRAIL: Рефлексия проверяет все public async методы.
+    // TRAP: An agent added a public async method without CancellationToken.
+    // GUARDRAIL: Reflection checks all public async methods.
     [Test]
     public async Task PublicAsyncMethods_ShouldAcceptCancellationToken()
     {
@@ -81,8 +81,8 @@ public class ArchitectureRules
             .Because($"Every public async method must accept CancellationToken ct = default. Violations: {string.Join(", ", violations)}");
     }
 
-    // TRAP: Агент добавил using System.Net.Http в Domain для "одного вызова".
-    // GUARDRAIL: Даже в single-project Domain namespace не должен зависеть от инфраструктуры.
+    // TRAP: An agent added using System.Net.Http in Domain for "a single call".
+    // GUARDRAIL: Even in a single-project app, the Domain namespace must not depend on infrastructure.
     [Test]
     public async Task DomainNamespace_ShouldNotReferenceInfrastructure()
     {

@@ -4,7 +4,7 @@ namespace DemoProject.Infrastructure;
 
 public sealed class InfrastructureBookingService : IBookingService
 {
-    // TRAP: Агент может забыть про CancellationToken или использовать FindAsync в read-path.
+    // TRAP: An agent might forget CancellationToken or use FindAsync in a read path.
     // GUARDRAIL: Code review agent + ArchitectureRules.FindAsync_ShouldNotBeUsedInReadPath
 
     public Task<Booking?> GetByIdAsync(BookingId id, CancellationToken ct = default)

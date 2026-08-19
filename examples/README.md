@@ -27,4 +27,4 @@
 If you are a Tech Lead studying the methodology:
 - `DemoProject/` will help you understand what "correct" looks like.
 - `DemoProject.Traps/` will help you understand what "broken" looks like.
-- For implementation in your project — follow [`docs/ONBOARDING.en.md`](../docs/ONBOARDING.en.md), not copy `examples/`.
+- For implementation in your project — follow [`docs/ONBOARDING.md`](../docs/ONBOARDING.md), not copy `examples/`.

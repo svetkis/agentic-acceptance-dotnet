@@ -1,27 +1,27 @@
-// TEMPLATE: Регрессионный тест для баг-фикса.
-// Копируй этот файл и переименовывай по шаблону: BUG###_ShortDescription.cs
+// TEMPLATE: Regression test for a bug fix.
+// Copy this file and rename it following the pattern: BUG###_ShortDescription.cs
 
 using TUnit;
 
 namespace Tests.Conventions;
 
-// TRAP: Баг пофиксили, но через неделю агент теми же руками его вернул.
-// GUARDRAIL: Баг-фикс обязан сопровождаться тестом, который воспроизводит проблему.
-public class BUG_TEMPLATE // Переименуй: BUG055_ShortDescription
+// TRAP: The bug was fixed, but a week later the agent brought it back with the same hands.
+// GUARDRAIL: A bug fix must be accompanied by a test that reproduces the problem.
+public class BUG_TEMPLATE // Rename: BUG055_ShortDescription
 {
     [Test]
     public async Task Scenario_ShouldNotReproduceTheBug()
     {
-        // Arrange: создаём состояние, при котором баг воспроизводился
+         // Arrange: create the state in which the bug reproduced
         // var context = await SetupBrokenState();
 
-        // Act: выполняем действие, которое раньше ломалось
+         // Act: perform the action that used to break
         // var result = await context.Execute();
 
-        // Assert: убеждаемся, что баг не воспроизводится
+         // Assert: verify the bug no longer reproduces
         // await Assert.That(result.Status).IsEqualTo(ExpectedStatus);
     }
 
-    // Если баг был race condition или требует специфичного setup —
-    // добавь [Before(Test)] и [After(Test)] для изоляции.
+    // If the bug was a race condition or requires a specific setup —
+    // add [Before(Test)] and [After(Test)] for isolation.
 }

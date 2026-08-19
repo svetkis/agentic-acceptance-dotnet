@@ -1,141 +1,141 @@
 # .NET Skeptical AI Engineering
 
-Методология ускорения инженерных практик через AI-агентов. Audit, review и guardrails, которые раньше требовали дорогой экспертизы, теперь масштабируются. Основана на докладе «ИИ уверен. Я нет» (Dotnext 2026).
+AI-accelerated quality control methodology for .NET teams. Audits, review, and guardrails that used to require expensive expertise now scale. Based on the talk "AI is confident. I am not" (Dotnext 2026).
 
-[🇬🇧 English version](README.en.md)
+[🇷🇺 Русская версия](README.ru.md)
 
 ![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![License MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![CI](https://github.com/svetkis/dotnet-ai-guardrails/workflows/Examples%20CI/badge.svg)
 
-> Хотя примеры и тесты реализованы на .NET, сама методология Decision Guards, уровней контроля (Engineering Assurance Levels) и гигиены промптов применима к любому стеку.
+> Although examples and tests are implemented in .NET, the methodology itself — Decision Guards, Engineering Assurance Levels, and prompt hygiene — applies to any stack.
 
-Репозиторий содержит готовые артефакты для .NET-проектов: правила, скиллы, тестовые паттерны и CI-воркфлоу.
+This repository contains ready-made artifacts for .NET projects: rules, skills, test patterns, and CI workflows.
 
-## Проблема
+## Problem
 
-AI-агенты (Cursor, Claude, Copilot) ускоряют написание кода, но генерируют скрытый техдолг, нарушают архитектурные границы и ломают безопасность. Ручное ревью такого кода становится бутылочным горлышком.
+AI agents (Cursor, Claude, Copilot) speed up code writing, but generate hidden tech debt, violate architectural boundaries, and break security. Manual review of such code becomes a bottleneck.
 
-**Skeptical AI** — методология проверки сгенерированного кода по принципу «доверяй, но проверяй» (аналогия с Zero Trust: никакой артефакт агента не считается корректным без детерминированной проверки). Контроль переносится из вероятностных промптов в детерминированные пайплайны.
+**Skeptical AI** is a verification methodology for generated code, by analogy with Zero Trust: no agent artifact is considered correct without a deterministic check. Control moves from probabilistic prompts into deterministic pipelines.
 
-## Как это работает
+## How it works
 
-Модель контроля — **Engineering Assurance Levels**. Артефакт классифицируется по
-области проверки, а не по месту запуска: unit-тест не становится System Check
-только потому, что запущен в CI.
+The control model is **Engineering Assurance Levels**. An artifact is classified by
+what it verifies, not by where it runs: a unit test does not become a System Check
+just because it runs in CI.
 
-| Уровень | Когда срабатывает | Что входит | Главный вопрос |
-|---------|-------------------|------------|----------------|
-| **Control Foundation** | До изменения кода | `AGENTS.md`, architecture boundaries, Decision Guards, policies | Какие ограничения и решения уже приняты? |
-| **1. Change Checks** | IDE, build, pre-commit | Компилятор, nullable, analyzers, formatting, banned APIs, dependency checks, pre-commit review | Может ли изменение технически существовать? |
-| **2. Behavior Checks** | Локальный или CI test run | Unit, regression, contract, characterization, architecture tests, ratchets | Сохранились ли ожидаемые свойства и поведение? |
-| **3. System Checks** | PR, CI, release pipeline | Integration, E2E, smoke, Testcontainers, load (NBomber), deployment verification | Работает ли система целиком? |
-| **4. Periodic Assurance** | По расписанию или risk-trigger | Security, database, performance, UX, API, i18n, tech-debt audits | Какие системные риски не видны автоматическим проверкам? |
+| Level | When it triggers | What it includes | Key question |
+|-------|------------------|------------------|--------------|
+| **Control Foundation** | Before code changes | `AGENTS.md`, architecture boundaries, Decision Guards, policies | Which constraints and decisions are already made? |
+| **1. Change Checks** | IDE, build, pre-commit | Compiler, nullable, analyzers, formatting, banned APIs, dependency checks, pre-commit review | Can the change technically exist? |
+| **2. Behavior Checks** | Local or CI test run | Unit, regression, contract, characterization, architecture tests, ratchets | Are expected properties and behavior preserved? |
+| **3. System Checks** | PR, CI, release pipeline | Integration, E2E, smoke, Testcontainers, load (NBomber), deployment verification | Does the system work as a whole? |
+| **4. Periodic Assurance** | On schedule or risk-trigger | Security, database, performance, UX, API, i18n, tech-debt audits | Which systemic risks are invisible to automated checks? |
 
-Отдельные процессы, не являющиеся уровнями:
+Separate processes, not levels:
 
-- **Engineering Governance** — принятие остаточного риска, release decision, бизнес- и продуктовые решения.
-- **Control Maintenance** — актуализация инструкций, agent memory, backlog, baselines, suppressions и самих guardrails (скиллы `memory-hygiene`, `doc-hygiene`, `backlog-hygiene`).
+- **Engineering Governance** — residual risk acceptance, release decision, business and product decisions.
+- **Control Maintenance** — keeping instructions, agent memory, backlog, baselines, suppressions, and guardrails themselves up to date (skills `memory-hygiene`, `doc-hygiene`, `backlog-hygiene`).
 
-> **Legacy:** `PYRAMID.md` (слои 0–2 + внешний цикл) — визуальная метафора доклада.
-> Канонический классификатор — таблица выше; маппинг слоёв на уровни дан в
-> начале [`PYRAMID.md`](PYRAMID.md).
+> **Legacy:** `PYRAMID.md` (layers 0–2 + outer loop) is the talk's visual metaphor.
+> The canonical classifier is the table above; the layer-to-level mapping is given at
+> the top of [`PYRAMID.md`](PYRAMID.md).
 
-### Карта артефактов по уровням
+### Artifact map by level
 
-| Уровень / процесс | Артефакты репозитория |
-|-------------------|-----------------------|
+| Level / process | Repository artifacts |
+|-----------------|----------------------|
 | Control Foundation | `rules/AGENTS_TEMPLATE.md` (+ efcore/dapper add-ons), `rules/CONVENTIONS.md`, Decision Guards (`PERF-###`/`DB-###`) |
-| 1. Change Checks | Banned APIs, Roslyn-анализаторы (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml`, `templates/skills/code-review/`, `templates/skills/frontend-code-review/`, `templates/skills/task-compliance/` |
+| 1. Change Checks | Banned APIs, Roslyn analyzers (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml`, `templates/skills/code-review/`, `templates/skills/frontend-code-review/`, `templates/skills/task-compliance/` |
 | 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests), `tests/conventions/` |
-| 3. System Checks | E2E/smoke паттерны, NBomber (`tests/patterns/LoadTest.cs`) |
+| 3. System Checks | E2E/smoke patterns, NBomber (`tests/patterns/LoadTest.cs`) |
 | 4. Periodic Assurance | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, simplicity, complexity, version, test, mutation, spellcheck, business-risk) |
 | Control Maintenance | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
 | Engineering Governance | `docs/solutions/human-audit-bridge.md`, release decision |
 
-`templates/skills/` — готовые инструкции для аудитов. Запускаются по расписанию или когда меняется код в зоне ответственности.
+`templates/skills/` — ready-made instructions for audits. Run on schedule or when code changes in their area.
 
-## Быстрый старт
+## Quick start
 
 ```bash
-# 1. Клонируй
+# 1. Clone
 git clone https://github.com/svetkis/dotnet-ai-guardrails.git
 
-# 2. Запусти DemoProject
+# 2. Run DemoProject
 cd examples/DemoProject
 dotnet build
 dotnet run --project tests/DemoProject.Tests
 
-# 3. Оцени свой проект
-# Открой .agents/skills/skeptical-ai-bootstrap/SKILL.md — прогони чеклист,
-# разберись что уже есть и что внедрить в первую очередь.
+# 3. Assess your project
+# Open .agents/skills/skeptical-ai-bootstrap/SKILL.md and run the checklist —
+# figure out what you already have and what to implement first.
 
-# 4. Адаптируй скиллы под свой стек
-# См. templates/skills/ADAPTATION.md — вычеркни неприменимые проверки.
+# 4. Adapt skills to your stack
+# See templates/skills/ADAPTATION.md — cross out irrelevant checks.
 
-# 5. Скопируй ТОЛЬКО выбранные артефакты (не всё подряд)
-# Путь: inventory → risk profile → selected controls → validation.
-# Конституция (Control Foundation):
-cp rules/AGENTS_TEMPLATE.md /your/project/AGENTS.md   # затем отредактируй под стек
-# По одному контролю на спринт, например pre-commit review:
+# 5. Copy ONLY selected artifacts (not everything)
+# Path: inventory → risk profile → selected controls → validation.
+# Constitution (Control Foundation):
+cp rules/AGENTS_TEMPLATE.md /your/project/AGENTS.md   # then edit for your stack
+# One control per sprint, e.g. pre-commit review:
 cp -r templates/skills/code-review /your/project/.kimi/skills/
-# Для React/TypeScript фронтенда:
+# For React/TypeScript frontend:
 # cp -r templates/skills/frontend-code-review /your/project/.kimi/skills/
-# Тестовые паттерны — бери по одному, когда он покрывает реальный риск
-# (tests/patterns/*.cs — шаблоны для чтения, а не пакет для массового копирования):
+# Test patterns — take one at a time, when it covers a real risk
+# (tests/patterns/*.cs are templates to read, not a bulk-copy package):
 # cp tests/patterns/ArchitectureRules.cs /your/project/tests/
 ```
 
-## Структура
+## Structure
 
 ```
 .
-├── AGENTS.md                     # Инструкции для AI-агентов
-├── PYRAMID.md                    # Подробный разбор слоёв
+├── AGENTS.md                     # Instructions for AI agents
+├── PYRAMID.md                    # Detailed breakdown of layers
 ├── rules/
-│   ├── AGENTS_TEMPLATE.md        # Базовая конституция для агентов (универсальная)
-│   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-специфичные правила
-│   ├── AGENTS_TEMPLATE.dapper.md # Add-on: Dapper / Raw SQL-специфичные правила
-│   └── CONVENTIONS.md            # Коммиты, воркфлоу, тесты
-├── templates/skills/                        # Роли агента
+│   ├── AGENTS_TEMPLATE.md        # Base constitution for agents (universal)
+│   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-specific rules
+│   ├── AGENTS_TEMPLATE.dapper.md # Add-on: Dapper / Raw SQL-specific rules
+│   └── CONVENTIONS.md            # Commits, workflow, tests
+├── templates/skills/                        # Agent roles
 │   ├── memory-hygiene/            # Control Maintenance: Auto Memory
-│   ├── doc-hygiene/               # Control Maintenance: документация
-│   ├── backlog-hygiene/           # Control Maintenance: бэклог
-│   ├── skeptical-ai-bootstrap/    # Оценка зрелости + бэклог guardrails
+│   ├── doc-hygiene/               # Control Maintenance: documentation
+│   ├── backlog-hygiene/           # Control Maintenance: backlog
+│   ├── skeptical-ai-bootstrap/    # Maturity assessment + guardrails backlog
 │   ├── code-review/               # Change Checks: pre-commit / PR review (.NET)
-│   ├── task-compliance/           # Change Checks: проверка scope
-│   ├── security-audit/            # Periodic Assurance: по триггеру
-│   ├── dba-audit/                 # Periodic Assurance: по триггеру (EF Core)
-│   ├── dba-audit-dapper/          # Periodic Assurance: по триггеру (Dapper / Raw SQL)
-│   ├── api-design-audit/          # Periodic Assurance: по триггеру
-│   ├── bot-audit/                 # Periodic Assurance: по триггеру
-│   ├── performance-audit/         # Periodic Assurance: по триггеру
-│   └── i18n-audit/                # Periodic Assurance: по триггеру
+│   ├── task-compliance/           # Change Checks: scope check
+│   ├── security-audit/            # Periodic Assurance: trigger-based
+│   ├── dba-audit/                 # Periodic Assurance: trigger-based (EF Core)
+│   ├── dba-audit-dapper/          # Periodic Assurance: trigger-based (Dapper / Raw SQL)
+│   ├── api-design-audit/          # Periodic Assurance: trigger-based
+│   ├── bot-audit/                 # Periodic Assurance: trigger-based
+│   ├── performance-audit/         # Periodic Assurance: trigger-based
+│   └── i18n-audit/                # Periodic Assurance: trigger-based
 ├── docs/
-│   ├── traps/                     # Ловушки агента
+│   ├── traps/                     # Agent traps
 │   └── solutions/
-│       ├── architecture-tests.md  # Гайд по arch-тестам
-│       └── ai-patterns.md         # 10 паттернов AI-driven разработки
+│       ├── architecture-tests.md  # Guide to arch tests
+│       └── ai-patterns.md         # 10 AI-driven development patterns
 ├── tests/
-│   ├── patterns/                  # Шаблоны тестов (Ratchet, NetArchTest, NBomber)
-│   └── conventions/               # Именование, TUnit гайд
+│   ├── patterns/                  # Test templates (Ratchet, NetArchTest, NBomber)
+│   └── conventions/               # Naming, TUnit guide
 ├── ci/                            # CI/CD guardrails
 └── examples/
-    ├── DemoProject/               # Рабочий пример на .NET 10 (Clean Architecture)
+    ├── DemoProject/               # Working .NET 10 example (Clean Architecture)
     ├── DemoProject.MinimalApi/    # Single-project MVP (Minimal API, no layers)
-    └── DemoProject.Traps/         # Intentionally broken code — демонстрация guardrails
+    └── DemoProject.Traps/         # Intentionally broken code — guardrails demo
 ```
 
 ## DemoProject
 
-`examples/DemoProject/` — рабочий пример на .NET 10 со всеми паттернами:
+`examples/DemoProject/` is a working .NET 10 example with all patterns:
 
 - Clean Architecture (Domain → Application → Infrastructure)
-- NetArchTest: проверка зависимостей между слоями
-- Ratchet-тесты: контроль публичных типов и количества тестов
-- Snapshot-тесты: контракты JSON-сериализации
-- NBomber: нагрузочные тесты (read + write mix)
-- TUnit: запуск через `dotnet run --project`
+- NetArchTest: layer dependency checks
+- Ratchet tests: public type and test count control
+- Snapshot tests: JSON serialization contracts
+- NBomber: load tests (read + write mix)
+- TUnit: run via `dotnet run --project`
 
 ```bash
 cd examples/DemoProject
@@ -145,25 +145,25 @@ dotnet run --project tests/DemoProject.Tests
 
 ## DemoProject.Traps
 
-`examples/DemoProject.Traps/` — специально сломанный код для демонстрации guardrails в действии. Каждый тест здесь падает, показывая, что ловит архитектурный тест, если агент нарушает правила.
+`examples/DemoProject.Traps/` — intentionally broken code demonstrating guardrails in action. Every test here fails, showing what an architectural test catches when an agent violates the rules.
 
 ```bash
 cd examples/DemoProject.Traps
 dotnet run --project tests/DemoProject.Traps.Tests
 ```
 
-**Что ломается:**
-- `MutableState` — мутабельное состояние в Domain
-- `DomainLeakingToInfra` — Domain зависит от `System.Net.Http`
-- `PaymentService` — прямая зависимость между Features (Orders → Payments)
-- `Modules/` — циклические зависимости между модулями (ArchUnitNET)
-- `RawGuidEntity` — голый `Guid` вместо strongly typed ID
+**What breaks:**
+- `MutableState` — mutable state in Domain
+- `DomainLeakingToInfra` — Domain depends on `System.Net.Http`
+- `PaymentService` — direct dependency between Features (Orders → Payments)
+- `Modules/` — cyclic dependencies between modules (ArchUnitNET)
+- `RawGuidEntity` — raw `Guid` instead of strongly typed ID
 
-См. также [`examples/DemoProject.Traps/README.md`](examples/DemoProject.Traps/README.md).
+See also [`examples/DemoProject.Traps/README.md`](examples/DemoProject.Traps/README.md).
 
 ## DemoProject.MinimalApi
 
-`examples/DemoProject.MinimalApi/` — вариант для **Minimal API без Clean Architecture**. Показывает, как адаптировать guardrails, когда нет слоёв Domain / Application / Infrastructure.
+`examples/DemoProject.MinimalApi/` — a variant for **Minimal API without Clean Architecture**. Shows how to adapt guardrails when there are no Domain / Application / Infrastructure layers.
 
 ```bash
 cd examples/DemoProject.MinimalApi
@@ -171,63 +171,65 @@ dotnet build
 dotnet run --project tests/DemoProject.MinimalApi.Tests
 ```
 
-**Что внутри:**
+**What's inside:**
 - Naming conventions, banned APIs (`DateTime.Now`)
 - `CancellationToken` guard
-- Ratchet-тесты на публичные типы
-- Duplication guard для бизнес-логики
+- Ratchet tests for public types
+- Duplication guard for business logic
 
-См. также [`examples/DemoProject.MinimalApi/README.md`](examples/DemoProject.MinimalApi/README.md).
+See also [`examples/DemoProject.MinimalApi/README.md`](examples/DemoProject.MinimalApi/README.md).
 
-## Навигация
+## Navigation
 
-Потерялись? Начните с [docs/README.md](docs/README.md).
+Lost? Start with [docs/README.md](docs/README.md).
 
-| Что нужно | Куда идти |
-|-----------|-----------|
-| Правила для агента (базовые) | `rules/AGENTS_TEMPLATE.md` |
+| What you need | Where to go |
+|---------------|-------------|
+| Agent rules (base) | `rules/AGENTS_TEMPLATE.md` |
 | EF Core add-on | `rules/AGENTS_TEMPLATE.efcore.md` |
 | Dapper add-on | `rules/AGENTS_TEMPLATE.dapper.md` |
-| Аудит безопасности | `templates/skills/security-audit/` |
-| Аудит БД (EF Core) | `templates/skills/dba-audit/` |
-| Аудит БД (Dapper) | `templates/skills/dba-audit-dapper/` |
-| Аудит производительности | `templates/skills/performance-audit/` |
-| Аудит локализации | `templates/skills/i18n-audit/` |
-| Pre-commit code review агент | `templates/skills/code-review/` |
-| Frontend pre-commit code review агент | `templates/skills/frontend-code-review/` |
-| Проверка scope | `templates/skills/task-compliance/` |
-| Паттерн теста | `tests/patterns/` |
-| CI безопасность | `ci/github-actions/safe-ci.yml` |
-| Ловушки агента | `docs/traps/` |
-| Груминг Auto Memory | `templates/skills/memory-hygiene/` |
-| Груминг доков | `templates/skills/doc-hygiene/` |
-| Груминг бэклога | `templates/skills/backlog-hygiene/` |
-| Архитектурные тесты | `docs/solutions/architecture-tests.md` |
-| Roslyn-анализаторы | `docs/solutions/roslyn-analyzers.md` |
-| Паттерны AI-разработки | `docs/solutions/ai-patterns.md` |
-| Онбординг проекта | `templates/skills/skeptical-ai-bootstrap/` |
-| Рабочий пример (Clean Architecture) | `examples/DemoProject/` |
-| Рабочий пример (Single-project MVP) | `examples/DemoProject.MinimalApi/` |
+| Security audit | `templates/skills/security-audit/` |
+| DBA audit | `templates/skills/dba-audit/` |
+| DBA audit (Dapper) | `templates/skills/dba-audit-dapper/` |
+| Performance audit | `templates/skills/performance-audit/` |
+| API design audit | `templates/skills/api-design-audit/` |
+| Bot audit | `templates/skills/bot-audit/` |
+| i18n audit | `templates/skills/i18n-audit/` |
+| Pre-commit code review agent | `templates/skills/code-review/` |
+| Frontend pre-commit code review agent | `templates/skills/frontend-code-review/` |
+| Scope check | `templates/skills/task-compliance/` |
+| Test pattern | `tests/patterns/` |
+| CI security | `ci/github-actions/safe-ci.yml` |
+| Agent traps | `docs/traps/` |
+| Auto Memory grooming | `templates/skills/memory-hygiene/` |
+| Doc grooming | `templates/skills/doc-hygiene/` |
+| Backlog grooming | `templates/skills/backlog-hygiene/` |
+| Architecture tests | `docs/solutions/architecture-tests.md` |
+| Roslyn analyzers | `docs/solutions/roslyn-analyzers.md` |
+| AI patterns | `docs/solutions/ai-patterns.md` |
+| Project onboarding | `templates/skills/skeptical-ai-bootstrap/` |
+| Working example (Clean Architecture) | `examples/DemoProject/` |
+| Working example (Single-project MVP) | `examples/DemoProject.MinimalApi/` |
 | Failing demo (guardrails) | `examples/DemoProject.Traps/` |
-| Интеграция с Kimi | `docs/agents/KIMI.md` |
-| Интеграция с Claude Code | `docs/agents/CLAUDE-CODE.md` |
-| Интеграция с Cursor | `docs/agents/CURSOR.md` |
-| Интеграция с Codex | `docs/agents/CODEX.md` |
-| Интеграция с OpenCode | `docs/agents/OPENCODE.md` |
+| Kimi integration | `docs/agents/KIMI.md` |
+| Claude Code integration | `docs/agents/CLAUDE-CODE.md` |
+| Cursor integration | `docs/agents/CURSOR.md` |
+| Codex integration | `docs/agents/CODEX.md` |
+| OpenCode integration | `docs/agents/OPENCODE.md` |
 | Bootstrap Protocol | `docs/agents/BOOTSTRAP-PROTOCOL.md` |
-| Сравнение агентов | `docs/agents/README.md` |
+| Agent comparison | `docs/agents/README.md` |
 
-## Автор
+## Author
 
-**Светлана Мелешкина** — автор методологии Skeptical AI Engineering, докладчик Dotnext 2026.
+**Svetlana Meleshkina** — creator of the Skeptical AI Engineering methodology, speaker at Dotnext 2026.
 
-- 💬 Telegram-канал: [@kot_review](https://t.me/kot_review)
+- 💬 Telegram channel: [@kot_review](https://t.me/kot_review)
 - ✉️ Telegram: [@svetkis](https://t.me/svetkis)
 
-## Контрибуция
+## Contributing
 
-См. [CONTRIBUTING.md](CONTRIBUTING.md). Принимаем новые скиллы, паттерны тестов, ловушки и интеграции с агентами.
+See [CONTRIBUTING.md](CONTRIBUTING.md). We accept new skills, test patterns, traps, and agent integrations.
 
-## Лицензия
+## License
 
 [MIT](LICENSE)

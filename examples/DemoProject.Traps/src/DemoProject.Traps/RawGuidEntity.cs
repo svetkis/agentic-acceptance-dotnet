@@ -1,7 +1,7 @@
 namespace DemoProject.Traps.Domain;
 
-// TRAP: Агент использовал Guid вместо strongly typed ID.
-// GUARDRAIL: Regex + архитектурные тесты ловят сырые Guid в именах свойств.
+// TRAP: An agent used Guid instead of a strongly typed ID.
+// GUARDRAIL: Regex + architecture tests catch raw Guids in property names.
 public class RawGuidEntity
 {
     public Guid Id { get; init; }

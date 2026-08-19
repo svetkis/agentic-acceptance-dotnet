@@ -31,12 +31,12 @@ description: >
 
 ## Scope
 
-- `AGENTS.md` / `AGENTS.en.md` (root and subfolders)
-- `README.md` / `README.en.md`
-- `PYRAMID.md` / `PYRAMID.en.md`
-- `GLOSSARY.md` / `GLOSSARY.en.md`
-- `docs/README.md` / `docs/README.en.md`
-- `docs/ONBOARDING.md` / `docs/ONBOARDING.en.md`
+- `AGENTS.md` (root and subfolders)
+- `README.md` (plus `README.ru.md` as the only localized mirror)
+- `PYRAMID.md`
+- `GLOSSARY.md`
+- `docs/README.md`
+- `docs/ONBOARDING.md`
 - `docs/agents/*.md`
 - `docs/solutions/*.md`
 - `examples/README.md`
@@ -93,12 +93,11 @@ description: >
 3. Do all agents describe the same stack/versions?
 
 ### Phase 4: README, GLOSSARY, ONBOARDING & CHANGELOG
-1. Does `README.md` / `README.en.md` contain current build commands?
+1. Does `README.md` contain current build commands?
 2. Does `CHANGELOG.md` cover the latest release?
-3. Do `GLOSSARY.md` / `GLOSSARY.en.md` define the same terms and link to existing files?
-4. Do `docs/ONBOARDING.md` / `docs/ONBOARDING.en.md` reference existing skills, patterns, and agent docs?
-5. Is the bilingual surface consistent: every link from `AGENTS.en.md` / `docs/README.en.md` to an English entry doc resolves, and the Russian counterpart exists where expected?
-6. Cross-language link hygiene: links inside `*.en.md` files target the `*.en.md` counterpart when one exists (e.g., `PYRAMID.en.md` rather than `PYRAMID.md`); links inside Russian files target the `.md` counterpart.
+3. Does `GLOSSARY.md` define its terms consistently and link to existing files?
+4. Does `docs/ONBOARDING.md` reference existing skills, patterns, and agent docs?
+5. Localization is single-mirror: `README.ru.md` is the only non-English doc; links from it resolve (they may target the English main docs as the single source).
 7. No links to deleted sections/skills?
 
 ### Phase 5: Size Budget

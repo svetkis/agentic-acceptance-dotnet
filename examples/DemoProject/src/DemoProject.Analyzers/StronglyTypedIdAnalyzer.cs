@@ -6,10 +6,10 @@ using System.Collections.Immutable;
 
 namespace DemoProject.Analyzers;
 
-// TRAP: Агент по привычке использует Guid/string/int/long для ID в Domain-сущностях
-// и передаёт их как параметры методов.
-// GUARDRAIL: Roslyn-анализаторы SAE001 / SAE002 ловят это на этапе компиляции —
-// быстрее regex-архитектурных тестов (Слой 2) и бесплатно для каждого члена команды.
+// TRAP: Out of habit, an agent uses Guid/string/int/long for IDs in Domain entities
+// and passes them around as method parameters.
+// GUARDRAIL: Roslyn analyzers SAE001 / SAE002 catch this at compile time —
+// faster than regex architecture tests (Layer 2) and free for every team member.
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class StronglyTypedIdAnalyzer : DiagnosticAnalyzer
 {

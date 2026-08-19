@@ -1,189 +1,189 @@
-# Пирамида контроля Skeptical AI Engineering
+# Skeptical AI Engineering Control Pyramid
 
-> **Legacy / визуальная метафора.** Этот документ — развёрнутая иллюстрация доклада
-> «ИИ уверен. Я нет». Канонический классификатор артефактов — модель
-> **Engineering Assurance Levels** в [`README.md`](README.md#как-это-работает).
-> Маппинг старых имён на уровни:
+> **Legacy / visual metaphor.** This document is the extended illustration of the talk
+> "AI is confident. I am not". The canonical artifact classifier is the
+> **Engineering Assurance Levels** model in [`README.md`](README.md#how-it-works).
+> Mapping of legacy names to levels:
 >
-> | Пирамида (legacy) | Engineering Assurance Level |
-> |-------------------|-----------------------------|
-> | Слой 0. Инструкции (AGENTS.md + Decision Guards) | Control Foundation |
-> | 1.1 Компилятор + типы | 1. Change Checks |
+> | Pyramid (legacy) | Engineering Assurance Level |
+> |------------------|-----------------------------|
+> | Layer 0. Agent instructions (AGENTS.md + Decision Guards) | Control Foundation |
+> | 1.1 Compiler + types | 1. Change Checks |
 > | 1.4 Pre-commit code review | 1. Change Checks |
-> | 1.2 Архитектура + Ratchet | 2. Behavior Checks |
-> | 1.3 Тесты | 2. Behavior Checks |
+> | 1.2 Architecture + Ratchet | 2. Behavior Checks |
+> | 1.3 Tests | 2. Behavior Checks |
 > | 1.5 Smoke | 3. System Checks |
 > | 2.1 E2E / MCP | 3. System Checks |
-> | 2.3 Нагрузка (NBomber) | 3. System Checks |
-> | 2.2 Аудиты | 4. Periodic Assurance |
-> | Внешний цикл (человек) | Engineering Governance (процесс, не уровень) |
-> | Груминг артефактов | Control Maintenance (процесс, не уровень) |
+> | 2.3 Load (NBomber) | 3. System Checks |
+> | 2.2 Audits | 4. Periodic Assurance |
+> | Outer loop (human) | Engineering Governance (process, not a level) |
+> | Artifact grooming | Control Maintenance (process, not a level) |
 
-> **Skeptical AI Engineering (SAE)** — методология из доклада «ИИ уверен. Я нет» (Dotnext 2026).
-> Скорость обратной связи определяет стоимость ошибки. Чем раньше находишь — тем дешевле чинишь.
-> AI позволяет добавить слои контроля, которые раньше были слишком дороги: аудиты, нагрузка, второй review.
-> Компилятор ловит за секунды. Smoke — за минуты. Всё, что дольше — приёмочный цикл. Человеческое суждение — внешний цикл.
+> **Skeptical AI Engineering (SAE)** — methodology from the talk "AI is confident. I am not" (Dotnext 2026).
+> Feedback speed determines the cost of an error. The earlier you find it, the cheaper it is to fix.
+> AI makes it possible to add control layers that used to be too expensive: audits, load testing, a second review.
+> The compiler catches things in seconds. Smoke in minutes. Anything longer is the acceptance cycle. Human judgment is the outer loop.
 
 ---
 
 <a name="layer-0"></a>
-## Слой 0. Инструкции для агента (AGENTS.md + Decision Guards)
+## Layer 0. Agent Instructions (AGENTS.md + Decision Guards)
 
-Агент читает перед кодом. Это не слой проверки — это слой разработки.
+The agent reads these before writing code. This is not a verification layer — it is a development layer.
 
-- `rules/AGENTS_TEMPLATE.md` — иерархические инструкции: корневые + per-module
-- `PERF-###` / `DB-###` / `AUD-###` — нумерованные решения в коде, которые агент не должен "почистить"
-- Архитектурный тест проверяет уникальность ID решений
+- `rules/AGENTS_TEMPLATE.md` — hierarchical instructions: root + per-module
+- `PERF-###` / `DB-###` / `AUD-###` — numbered decisions in code that the agent must not "clean up"
+- An architecture test checks the uniqueness of decision IDs
 
 ---
 
 <a name="layer-1"></a>
-## Слой 1. Цикл разработки / Быстрая обратная связь
+## Layer 1. Development Cycle / Fast Feedback
 
-Всё, что бежит за секунды и минуты — пока разработчик (или агент) ещё в контексте задачи. Если здесь что-то сломано, править дешевле всего.
+Everything that runs in seconds and minutes — while the developer (or agent) is still in context. Fixing here is cheapest.
 
 <a name="layer-1-compiler"></a>
-### 1.1 Компилятор + типы (~секунды)
+### 1.1 Compiler + Types (~seconds)
 
-**Ловушка:** Агент возвращает `string` вместо `DateTime`, меняет DTO, а фронт не узнал.
+**Trap:** Agent returns `string` instead of `DateTime`, changes a DTO, frontend never finds out.
 
-**Решение:** Статическая типизация — самый быстрый и дешёвый feedback loop.
+**Fix:** Static typing — fastest and cheapest feedback loop.
 
 #### Backend
 - `dotnet build` — Nullable reference types, record-based DTO immutability
-- **BannedApiAnalyzers (RS0030)** — запрещённые API (`DateTime.Now`, `FindAsync`) ловятся при сборке, а не в тестах
-- Агент не может вернуть `null` без проверки
-- **Strongly Typed IDs** — `BookingId` вместо `Guid`, `CustomerId` вместо `string`. Компилятор ловит подстановку чужого ID до запуска тестов. См. `examples/DemoProject/src/DemoProject.Domain/BookingId.cs`
-- **Roslyn-first для C# guardrails** — правила по исходникам C# должны жить в анализаторах, если им нужен смысл языка, типов или символов. `SAE001` ловит `Guid Id` в Domain-сущностях, `SAE002` — `Guid somethingId` в параметрах прямо в IDE, ещё до `dotnet build`. См. `examples/DemoProject/src/DemoProject.Analyzers/`
-- **[HotPath] guardrails (SAE003/004/005)** — ловит `new`, `async` state machine и boxing в методах с `[HotPath]` ещё в IDE. Перформанс-деградация предотвращается до коммита, а не профилировщиком на проде. См. `examples/DemoProject/src/DemoProject.Analyzers/HotPathAnalyzer.cs`
-- **Complexity analyzers** — `SonarAnalyzer.CSharp` (`S3776` cognitive / `S1541` cyclomatic) не даёт агенту незаметно превратить метод в клубок ветвлений. Для новых проектов — `error` с порогами 15/10; для legacy — baseline + ratchet. См. `tests/patterns/ComplexityRatchetTest.cs`
-- **Analyzer tests** — кастомные Roslyn-анализаторы имеют positive/negative unit-тесты, чтобы обновление Roslyn не сломало guardrails тихо. См. `tests/patterns/AnalyzerTests.cs`
+- **BannedApiAnalyzers (RS0030)** — forbidden APIs (`DateTime.Now`, `FindAsync`) caught at build time, not in tests
+- Agent cannot return `null` unchecked
+- **Strongly Typed IDs** — `BookingId` instead of `Guid`, `CustomerId` instead of `string`. The compiler catches wrong-ID substitution before tests run. See `examples/DemoProject/src/DemoProject.Domain/BookingId.cs`
+- **Roslyn-first for C# guardrails** — source-level C# rules should live in analyzers when they need language meaning, types or symbols. `SAE001` catches `Guid Id` in Domain entities, `SAE002` catches `Guid somethingId` parameters right in the IDE, before `dotnet build`. See `examples/DemoProject/src/DemoProject.Analyzers/`
+- **[HotPath] guardrails (SAE003/004/005)** — catches `new`, `async` state machine and boxing in `[HotPath]` methods right in the IDE. Performance degradation is prevented before commit, not by a profiler in production. See `examples/DemoProject/src/DemoProject.Analyzers/HotPathAnalyzer.cs`
+- **Complexity analyzers** — `SonarAnalyzer.CSharp` (`S3776` cognitive / `S1541` cyclomatic) prevents the agent from quietly turning a method into a knot of branches. For new projects — `error` with thresholds 15/10; for legacy — baseline + ratchet. See `tests/patterns/ComplexityRatchetTest.cs`
+- **Analyzer tests** — custom Roslyn analyzers have positive/negative unit tests, so a Roslyn update does not silently break guardrails. See `tests/patterns/AnalyzerTests.cs`
 
 #### Frontend
 - `tsc --noEmit` (strict mode) + `noUnusedLocals`
-- Автогенерация типов из OpenAPI snapshot — backend поменял DTO, фронт не скомпилируется
+- Auto-generated types from OpenAPI snapshot — backend changes DTO, frontend fails to compile
 
-**Паттерн:** `tests/patterns/SnapshotTest.cs`
+**Pattern:** `tests/patterns/SnapshotTest.cs`
 
 ---
 
 <a name="layer-1-architecture"></a>
-### 1.2 Архитектура + Ratchet (~10 секунд)
+### 1.2 Architecture + Ratchet (~10 seconds)
 
-**Ловушка:** Агент добавил `using Infrastructure` в Application, удалил типы/тесты или использовал `.FindAsync()` в read-path.
+**Trap:** Agent adds `using Infrastructure` in Application, deletes types/tests, or uses `.FindAsync()` in read-path.
 
-**Решение:** 25+ автоматических проверок, которые бегут за секунды.
+**Fix:** 25+ automated checks running in seconds.
 
-| Категория | Тестов | Пример |
-|-----------|--------|--------|
-| Слои (Clean Architecture) | 10 | Domain не зависит от Infrastructure |
-| Именование | 3 | Job-классы заканчиваются на `Job` |
-| Структура и антипаттерны | 12 | Запрет `.FindAsync()` и `.Include()` в read-path; запрет дублирования бизнес-логики; запрет циклических зависимостей; Entity leak guard; запрет голых Guid/string/int для идентификаторов в Domain |
-| Complexity | 1 | Количество методов с нарушениями `S3776`/`S1541` не растёт (baseline + ratchet) |
-| Allocation budget | 1 | Каждый `[HotPath]` метод имеет `{MethodName}_AllocationBudget` тест; аллокации не превышают baseline + 10%. Green: [`examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs`](examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs). Red: [`examples/DemoProject.Traps/src/DemoProject.Traps/AllocationBudgetHotspot.cs`](examples/DemoProject.Traps/src/DemoProject.Traps/AllocationBudgetHotspot.cs) + [`tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs`](examples/DemoProject.Traps/tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs) — `new List<int>` в hot path превышает бюджет |
-| Performance | 1 | Количество публичных типов и тестов не уменьшается |
-| Тестовый инвентарь | 1 | Количество тестов не уменьшается (страховка от "0 tests ran") |
+| Category | Checks | Example |
+|----------|--------|---------|
+| Layers (Clean Architecture) | 10 | Domain does not depend on Infrastructure |
+| Naming | 3 | Job classes end with `Job` |
+| Structure and anti-patterns | 12 | Forbid `.FindAsync()` and `.Include()` in read-path; forbid duplicated business logic; forbid cyclic dependencies; entity leak guard; forbid raw Guid/string/int for identifiers in Domain |
+| Complexity | 1 | Number of methods violating `S3776`/`S1541` must not grow (baseline + ratchet) |
+| Allocation budget | 1 | Every `[HotPath]` method has a `{MethodName}_AllocationBudget` test; allocations stay within baseline + 10%. Green: [`examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs`](examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs). Red: [`examples/DemoProject.Traps/src/DemoProject.Traps/AllocationBudgetHotspot.cs`](examples/DemoProject.Traps/src/DemoProject.Traps/AllocationBudgetHotspot.cs) + [`tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs`](examples/DemoProject.Traps/tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs) — `new List<int>` in a hot path exceeds the budget |
+| Performance | 1 | Number of public types and tests must not decrease |
+| Test inventory | 1 | Number of tests must not decrease (protection against "0 tests ran") |
 
-#### Failing demo
+### Failing demo
 
-Посмотри живой пример сломанных guardrails: [`examples/DemoProject.Traps/`](examples/DemoProject.Traps/) — 7 intentionally broken тестов с `IType.Explanation` и ArchUnitNET. Запусти `dotnet run --project tests/DemoProject.Traps.Tests` и увидишь, как выглядит падение при нарушении каждого правила.
+See the live example of broken guardrails: [`examples/DemoProject.Traps/`](examples/DemoProject.Traps/) — 7 intentionally broken tests with `IType.Explanation` and ArchUnitNET. Run `dotnet run --project tests/DemoProject.Traps.Tests` to see what a failure looks like for each violated rule.
 
-#### Roslyn-first, regex-last
+### Roslyn-first, regex-last
 
-Для C#-исходников default choice — **Roslyn analyzer**, потому что он понимает syntax tree, semantic model, типы и символы. Regex — это текстовое совпадение: он ловит комментарии, мёртвый код и форматирование, но не понимает C#.
+For C# source code, the default choice is a **Roslyn analyzer**, because it understands syntax trees, semantic model, types and symbols. Regex is text matching: it catches comments, dead code and formatting, but does not understand C#.
 
-Используй инструменты по смыслу:
+Use tools by meaning:
 
-| Задача | Предпочтительный guardrail |
-|--------|-----------------------------|
-| Запрещённый API / raw primitive ID / hot-path allocation | Roslyn analyzer (Layer 1.1) |
-| Зависимости между слоями, slices, циклы | NetArchTest / ArchUnitNET (Layer 1.2) |
-| Уникальность `PERF-###`, `.csproj`, `.yml`, markdown, package manifests | Regex / parser по артефактам |
-| Срочный spike до стабилизации правила | Временный regex с TODO на перенос в Roslyn |
+| Task | Preferred guardrail |
+|------|---------------------|
+| Forbidden API / raw primitive ID / hot-path allocation | Roslyn analyzer (Layer 1.1) |
+| Dependencies between layers, slices, cycles | NetArchTest / ArchUnitNET (Layer 1.2) |
+| Unique `PERF-###`, `.csproj`, `.yml`, markdown, package manifests | Regex / parser over artifacts |
+| Urgent spike before the rule stabilizes | Temporary regex with TODO to promote to Roslyn |
 
-Пример правила, которое должно быть Roslyn-анализатором:
+Example of a rule that should be a Roslyn analyzer:
 
 ```csharp
-// SAE006: запретить FindAsync() в read-path, но разрешить в write-path через атрибут/namespace.
-// Анализатор проверяет InvocationExpression + semantic symbol, а не строку ".FindAsync(".
+// SAE006: forbid FindAsync() in read-path, but allow it in write-path via attribute/namespace.
+// The analyzer checks InvocationExpression + semantic symbol, not the string ".FindAsync(".
 ```
 
-Пример правила, где regex всё ещё уместен:
+Example of a rule where regex is still appropriate:
 
 ```csharp
-// Проверяем уникальность Decision Guards в комментариях, markdown и config-файлах.
+// Check the uniqueness of Decision Guards in comments, markdown and config files.
 var ids = ExtractDecisionIds(rootDir, @"(PERF|DB|AUD)-\d{3}");
 ```
 
-#### Whitelist со staleness check
+### Whitelist with staleness check
 
-Whitelist для исключений (write-path) сам проверяется: если файл из whitelist больше не содержит паттерн — тест падает.
+Whitelist for exceptions (write-path) self-validates: if a file from the whitelist no longer contains the pattern — the test fails.
 
-**Паттерн:** `tests/patterns/ArchitectureRules.cs`, `tests/patterns/RatchetTest.cs`, `tests/patterns/DependencyDriftTest.cs`, `tests/patterns/EntityLeakTest.cs`, `tests/patterns/StronglyTypedIds.cs`, `tests/patterns/ArchUnitNetSliceTest.cs`
+**Patterns:** `tests/patterns/ArchitectureRules.cs`, `tests/patterns/RatchetTest.cs`, `tests/patterns/DependencyDriftTest.cs`, `tests/patterns/EntityLeakTest.cs`, `tests/patterns/StronglyTypedIds.cs`, `tests/patterns/ArchUnitNetSliceTest.cs`, `tests/patterns/ComplexityRatchetTest.cs`, `tests/patterns/AllocationBudgetTest.cs`
 
 ---
 
 <a name="layer-1-tests"></a>
-### 1.3 Тесты (TUnit + `dotnet run`) (~30 секунд)
+### 1.3 Tests (TUnit + `dotnet run`) (~30 seconds)
 
-**Ловушка:** CI зелёный, потому что `0 tests ran`, exit 0. Код мержится без проверок две недели.
+**Trap:** CI is green because `0 tests ran`, exit code 0. Code merges unchecked for two weeks.
 
-**Решение:**
-- **TUnit** + `dotnet run --project` (запрет на `dotnet test`)
-- **BUG-regression convention:** каждый баг-фикс = файл `BUG###_DescriptiveName.cs`
-- **OpenAPI snapshot test:** backend поменял DTO → snapshot падает → фронт не забыт
-- **Characterization-тесты:** фиксация поведения критичных алгоритмов ("вот так работает сейчас")
+**Fix:**
+- **TUnit** + `dotnet run --project` (no `dotnet test`)
+- **BUG-regression convention:** every bug-fix = file `BUG###_DescriptiveName.cs`
+- **OpenAPI snapshot test:** backend changes DTO → snapshot fails → frontend is not forgotten
+- **Characterization tests:** pinning behavior of critical algorithms ("this is how it works now")
 
-**Артефакты:** `tests/conventions/TUnit_Guide.md`, `tests/conventions/BUG_TEMPLATE.cs`
+**Artifacts:** `tests/conventions/TUnit_Guide.md`, `tests/conventions/BUG_TEMPLATE.cs`
 
 ---
 
 <a name="layer-1-code-review"></a>
-### 1.4 Pre-commit code review агентом (~2 минуты)
+### 1.4 Pre-commit code review by agent (~2 minutes)
 
-**Ловушка:** Агент написал XSS в `returnUrl`, забыл `await`, утёк internal ClientId.
+**Trap:** Agent wrote XSS in `returnUrl`, forgot `await`, leaked internal ClientId.
 
-**Решение:** Перед коммитом запускается **отдельный агент** (не тот, что писал код), который ревьюит diff.
+**Fix:** Before commit, a **separate agent** (not the one that wrote the code) reviews the diff.
 
-Из практики: 8 review-коммитов с находками:
+From practice: 8 review commits with findings:
 - XSS in query params
-- Забытый `await` на notification send (silent failure)
-- Утечка внутреннего ClientId в API-ответе
-- Constant-time hash не используется (timing attack)
+- Forgotten `await` on notification send (silent failure)
+- Leaked internal ClientId in API response
+- Constant-time hash not used (timing attack)
 
-**Чеклист:** при ревью коммита с `fix:` — проверить наличие `BUG*Tests.cs`.
+**Checklist:** when reviewing a commit with `fix:` — check for `BUG*Tests.cs`.
 
-**Артефакт:** `templates/skills/code-review/`
+**Artifact:** `templates/skills/code-review/`
 
 ---
 
 <a name="layer-1-smoke"></a>
-### 1.5 Smoke тесты (~5 минут)
+### 1.5 Smoke tests (~5 minutes)
 
-**Ловушка:** Агент сломал критичный путь (авторизация, оплата, бронирование), но все юнит-тесты зелёные, потому что каждый компонент работает изолированно.
+**Trap:** Agent broke the critical path (auth, payment, booking), but all unit tests are green because each component works in isolation.
 
-**Решение:** Автоматизированный прогон 10 критичных сценариев — быстрая проверка, что основные потоки не разломаны. Это не полное E2E, а скорость: если smoke горит, дальше не идём.
+**Fix:** Automated run of 10 critical scenarios — quick check that main flows are not broken. This is not full E2E; it's speed: if smoke is on fire, we don't proceed.
 
 ---
 
-### Синтез: Слой 1 (цикл разработки)
+### Synthesis: Layer 1 (development cycle)
 
 ```
           ┌─────────────────────┐
-          │   Smoke тесты       │  ← 1.5: 10 критичных сценариев (~5 мин)
+          │   Smoke tests       │  ← 1.5: 10 critical scenarios (~5 min)
           ├─────────────────────┤
-          │   Pre-commit        │  ← 1.4: Второй агент смотрит staged diff (~2 мин)
+          │   Pre-commit        │  ← 1.4: Second agent reads staged diff (~2 min)
           │   code review       │
           ├─────────────────────┤
-          │   TUnit             │  ← 1.3: BUG-regression, snapshot (~30 сек)
+          │   TUnit             │  ← 1.3: BUG-regression, snapshot (~30 sec)
           │   + dotnet run      │
           ├─────────────────────┤
-          │   NetArchTest       │  ← 1.2: Слои, ratchet (~10 сек)
+          │   NetArchTest       │  ← 1.2: Layers, ratchet (~10 sec)
           ├─────────────────────┤
-          │   Компилятор        │  ← 1.1: dotnet build, tsc (~секунды)
+          │   Compiler          │  ← 1.1: dotnet build, tsc (~seconds)
           │   + Snapshot        │
           ├─────────────────────┤
-          │   AGENTS.md         │  ← Слой 0: Инструкции перед кодом
+          │   AGENTS.md         │  ← Layer 0: Instructions before code
           │  + Decision Guards  │
           └─────────────────────┘
 ```
@@ -191,42 +191,42 @@ Whitelist для исключений (write-path) сам проверяется
 ---
 
 <a name="layer-2"></a>
-## Слой 2. Приёмочный цикл
+## Layer 2. Acceptance Cycle
 
-> Всё, что запускается перед релизом или по триггеру — не часть ежедневного feedback loop, но полная проверка, что система держится как целое.
+> Anything that runs before release or on trigger — not part of the daily feedback loop, but full validation that the system holds together as a whole.
 
 <a name="layer-2-e2e"></a>
-### 2.1 E2E MCP по полным сценариям (~15–30 минут)
+### 2.1 E2E MCP with full scenarios (~15–30 minutes)
 
-**Ловушка:** Агент не видит, что shift mode показывает все дни как "Day Off" из-за stale cache.
+**Trap:** Agent does not see that shift mode shows all days as "Day Off" due to stale cache.
 
-**Решение:** 20+ MCP-тулов: Telegram, VK, browser, API. Агент сам "протыкивает" приложение по полным пользовательским сценариям.
+**Fix:** 20+ MCP tools: Telegram, VK, browser, API. The agent exercises the app itself through full user scenarios.
 
-| Баг | Как нашло |
-|-----|-----------|
-| Stale cache (22 дня в проде!) | Агент увидел пустое расписание на скриншоте |
-| Dashboard date reset | Агент "кликал" по дашборду |
-| Self-booking bypass | Агент попробовал забронировать сам к себе |
+| Bug | How it was found |
+|-----|------------------|
+| Stale cache (22 days in prod!) | Agent saw empty schedule on screenshot |
+| Dashboard date reset | Agent "clicked" through dashboard |
+| Self-booking bypass | Agent tried to book themselves |
 
-**Ключевое:** E2E нашло stale cache, который не ловился:
-- Компилятором ✅ (код синтаксически верный)
-- Юнит-тестами ✅ (мокают кэш)
-- Code review ✅ (diff кэширования выглядел правильно)
+**Key point:** E2E found stale cache that slipped through:
+- Compiler ✅ (code is syntactically correct)
+- Unit tests ✅ (mock cache)
+- Code review ✅ (caching diff looked correct)
 
-**Паттерн:** `docs/traps/silent-breakdown.md`
+**Pattern:** `docs/traps/silent-breakdown.md`
 
 ---
 
 <a name="layer-2-audits"></a>
-### 2.2 Аудиты (~1–2 часа)
+### 2.2 Audits (~1–2 hours)
 
-Это не «уровень обратной связи» — это **повторяемая процедура аудита**. Без скиллов assurance review превращается в хаотичный ручной просмотр.
+This is not a "feedback level" — it is a **repeatable audit procedure**. Without skills, the assurance review becomes chaotic manual browsing.
 
-- `templates/skills/security-audit/`, `templates/skills/dba-audit/` и др. — узкие аудиторские роли с `CHECKLIST.md`
-- Запускаются пачками (batch) — cross-pollination находок между security и UX, performance и DB schema
-- Каждый скилл = роль агента, которую можно запустить в любой момент с одинаковым результатом
+- `templates/skills/security-audit/`, `templates/skills/dba-audit/` etc. — narrow audit roles with `CHECKLIST.md`
+- Run in batches — cross-pollination of findings between security and UX, performance and DB schema
+- Each skill = an agent role you can run anytime with the same result
 
-| Аудит | Артефакт |
+| Audit | Artifact |
 |-------|----------|
 | Security | `templates/skills/security-audit/` |
 | DBA | `templates/skills/dba-audit/` |
@@ -246,199 +246,199 @@ Whitelist для исключений (write-path) сам проверяется
 | Analyzer Tests | `templates/skills/analyzer-tests-audit/` |
 | Business Risk / Cross-Layer | `templates/skills/business-risk-audit/` |
 
-**График:** раз в спринт или точечно, когда чуете опасность.
+**Schedule:** once per sprint or ad-hoc when you smell danger.
 
 ---
 
 <a name="layer-2-load"></a>
-### 2.3 Нагрузка (NBomber) (~минуты)
+### 2.3 Load (NBomber) (~minutes)
 
-**Ловушка:** Агент показывает P50 = 6ms, но Max = 4400ms. Пользователь попадает в tail latency.
+**Trap:** Agent shows P50 = 6ms, but Max = 4400ms. User hits tail latency.
 
-**Решение:** NBomber — read + write mix, spike, concurrent booking. Бегает перед релизом или при подозрении на деградацию.
+**Fix:** NBomber — read + write mix, spike, concurrent booking. Runs before release or when degradation is suspected.
 
-Сценарии: read + write mix, spike, concurrent booking.
+Scenarios: read + write mix, spike, concurrent booking.
 
-Дополнение: **allocation budget tests** для `[HotPath]` методов ловят регресс аллокаций ещё до нагрузочного стенда — дешевле и быстрее, чем профилировщик на проде.
+Addendum: **allocation budget tests** for `[HotPath]` methods catch allocation regressions before the load lab — cheaper and faster than a profiler in production.
 
-**Паттерны:** `tests/patterns/LoadTest.cs`, `tests/patterns/AllocationBudgetTest.cs`
+**Patterns:** `tests/patterns/LoadTest.cs`, `tests/patterns/AllocationBudgetTest.cs`
 
 ---
 
-### Синтез: Слой 2 (приёмочный цикл)
+### Synthesis: Layer 2 (acceptance cycle)
 
 ```
           ┌─────────────────────┐
-          │   Нагрузка          │  ← 2.3: NBomber, read+write mix
+          │   Load              │  ← 2.3: NBomber, read+write mix
           │   (NBomber)         │
           ├─────────────────────┤
-          │   Аудиты            │  ← 2.2: Пакетные аудит-роли  
+          │   Audits            │  ← 2.2: Batch audit roles
           │   (batch)           │
           ├─────────────────────┤
-          │   E2E MCP           │  ← 2.1: Полные сценарии, реальные руки
-          │   (полные сценарии) │
+          │   E2E MCP           │  ← 2.1: Full scenarios, real hands
+          │   (full scenarios)  │
           └─────────────────────┘
 ```
 
 ---
 
 <a name="outer-loop"></a>
-## Внешний цикл / Человеческое суждение
+## Outer Loop / Human Judgment
 
-> Всё, что требует бизнес-решения, продуктового суждения или окончательной проверки человеком.
+> Anything that requires a business decision, product judgment, or final human validation.
 
-Это не слой пирамиды в классическом смысле — последняя линия обороны, которую нельзя автоматизировать.
+This is not a pyramid layer in the classic sense — it's the last line of defense that cannot be automated.
 
-- **Бизнес-решения** — соответствует ли реализация стратегии, не нарушает ли контракты
-- **Продуктовые решения** — UX, поведение, edge-кейсы, которые невозможно формализовать
-- **Окончательная проверка человеком** — продуктовое использование, реальные пользователи, реальные данные
+- **Business decisions** — does the implementation match strategy, does it break contracts
+- **Product decisions** — UX, behavior, edge cases that cannot be formalized
+- **Final human validation** — production usage, real users, real data
 
-Всё, что дошло сюда, прошло Слой 1 (быстрая обратная связь) + Слой 2 (приёмочный цикл).
+Anything that got here passed Layer 1 (fast feedback) + Layer 2 (acceptance cycle).
 
 ---
 
-## Общий синтез: пирамида + внешний цикл
+## Overall synthesis: pyramid + outer loop
 
 ```
           ┌─────────────────────┐
-          │   Внешний цикл      │  ← Человек, бизнес, продукт
+          │   Outer loop        │  ← Human, business, product
           │   (Human judgment)  │
           ├─────────────────────┤
-          │   Приёмочный цикл   │  ← Слой 2: E2E, аудиты, нагрузка
+          │   Acceptance cycle  │  ← Layer 2: E2E, audits, load
           │   (Acceptance)      │
           ├─────────────────────┤
-          │   Цикл разработки   │  ← Слой 1: Компилятор → Smoke
+          │   Development cycle │  ← Layer 1: Compiler → Smoke
           │   (Fast feedback)   │
           ├─────────────────────┤
-          │   AGENTS.md         │  ← Слой 0: Правила до кода
+          │   AGENTS.md         │  ← Layer 0: Rules before code
           │  + Decision Guards  │
           └─────────────────────┘
 ```
 
 ---
 
-## Метрики эффективности
+## Effectiveness metrics
 
-> **Evidence note.** Классификация данных ниже: **observed case** — один проект
-> автора (материал доклада), git-история fix-коммитов за ~6 месяцев, знаменатель
-> ~450 коммитов. Цифры — единичное наблюдение, не воспроизводимое измерение и не
-> бенчмарк; не экстраполируй на свой проект. Оценки стоимости в ROI-таблицах —
-> **estimates** (экспертная оценка), помечены `~`.
+> **Evidence note.** Data classification below: **observed case** — a single project
+> of the author (talk material), git history of fix commits over ~6 months,
+> denominator ~450 commits. The numbers are a single observation, not a reproducible
+> measurement or a benchmark; do not extrapolate to your project. Cost figures in the
+> ROI tables are **estimates** (expert judgment), marked `~`.
 
-### Что поймал каждый слой (из git-истории, observed case)
+### What each layer caught (from git history, observed case)
 
-| Цикл | Слой | Найдено багов | % от fix | Примеры |
-|------|------|--------------|----------|---------|
-| **Inner** (Слой 1) | Компилятор + типы | ~0 коммитов | — | Ловит до коммита, не видно в git |
-| **Inner** (Слой 1) | Arch-тесты + Ratchet | ~0 коммитов | — | Ловит до коммита, не видно в git |
-| **Inner** (Слой 1) | Юнит/интеграционные | 6 коммитов | 1.3% | Falling tests после рефакторинга |
-| **Inner** (Слой 1) | Code review | 8 коммитов | 1.8% | XSS, await, data leak |
-| **Inner** (Слой 1) | Smoke | ~0 коммитов | — | Предотвращает регресс критичного пути до мержа |
-| **Acceptance** (Слой 2) | E2E MCP | 9 коммитов | 2.0% | UI flow, stale cache, self-booking |
-| **Acceptance** (Слой 2) | Аудиты | 19 коммитов | 4.2% | Security, i18n, UX, perf |
-| **Acceptance** (Слой 2) | Нагрузка | ~0 коммитов | — | Предотвращает деградацию до продакшена |
-| **Outer** | Человеческое суждение | ~78 коммитов | 17% | Бизнес-логика, edge cases |
-| — | Серая зона | ~331 коммитов | 74% | Неизвестно кто нашёл |
+| Cycle | Layer | Bugs found | % of fixes | Examples |
+|-------|-------|-----------|------------|----------|
+| **Inner** (Layer 1) | Compiler + types | ~0 commits | — | Catches before commit, invisible in git |
+| **Inner** (Layer 1) | Arch tests + Ratchet | ~0 commits | — | Catches before commit, invisible in git |
+| **Inner** (Layer 1) | Unit/integration | 6 commits | 1.3% | Falling tests after refactoring |
+| **Inner** (Layer 1) | Code review | 8 commits | 1.8% | XSS, await, data leak |
+| **Inner** (Layer 1) | Smoke | ~0 commits | — | Prevents critical-path regression before merge |
+| **Acceptance** (Layer 2) | E2E MCP | 9 commits | 2.0% | UI flow, stale cache, self-booking |
+| **Acceptance** (Layer 2) | Audits | 19 commits | 4.2% | Security, i18n, UX, perf |
+| **Acceptance** (Layer 2) | Load | ~0 commits | — | Prevents degradation before production |
+| **Outer** | Human judgment | ~78 commits | 17% | Business logic, edge cases |
+| — | Gray zone | ~331 commits | 74% | Unknown who found it |
 
-### Парадокс невидимых слоёв
+### The invisible layer paradox
 
-Компилятор, arch-тесты и smoke — **самые эффективные** слои, но в git у них 0 коммитов. Они предотвращают баги **до** того, как код покидает рабочую станцию.
+Compiler, arch tests, and smoke are the **most effective** layers, but in git they show 0 commits. They prevent bugs **before** code leaves the workstation.
 
-### ROI по слоям
+### ROI by layer
 
-| Слой | Стоимость создания | Стоимость поддержки | Окупаемость |
-|------|-------------------|---------------------|-------------|
-| Компилятор + типы | 0 (встроено) | 0 | Мгновенная |
-| Arch-тесты + Ratchet | ~2 дня | ~1 час/месяц | За первую неделю |
-| Юнит-тесты | ~2 недели | ~30 мин/фичу | За первый месяц |
-| Code review | ~0 (AGENTS.md rule) | ~2 мин/коммит | За первый XSS |
-| Smoke | ~1 день | ~15 мин/сессия | За первый сломанный критичный путь |
-| E2E MCP | ~3 дня | ~1 час/платформу | За stale cache (22 дня в проде) |
-| Аудиты | ~0 (промпты) | ~2 часа/аудит | За первый батч |
-| Нагрузка (NBomber) | ~1 день | ~30 мин/сценарий | За первый silent breakdown под нагрузкой |
-| Человеческое суждение | — | ~часы-дни | Невозможно измерить |
+| Layer | Setup cost | Maintenance cost | Break-even |
+|-------|-----------|------------------|------------|
+| Compiler + types | 0 (built-in) | 0 | Instant |
+| Arch tests + Ratchet | ~2 days | ~1 hour/month | First week |
+| Unit tests | ~2 weeks | ~30 min/feature | First month |
+| Code review | ~0 (AGENTS.md rule) | ~2 min/commit | First XSS |
+| Smoke | ~1 day | ~15 min/session | First broken critical path |
+| E2E MCP | ~3 days | ~1 hour/platform | After stale cache (22 days in prod) |
+| Audits | ~0 (prompts) | ~2 hours/audit | First batch |
+| Load (NBomber) | ~1 day | ~30 min/scenario | First silent breakdown under load |
+| Human judgment | — | ~hours-days | Impossible to measure |
 
 ---
 
-## Цикл груминга (Grooming loop) — Maintenance артефактов
+## Grooming loop — Artifact maintenance
 
-> Внутренний цикл ловит баги в коде. Приёмочный — системные дыры. Внешний — человеческое суждение.
-> Но артефакты агента тоже устаревают: AGENTS.md отстаёт от кода, Auto Memory
-> накапливает дубли, бэклог превращается в кладбище. Это третий цикл.
+> The inner loop catches bugs in code. Acceptance catches systemic holes. The outer loop covers human judgment.
+> But agent artifacts rot too: AGENTS.md drifts from code, Auto Memory
+> accumulates duplicates, backlog turns into a graveyard. This is the third loop.
 
 ```
           ┌─────────────────────┐
-          │   backlog-hygiene   │  ← Очистка мёртвых спек и drift приоритетов
+          │   backlog-hygiene   │  ← Clean dead specs and priority drift
           ├─────────────────────┤
-          │   doc-hygiene       │  ← Консистентность AGENTS.md и cross-agent docs
+          │   doc-hygiene       │  ← AGENTS.md consistency and cross-agent docs
           ├─────────────────────┤
-          │   memory-hygiene    │  ← Auto Memory: дубли, hierarchical drift
+          │   memory-hygiene    │  ← Auto Memory: duplicates, hierarchical drift
           └─────────────────────┘
 ```
 
-### Почему отдельно
+### Why separate
 
-Груминг — не слой пирамиды и не аудит. Он не даёт обратную связь по коду
-во время разработки. Он предотвращает **деградацию мета-информации**, от
-которой зависит качество всей пирамиды.
+Grooming is not a pyramid layer or an audit. It does not give feedback on code
+during development. It prevents **meta-information decay** that the whole
+pyramid depends on.
 
-| Артефакт | Что деградирует | Последствия |
-|----------|----------------|-------------|
-| **Auto Memory** | Дубли, stale notes, drift с AGENTS.md | Агент принимает решения на основе мусора |
-| **AGENTS.md** | Противоречия между уровнями, drift кода | Guardrails лгут или бессильны |
-| **Бэклог** | Orphaned specs, stale задачи, priority drift | `task-compliance` проверяет diff против мёртвых требований |
+| Artifact | What rots | Consequences |
+|----------|-----------|--------------|
+| **Auto Memory** | Duplicates, stale notes, drift from AGENTS.md | Agent makes decisions based on garbage |
+| **AGENTS.md** | Contradictions between levels, code drift | Guardrails lie or become powerless |
+| **Backlog** | Orphaned specs, stale tasks, priority drift | `task-compliance` checks diff against dead requirements |
 
-### Скиллы груминга
+### Grooming skills
 
-| Скилл | Что чистит | Периодичность |
-|-------|-----------|---------------|
-| `templates/skills/memory-hygiene/` | Auto Memory: дубли, hierarchical drift, stale refs | Раз в спринт или при смене агента |
-| `templates/skills/doc-hygiene/` | AGENTS.md: консистентность иерархии, code drift, cross-agent docs | Раз в спринт или после рефакторинга модулей |
-| `templates/skills/backlog-hygiene/` | Бэклог: stale, orphaned, duplicates, priority drift | Раз в спринт |
+| Skill | What it cleans | Frequency |
+|-------|---------------|-----------|
+| `templates/skills/memory-hygiene/` | Auto Memory: duplicates, hierarchical drift, stale refs | Once per sprint or on agent change |
+| `templates/skills/doc-hygiene/` | AGENTS.md: hierarchy consistency, code drift, cross-agent docs | Once per sprint or after module refactoring |
+| `templates/skills/backlog-hygiene/` | Backlog: stale, orphaned, duplicates, priority drift | Once per sprint |
 
-### Парадокс невидимой деградации
+### The invisible decay paradox
 
-Деградация guardrails не видна в git, не падает на CI и не ловится тестами.
-Она проявляется внезапно: агент «забывает» правило, потому что AGENTS.md
-врёт, или принимает архитектурное решение на основе stale-заметки из
-Auto Memory. Груминг — единственная защита от этого.
+Guardrail decay is invisible in git, not flagged by CI, and not caught by tests.
+It hits suddenly: the agent "forgets" a rule because AGENTS.md
+is out of sync, or makes an architectural decision based on a stale note from
+Auto Memory. Grooming is the only defense against this.
 
 ### ROI
 
-| Скилл | Стоимость | Окупаемость |
-|-------|-----------|-------------|
-| memory-hygiene | ~30 мин/спринт | За первый архитектурный баг от stale memory |
-| doc-hygiene | ~1 час/спринт | За первый случай, когда агент сломал код по устаревшему AGENTS.md |
-| backlog-hygiene | ~30 мин/спринт | За первый false positive `task-compliance` на мёртвой спеке |
+| Skill | Cost | Break-even |
+|-------|------|------------|
+| memory-hygiene | ~30 min/sprint | First architectural bug from stale memory |
+| doc-hygiene | ~1 hour/sprint | First time agent broke code due to outdated AGENTS.md |
+| backlog-hygiene | ~30 min/sprint | First false positive `task-compliance` on a dead spec |
 
 ---
 
-## Эволюция: как система растёт
+## Evolution: how the system grows
 
 ```
-Январь:    компилятор + типы → юнит-тесты → smoke
-  ↓ баги в архитектуре
-Февраль:   + arch-тесты → + code review
-  ↓ баги в UI
-Март:      + E2E MCP (приёмочный) → + характеризационные тесты
-  ↓ деградация write-path
-Апрель:    + аудиты (батчами) → + NBomber → + ratchet-тесты
+January:   compiler + types → unit tests → smoke
+  ↓ architecture bugs
+February:  + arch tests → + code review
+  ↓ UI bugs
+March:     + E2E MCP (acceptance) → + characterization tests
+  ↓ write-path degradation
+April:     + audits (in batches) → + NBomber → + ratchet tests
 ```
 
-Каждый новый слой — реакция на класс багов, которые прошлые слои не ловили.
+Every new layer is a reaction to a bug class that previous layers missed.
 
-### Принцип: Guardrail должен быть обоснован риском
+### Principle: Guardrails must be justified by risk
 
-> Guardrail обоснован реальным инцидентом, достоверной моделью угроз, нормативным
-> требованием либо документированным сценарием отказа с высоким impact.
+> A guardrail is justified by a real incident, a credible threat model, a regulatory
+> requirement, or a documented high-impact failure scenario.
 
-Любой guardrail — Roslyn-анализатор, архитектурная проверка, тест, regex по артефактам или линтер-правило — должен отвечать на вопрос: **«Какой конкретный риск это покрывает?»** Ответ «реальный баг» — самый сильный, но не единственный допустимый: proactive security- и compliance-контроли оправданы моделью угроз или требованием регулятора до первого инцидента.
+Every guardrail — Roslyn analyzer, architecture check, test, artifact regex or linter rule — must answer: **"What specific risk does this cover?"** "A real bug" is the strongest answer, but not the only valid one: proactive security and compliance controls are justified by a threat model or a regulatory requirement before the first incident.
 
-Нулевое количество срабатываний — **не достаточное основание** для удаления. При пересмотре guardrail учитывай severity риска, вероятность, стоимость поддержки, false-positive rate и наличие компенсирующих controls. Guardrail, который покрывает редкий high-impact риск (security, data loss), может не срабатывать годами — и всё равно быть оправданным. Кандидат на удаление: низкий impact + высокая стоимость поддержки + компенсирующие проверки есть.
+Zero triggers is **not sufficient grounds** for removal. When reviewing a guardrail, weigh risk severity, likelihood, maintenance cost, false-positive rate, and the presence of compensating controls. A guardrail covering a rare high-impact risk (security, data loss) may never fire and still be justified. A removal candidate: low impact + high maintenance cost + existing compensating checks.
 
-## 4 правила для понедельника
+## 4 rules for Monday
 
-1. **Каждый воспроизводимый баг-фикс = `BUG###_` тест.** Для дефектов конфигурации, документации, эксплуатации и процессов допустим другой regression control (проверка, runbook, ADR) — с явным объяснением, почему автотест неприменим.
-2. **Каждый PR = `dotnet run --project` тестов + code review агентом + smoke.**
-3. **Каждый спринт = приёмочный цикл (E2E + аудиты + NBomber) перед релизом.** Агент не видит системные дыры — scoped audit role видит.
-4. **Каждый спринт = груминг артефактов.** Memory-hygiene, doc-hygiene, backlog-hygiene — артефакты агента тоже устаревают.
+1. **Every reproducible bug-fix = `BUG###_` test.** For configuration, documentation, operational, and process defects, another regression control is allowed (a check, a runbook, an ADR) — with an explicit explanation of why an automated test does not apply.
+2. **Every PR = `dotnet run --project` tests + code review by agent + smoke.**
+3. **Every sprint = acceptance cycle (E2E + audits + NBomber) before release.** An agent does not see systemic holes — a scoped audit role does.
+4. **Every sprint = groom artifacts.** Memory-hygiene, doc-hygiene, backlog-hygiene — agent artifacts rot too.

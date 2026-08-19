@@ -1,28 +1,28 @@
-// TRAP: Агент добавляет new/async/boxing в метод с [HotPath], и latency деградирует на проде.
-// GUARDRAIL: Каждый [HotPath] метод имеет allocation-бюджет; регресс ловится в тестах.
+// TRAP: The agent adds new/async/boxing to a [HotPath] method, and latency degrades in production.
+// GUARDRAIL: Every [HotPath] method has an allocation budget; regressions are caught in tests.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
 //
-// NOTE: Для стабильности запускайте в изолированной среде (одинаковый OS, .NET runtime, GC mode).
-//       Используйте warmup + несколько итераций, чтобы избежать flaky тестов.
+// NOTE: For stability, run in an isolated environment (same OS, .NET runtime, GC mode).
+//       Use warmup + several iterations to avoid flaky tests.
 
 using System.Reflection;
 using TUnit;
 
 namespace Tests.Patterns;
 
-// Маркер hot path. Можно заменить на свой атрибут из проекта.
+// Hot path marker. You can replace it with your project's own attribute.
 [AttributeUsage(AttributeTargets.Method)]
 public class HotPathAttribute : Attribute { }
 
 public class AllocationBudgetTests
 {
-    // TRAP: Агент добавил лишние аллокации в критичный метод.
-    // GUARDRAIL: Аллокации [HotPath] метода не превышают baseline + 10%.
+    // TRAP: The agent added extra allocations to a critical method.
+    // GUARDRAIL: Allocations of a [HotPath] method do not exceed baseline + 10%.
     [Test]
     public void HotPath_GetAvailableSlots_AllocationBudget()
     {
@@ -31,7 +31,7 @@ public class AllocationBudgetTests
             warmupIterations: 3,
             measureIterations: 100);
 
-        // Baseline зафиксирован при первом аудите. Обновлять вручную после осознанной оптимизации.
+        // Baseline was recorded during the first audit. Update manually after a deliberate optimization.
         const long baselineBytes = 1024;
         var threshold = (long)(baselineBytes * 1.10);
 
@@ -41,8 +41,8 @@ public class AllocationBudgetTests
                      $"Baseline={baselineBytes}, Current={budget.BytesAllocated}, Threshold={threshold}");
     }
 
-    // TRAP: Агент добавил [HotPath] метод, но забыл написать для него allocation-тест.
-    // GUARDRAIL: Каждый public метод с [HotPath] имеет парный тест {MethodName}_AllocationBudget.
+    // TRAP: The agent added a [HotPath] method but forgot to write an allocation test for it.
+    // GUARDRAIL: Every public method with [HotPath] has a matching {MethodName}_AllocationBudget test.
     [Test]
     public void AllHotPathMethods_HaveAllocationBudgetTests()
     {

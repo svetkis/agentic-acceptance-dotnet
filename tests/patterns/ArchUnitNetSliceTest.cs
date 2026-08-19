@@ -1,10 +1,10 @@
-// GUARDRAIL: ArchUnitNET ловит циклические зависимости между слайсами,
-// которые NetArchTest.NotHaveDependenciesBetweenSlices не различает.
-// TRAP: Агент добавляет межмодульные вызовы через mediator / events / shared kernel,
-// создавая цикл Orders -> Payments -> Shipping -> Orders.
-// NetArchTest запрещает ЛЮБЫЕ зависимости между слайсами (zero-tolerance).
-// ArchUnitNET позволяет иметь DAG (направленный ациклический граф),
-// но ловит только циклы.
+// GUARDRAIL: ArchUnitNET catches circular dependencies between slices,
+// which NetArchTest.NotHaveDependenciesBetweenSlices does not distinguish.
+// TRAP: The agent adds cross-module calls via mediator / events / shared kernel,
+// creating a cycle Orders -> Payments -> Shipping -> Orders.
+// NetArchTest forbids ANY dependencies between slices (zero-tolerance).
+// ArchUnitNET allows having a DAG (directed acyclic graph),
+// but only catches cycles.
 
 using ArchUnitNET.Domain;
 using ArchUnitNET.Fluent;
@@ -16,8 +16,8 @@ namespace Tests.Patterns;
 
 public class ArchUnitNetSliceTests
 {
-    // TIP: загружай архитектуру один раз в static readonly для производительности.
-    // ArchUnitNET читает байткод через Mono.Cecil — это дороже, чем NetArchTest.
+    // TIP: load the architecture once into a static readonly for performance.
+    // ArchUnitNET reads bytecode via Mono.Cecil — this is more expensive than NetArchTest.
     private static readonly Architecture Architecture = new ArchLoader()
         .LoadAssemblies(typeof(ArchUnitNetSliceTests).Assembly)
         .Build();
@@ -25,9 +25,9 @@ public class ArchUnitNetSliceTests
     [Test]
     public async Task Modules_ShouldBeFreeOfCycles()
     {
-        // GUARDRAIL: Циклические зависимости между модулями/фичами.
-        // Разрешаем DAG: Orders -> Payments -> Shipping.
-        // Запрещаем цикл: Shipping -> Orders.
+        // GUARDRAIL: Circular dependencies between modules/features.
+        // DAG allowed: Orders -> Payments -> Shipping.
+        // Cycle forbidden: Shipping -> Orders.
         IArchRule rule = SliceRuleDefinition.Slices()
             .Matching("MyApp.Modules.(*)..")
             .Should()
@@ -39,10 +39,10 @@ public class ArchUnitNetSliceTests
     [Test]
     public async Task Modules_ShouldNotDependOnEachOther()
     {
-        // GUARDRAIL: Альтернатива NetArchTest.NotHaveDependenciesBetweenSlices.
-        // Zero-tolerance: любая зависимость между слайсами запрещена.
-        // Используй, когда модули должны быть полностью изолированы.
-        // NOTE: Это тот же guardrail, что и NetArchTest, но через ArchUnitNET API.
+        // GUARDRAIL: An alternative to NetArchTest.NotHaveDependenciesBetweenSlices.
+        // Zero-tolerance: any dependency between slices is forbidden.
+        // Use it when modules must be fully isolated.
+        // NOTE: This is the same guardrail as NetArchTest, but via the ArchUnitNET API.
         IArchRule rule = SliceRuleDefinition.Slices()
             .Matching("MyApp.Modules.(*)..")
             .Should()

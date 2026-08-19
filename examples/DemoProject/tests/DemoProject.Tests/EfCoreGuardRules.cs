@@ -1,7 +1,7 @@
-// TRAP: Агент использует EF Core антипаттерны, которые рефлексия не видит
-// или нарушает read/write path конвенции.
-// GUARDRAIL: Regex-сканирование исходников ловит нарушения EF-специфичных правил.
-// NOTE: Этот файл — только для проектов с EF Core. Для Dapper см. DapperGuardRules.cs.
+// TRAP: An agent uses EF Core antipatterns that reflection cannot see
+// or violates read/write path conventions.
+// GUARDRAIL: Regex source scanning catches violations of EF-specific rules.
+// NOTE: This file is for EF Core projects only. For Dapper see DapperGuardRules.cs.
 
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -15,8 +15,8 @@ public class EfCoreGuardRules
 {
     private static readonly Assembly ApplicationAssembly = typeof(Application.BookingService).Assembly;
 
-    // TRAP: Агент добавил DbContext в Application layer.
-    // GUARDRAIL: Application знает только про Ports (интерфейсы).
+    // TRAP: An agent added a DbContext to the Application layer.
+    // GUARDRAIL: Application knows only about Ports (interfaces).
     [Test]
     public async Task Application_ShouldNotReferenceEfCore()
     {
@@ -29,10 +29,10 @@ public class EfCoreGuardRules
             .Because(FormatFailingTypes(result));
     }
 
-    // TRAP: Агент использует FindAsync в read-path, нарушает слоистую архитектуру.
-    // GUARDRAIL: Regex-сканирование исходников ловит антипаттерны, которые рефлексия не видит.
-    // NOTE: Также ловится compile-time через BannedApiAnalyzers (RS0030) в BannedSymbols.txt.
-    //       Regex тут — fallback / double-check для случаев, когда analyzer не подхватился.
+    // TRAP: An agent uses FindAsync in a read path, violating layered architecture.
+    // GUARDRAIL: Regex source scanning catches antipatterns that reflection cannot see.
+    // NOTE: Also caught at compile time via BannedApiAnalyzers (RS0030) in BannedSymbols.txt.
+    //       The regex here is a fallback / double-check for cases where the analyzer did not load.
     [Test]
     public async Task SourceCode_ShouldNotUse_FindAsync_InQueryServices()
     {
@@ -45,8 +45,8 @@ public class EfCoreGuardRules
             .Because("FindAsync is only allowed in write-path / command handlers.");
     }
 
-    // TRAP: Агент использовал .Include() в QueryService — N+1 и лишние данные.
-    // GUARDRAIL: Regex-сканирование исходников ловит то, что рефлексия не видит.
+    // TRAP: An agent used .Include() in QueryService — N+1 and extra data.
+    // GUARDRAIL: Regex source scanning catches what reflection cannot see.
     [Test]
     public async Task SourceCode_ShouldNotUse_Include_InQueryServices()
     {

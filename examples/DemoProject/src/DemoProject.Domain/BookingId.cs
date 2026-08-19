@@ -2,9 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace DemoProject.Domain;
 
-// TRAP: Агент передаёт Guid клиента в метод, ожидающий Guid агента — компилятор молчит.
-// GUARDRAIL: BookingId — это не Guid. Метод GetByIdAsync(BookingId) не примет CustomerId.
-// Ошибка ловится за секунды при наборе кода, без запуска тестов.
+// TRAP: An agent passes a customer Guid to a method expecting a booking Guid — the compiler stays silent.
+// GUARDRAIL: BookingId is not a Guid. GetByIdAsync(BookingId) will not accept a CustomerId.
+// The error is caught within seconds of typing, without running tests.
 [JsonConverter(typeof(BookingIdJsonConverter))]
 public readonly record struct BookingId(Guid Value)
 {

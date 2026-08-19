@@ -1,5 +1,5 @@
-// GUARDRAIL: Кастомные Roslyn-анализаторы имеют positive/negative unit-тесты.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/AnalyzerTests.cs
+// GUARDRAIL: Custom Roslyn analyzers have positive/negative unit tests.
+// This file is a working adaptation of the template from tests/patterns/AnalyzerTests.cs
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;

@@ -4,7 +4,7 @@ namespace DemoProject.Application;
 
 public sealed class BookingService : IBookingService
 {
-    // TRAP: Агент может добавить using DemoProject.Infrastructure и сломать слои.
+    // TRAP: An agent might add using DemoProject.Infrastructure and break the layers.
     // GUARDRAIL: ArchitectureRules.Api_ShouldNotReferenceInfrastructureDirectly
 
     public Task<Booking?> GetByIdAsync(BookingId id, CancellationToken ct = default)
@@ -32,8 +32,8 @@ public sealed class BookingService : IBookingService
         return Task.CompletedTask;
     }
 
-    // TRAP: Агент добавляет new/async/boxing в метод, который вызывается часто.
-    // GUARDRAIL: [HotPath] + AllocationBudgetTests ловит регресс аллокаций.
+    // TRAP: An agent adds new/async/boxing to a method that is called frequently.
+    // GUARDRAIL: [HotPath] + AllocationBudgetTests catch allocation regressions.
     [HotPath]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3400:Methods should not return constants",
         Justification = "Demo hot-path method for allocation budget testing.")]

@@ -1,7 +1,7 @@
-// TRAP: Агент возвращает Domain Entity из Application-сервиса вместо DTO.
-// GUARDRAIL: NetArchTest custom rule (Mono.Cecil) ловит Entity leak в сигнатурах методов.
-// NOTE: Entity leak — скрытый цикл: Application тянет ORM-логику, lazy loading,
-//       навигационные свойства, и тестировать слой изолированно невозможно.
+// TRAP: The agent returns a Domain Entity from an Application service instead of a DTO.
+// GUARDRAIL: A NetArchTest custom rule (Mono.Cecil) catches Entity leaks in method signatures.
+// NOTE: An Entity leak is a hidden cycle: Application drags in ORM logic, lazy loading,
+//       navigation properties, and the layer becomes impossible to test in isolation.
 
 using Mono.Cecil;
 using NetArchTest.Rules;
@@ -11,12 +11,12 @@ namespace Tests.Patterns;
 
 public class EntityLeakTest
 {
-    // TRAP: Агент написал Task<Booking> вместо Task<BookingDto>.
-    // GUARDRAIL: Application-интерфейсы не возвращают Domain Entity.
+    // TRAP: The agent wrote Task<Booking> instead of Task<BookingDto>.
+    // GUARDRAIL: Application interfaces must not return Domain Entities.
     [Test]
     public void ApplicationInterfaces_ShouldNotReturnDomainEntities()
     {
-        // Адаптация: замените на свои assembly и convention для Entity.
+        // Adaptation: replace with your assemblies and Entity naming convention.
         // var appAssembly = typeof(YourApplicationService).Assembly;
         // var entityRule = new EntityLeakRule(entityNamespace: "YourProject.Domain", excludedSuffixes: new[] { "Dto", "ViewModel" });
         //
@@ -32,17 +32,17 @@ public class EntityLeakTest
             .Because("Template: adapt this test to your assembly and entity naming convention. See commented code.");
     }
 
-    // TRAP: Агент добавил Entity leak, но тест проходит потому что baseline не обновлён.
-    // GUARDRAIL: Ratchet — считаем текущее количество нарушений и проверяем, что оно не растёт.
+    // TRAP: The agent added an Entity leak, but the test passes because the baseline was not updated.
+    // GUARDRAIL: Ratchet — count the current number of violations and verify it does not grow.
     [Test]
     public void ApplicationInterfaces_EntityLeakCount_ShouldNotGrow()
     {
-        // Адаптация:
+        // Adaptation:
         // var appAssembly = typeof(YourApplicationService).Assembly;
         // var entityRule = new EntityLeakRule(...);
         // var violations = CountViolations(appAssembly, entityRule);
         //
-        // const int baseline = 0; // Зафиксируй текущее значение
+        // const int baseline = 0; // Pin the current value
         // Assert.That(violations).IsLessThanOrEqualTo(baseline)
         //     .Because($"Entity leaks must not grow. Current: {violations}, baseline: {baseline}");
 

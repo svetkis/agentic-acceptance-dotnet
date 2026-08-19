@@ -1,5 +1,5 @@
-// GUARDRAIL: Regex-сканирование исходников ловит дублирование критичных бизнес-фрагментов.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/DuplicationGuardTest.cs
+// GUARDRAIL: Regex source scanning catches duplication of critical business fragments.
+// This file is a working adaptation of the template from tests/patterns/DuplicationGuardTest.cs
 
 using System.Text.RegularExpressions;
 using TUnit;
@@ -8,8 +8,8 @@ namespace DemoProject.Tests;
 
 public class DuplicationGuardTest
 {
-    // TRAP: Агент добавил проверку статуса бронирования в новый сервис вместо реюса.
-    // GUARDRAIL: Паттерн бизнес-правила встречается только в одном production-файле.
+    // TRAP: An agent added booking status validation to a new service instead of reusing the existing one.
+    // GUARDRAIL: The business rule pattern appears in only one production file.
     [Test]
     public async Task BusinessRule_ShouldNotBeDuplicatedAcrossServices()
     {

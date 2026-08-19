@@ -1,15 +1,15 @@
-// TRAP: Опечатка в имени public property/DTO/endpoint утекает в API-контракт и становится обратно несовместимой.
-// GUARDRAIL: CSpell проверяет markdown, комментарии и публичные символы; новых опечаток быть не должно.
+// TRAP: A typo in a public property/DTO/endpoint name leaks into the API contract and becomes backward-incompatible.
+// GUARDRAIL: CSpell checks markdown, comments, and public symbols; there must be no new misspellings.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
 //
-// NOTE: Требуется установленный глобально или локально `cspell`:
+// NOTE: Requires `cspell` installed globally or locally:
 //       npm install -g cspell
-//       или dotnet tool install --global cspell
+//       or dotnet tool install --global cspell
 
 using System.Diagnostics;
 using TUnit;
@@ -20,8 +20,8 @@ public class SpellcheckGuardTests
 {
     private static readonly string RepoRoot = FindRepoRoot();
 
-    // TRAP: Агент добавил опечатку в публичное API-имя.
-    // GUARDRAIL: CSpell не находит новых ошибок в проверяемых файлах.
+    // TRAP: The agent added a typo to a public API name.
+    // GUARDRAIL: CSpell finds no new errors in the checked files.
     [Test]
     public void CSpell_ShouldNotFindNewMisspellings()
     {

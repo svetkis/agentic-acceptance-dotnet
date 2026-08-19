@@ -2,8 +2,8 @@ using DemoProject.MinimalApi.Domain;
 
 namespace DemoProject.MinimalApi.Features.Orders;
 
-// TRAP: Агент может использовать DateTime.Now вместо UtcNow.
-// GUARDRAIL: Архитектурный тест ловит DateTime.Now через regex.
+// TRAP: An agent might use DateTime.Now instead of UtcNow.
+// GUARDRAIL: An architecture test catches DateTime.Now via regex.
 public class OrderService
 {
     private static readonly List<Order> _orders = new();

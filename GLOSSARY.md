@@ -1,96 +1,95 @@
-# Глоссарий
+# Glossary
 
-> Ключевые термины репозитория. Если вы встретили незнакомое слово в `AGENTS.md` или `PYRAMID.md` — скорее всего, оно здесь.
+> Key terms of the repository. If you encounter an unfamiliar word in `AGENTS.md` or `PYRAMID.md` — it is most likely here.
 >
-> [🇬🇧 English version](GLOSSARY.en.md)
 
 ---
 
-## Нормативная терминология
+## Normative Terminology
 
-> Происхождение термина: `industry-standard` (общепринятый), `borrowed`
-> (заимствован из другой области, используется по аналогии), `SAE-specific`
-> (введён методологией), `informal` (разговорный, не для нормативных документов).
+> Term origin: `industry-standard` (widely accepted), `borrowed` (taken from another
+> domain, used by analogy), `SAE-specific` (introduced by this methodology),
+> `informal` (colloquial, not for normative documents).
 
-| Термин | Происхождение | Определение |
-|--------|---------------|-------------|
-| **check** | industry-standard | Автоматическая детерминированная проверка: одинаковый вход → одинаковый результат, без инженерного суждения. |
-| **test** | industry-standard | Check, проверяющий поведение кода через исполнение (unit, integration, E2E). |
-| **Self-Checking Test** | industry-standard | Тест, который сам определяет pass/fail без ручной интерпретации результата (xUnit Test Patterns, Meszaros). Базовое свойство; не гарантирует обнаружение дефекта. |
-| **Assertion Reachability** | SAE-specific | Свойство теста: ни один успешный путь исполнения не обходит assertions. Нарушение — assertion внутри `if`, который может не выполниться. |
-| **Fault Sensitivity** | borrowed | Свойство теста/набора: падает при наличии релевантного дефекта (мутация или исходный баг). Из mutation testing; проверяется fault injection или mutation score. |
-| **gate** | industry-standard | Обязательная точка прохождения: изменение не идёт дальше, пока gate не пройден (`commit gate`, `PR gate`, `release gate`). |
-| **audit** | industry-standard | Исследовательская проверка узкой области, требующая evidence и инженерного суждения. Результат — findings, а не pass/fail. |
-| **assurance** | industry-standard | Совокупность мер, дающих обоснованную уверенность, что система соответствует требованиям. |
-| **validation** | industry-standard | Подтверждение, что система решает нужную задачу («built the right thing»); не путать с verification («built it right»). |
-| **governance** | industry-standard | Принятие решений о рисках: residual risk acceptance, release decision, приоритеты. |
-| **maintenance** | industry-standard | Поддержание артефактов контроля в актуальном состоянии (см. Control Maintenance). |
-| **ratchet** | borrowed | Check на монотонность метрики: значение не должно ухудшаться (количество публичных типов, тестов, complexity). От механического «храповика». |
-| **baseline** | industry-standard | Зафиксированное текущее состояние метрики, от которого ratchet запрещает деградацию. |
-| **guardrail** | SAE-specific | Любой артефакт контроля (check, gate, audit, инструкция), ограничивающий пространство действий агента или разработчика. |
-| **Decision Guard** | SAE-specific | См. раздел «Паттерны кода». |
-| **Zero Trust (аналогия)** | borrowed | Security-модель «never trust, always verify»; в SAE — аналогия: ни один артефакт агента не считается корректным без проверки. Не утверждение о реализации Zero Trust Architecture. |
-| **skill** | SAE-specific | Инструкция + чеклист для роли агента (аудит, ревью, онбординг). |
-| **persona** | informal | Именованная роль агента внутри skill («DBA Auditor»). Не нормативный термин. |
+| Term | Origin | Definition |
+|------|--------|------------|
+| **check** | industry-standard | Automated deterministic check: same input → same result, no engineering judgment. |
+| **test** | industry-standard | A check that verifies code behavior through execution (unit, integration, E2E). |
+| **Self-Checking Test** | industry-standard | A test that determines pass/fail automatically, without manual interpretation of results (xUnit Test Patterns, Meszaros). Baseline property; does not guarantee defect detection. |
+| **Assertion Reachability** | SAE-specific | Test property: no successful execution path bypasses the assertions. Violation — an assert inside an `if` that may not execute. |
+| **Fault Sensitivity** | borrowed | Test/suite property: fails when a relevant defect is present (a mutation or the original bug). From mutation testing; verified by fault injection or mutation score. |
+| **gate** | industry-standard | Mandatory passage point: a change does not proceed until the gate passes (`commit gate`, `PR gate`, `release gate`). |
+| **audit** | industry-standard | Investigative review of a narrow area, requiring evidence and engineering judgment. Output is findings, not pass/fail. |
+| **assurance** | industry-standard | The body of measures giving justified confidence that the system meets its requirements. |
+| **validation** | industry-standard | Confirmation that the system solves the right problem ("built the right thing"); not to be confused with verification ("built it right"). |
+| **governance** | industry-standard | Risk decision-making: residual risk acceptance, release decision, priorities. |
+| **maintenance** | industry-standard | Keeping control artifacts up to date (see Control Maintenance). |
+| **ratchet** | borrowed | A check on metric monotonicity: the value must not degrade (public type count, test count, complexity). From the mechanical ratchet. |
+| **baseline** | industry-standard | The recorded current value of a metric from which a ratchet forbids degradation. |
+| **guardrail** | SAE-specific | Any control artifact (check, gate, audit, instruction) that constrains the action space of an agent or developer. |
+| **Decision Guard** | SAE-specific | See "Code Patterns". |
+| **Zero Trust (analogy)** | borrowed | The "never trust, always verify" security model; in SAE — an analogy: no agent artifact is considered correct without a check. Not a claim of implementing Zero Trust Architecture. |
+| **skill** | SAE-specific | Instruction + checklist for an agent role (audit, review, onboarding). |
+| **persona** | informal | A named agent role inside a skill ("DBA Auditor"). Not a normative term. |
 
-## Engineering Assurance Levels (модель контроля)
+## Engineering Assurance Levels (control model)
 
-| Термин | Определение | Где используется |
-|--------|-------------|------------------|
-| **Control Foundation** | Основание контроля: `AGENTS.md`, архитектурные границы, Decision Guards, policies. Действует до изменения кода. | [README.md](README.md#как-это-работает), [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
-| **1. Change Checks** | Проверки изменения: компилятор, nullable, analyzers, formatting, banned APIs, dependency checks, pre-commit review. IDE, build, pre-commit. | [README.md](README.md#как-это-работает) |
-| **2. Behavior Checks** | Проверки поведения: unit, regression, contract, characterization, architecture tests, ratchets. Локальный или CI test run. | [README.md](README.md#как-это-работает), [tests/patterns/](tests/patterns/) |
-| **3. System Checks** | Проверки системы целиком: integration, E2E, smoke, Testcontainers, load, deployment verification. PR, CI, release pipeline. | [README.md](README.md#как-это-работает) |
-| **4. Periodic Assurance** | Исследовательские аудиты по расписанию или risk-trigger: security, database, performance, UX, API, i18n, tech-debt. | `templates/skills/*-audit/` |
-| **Engineering Governance** | Процесс (не уровень): принятие остаточного риска, release decision, бизнес- и продуктовые решения. | [docs/solutions/human-audit-bridge.md](docs/solutions/human-audit-bridge.md) |
-| **Control Maintenance** | Процесс (не уровень): актуализация инструкций, agent memory, backlog, baselines, suppressions, guardrails. | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
-| **AGENTS.md** | Файл с правилами для AI-агентов. Читается агентом перед каждой задачей. Может быть иерархическим (корневой + по модулям). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
-| **Слои 0–2 / Inner-Outer loop** | *Legacy:* имена из визуальной метафоры доклада (PYRAMID.md). Маппинг на уровни — в начале [PYRAMID.md](PYRAMID.md). | [PYRAMID.md](PYRAMID.md) |
+| Term | Definition | Used in |
+|------|------------|---------|
+| **Control Foundation** | The control base: `AGENTS.md`, architecture boundaries, Decision Guards, policies. Applies before code changes. | [README.md](README.md#how-it-works), [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
+| **1. Change Checks** | Change-level checks: compiler, nullable, analyzers, formatting, banned APIs, dependency checks, pre-commit review. IDE, build, pre-commit. | [README.md](README.md#how-it-works) |
+| **2. Behavior Checks** | Behavior checks: unit, regression, contract, characterization, architecture tests, ratchets. Local or CI test run. | [README.md](README.md#how-it-works), [tests/patterns/](tests/patterns/) |
+| **3. System Checks** | Whole-system checks: integration, E2E, smoke, Testcontainers, load, deployment verification. PR, CI, release pipeline. | [README.md](README.md#how-it-works) |
+| **4. Periodic Assurance** | Investigative audits on schedule or risk-trigger: security, database, performance, UX, API, i18n, tech-debt. | `templates/skills/*-audit/` |
+| **Engineering Governance** | Process (not a level): residual risk acceptance, release decision, business and product decisions. | [docs/solutions/human-audit-bridge.md](docs/solutions/human-audit-bridge.md) |
+| **Control Maintenance** | Process (not a level): keeping instructions, agent memory, backlog, baselines, suppressions, and guardrails up to date. | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
+| **AGENTS.md** | File with rules for AI agents. Read by the agent before every task. Can be hierarchical (root + per-module). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
+| **Layers 0–2 / Inner-Outer loop** | *Legacy:* names from the talk's visual metaphor (PYRAMID.md). Mapping to levels — at the top of [PYRAMID.md](PYRAMID.md). | [PYRAMID.md](PYRAMID.md) |
 
-## Тестовые паттерны
+## Test Patterns
 
-| Термин | Определение | Пример |
-|--------|-------------|--------|
-| **Ratchet** | Инвентаризация тестами: метрика (например, количество публичных типов или тестов) должна **не уменьшаться**. Если агент удаляет типы или тесты — тест падает. | [tests/patterns/RatchetTest.cs](tests/patterns/RatchetTest.cs) |
-| **BUG###** | Соглашение об именовании regression-тестов: один баг = один файл `BUG###_DescriptiveName.cs`. Покрывает все пути, по которым баг мог проявиться. | [tests/conventions/BUG_TEMPLATE.cs](tests/conventions/BUG_TEMPLATE.cs) |
-| **Snapshot test** | Тест, который захватывает и сравнивает вывод (JSON, OpenAPI) с эталонным файлом. Если DTO меняется — snapshot ломается. | [tests/patterns/SnapshotTest.cs](tests/patterns/SnapshotTest.cs) |
-| **Characterization test** | Тест, который фиксирует текущее поведение системы без оценки корректности. Нужен, чтобы рефакторинг не менял поведение. | [PYRAMID.md §Слой 1.3](PYRAMID.md#layer-1-tests) |
-| **«0 tests ran»** | Проблема, когда раннер не нашёл тестов, но exit code = 0. CI выглядит зелёным, хотя ничего не проверено. | [PYRAMID.md §Слой 1.3](PYRAMID.md#layer-1-tests) |
+| Term | Definition | Example |
+|------|------------|---------|
+| **Ratchet** | Test inventory: a metric (e.g., number of public types or tests) must **not decrease**. If an agent deletes types or tests — the test fails. | [tests/patterns/RatchetTest.cs](tests/patterns/RatchetTest.cs) |
+| **BUG###** | Regression test naming convention: one bug = one file `BUG###_DescriptiveName.cs`. Covers all code paths where the bug could manifest. | [tests/conventions/BUG_TEMPLATE.cs](tests/conventions/BUG_TEMPLATE.cs) |
+| **Snapshot test** | A test that captures and compares output (JSON, OpenAPI) with a reference file. If the DTO changes — the snapshot breaks. | [tests/patterns/SnapshotTest.cs](tests/patterns/SnapshotTest.cs) |
+| **Characterization test** | A test that captures current system behavior without judging correctness. Needed so refactoring does not change behavior. | [PYRAMID.md §Layer 1.3](PYRAMID.md#layer-1-tests) |
+| **"0 tests ran"** | Problem when the test runner found no tests, but exit code = 0. CI looks green though nothing was checked. | [PYRAMID.md §Layer 1.3](PYRAMID.md#layer-1-tests) |
 
-## Паттерны кода
+## Code Patterns
 
-| Термин | Определение | Где используется |
-|--------|-------------|------------------|
-| **Read-path** | Путь чтения данных: read-only запросы. `.Select()` + `.AsNoTracking()` **обязательны**. `.Include()`, `.FindAsync()` запрещены. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
-| **Write-path** | Путь записи данных: команды, изменяющие состояние. Change tracking обязателен, `.AsNoTracking()` запрещён. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
-| **Decision Guard** | SAE-specific: осознанное отклонение от стандарта, зафиксированное ID в комментарии (`PERF-###`, `DB-###`, `AUD-###`) и короткой записью в реестре. **Не синоним ADR** — это лёгкая ссылка на решение; при наличии полноценных ADR запись ссылается на них. Проверяется архитектурным тестом на уникальность. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md), [templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md](templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) |
-| **Semantic Anchors** | Устоявшиеся термины вместо описаний. Каждый термин активирует конкретную методологию (например, "read-path" = `.Select()` + `.AsNoTracking()`). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
+| Term | Definition | Used in |
+|------|------------|---------|
+| **Read-path** | Data read path: read-only queries. `.Select()` + `.AsNoTracking()` are **mandatory**. `.Include()`, `.FindAsync()` are forbidden. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
+| **Write-path** | Data write path: commands that change state. Change tracking is required, `.AsNoTracking()` is forbidden. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
+| **Decision Guard** | SAE-specific: intentional deviation from standard, documented by an ID in a comment (`PERF-###`, `DB-###`, `AUD-###`) plus a short registry entry. **Not a synonym for ADR** — a lightweight reference to a decision; when full ADRs exist, the entry links to them. Checked by an architecture test for uniqueness. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md), [templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md](templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) |
+| **Semantic Anchors** | Established terms instead of descriptions. Each term activates a specific methodology (e.g., "read-path" = `.Select()` + `.AsNoTracking()`). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
 
-## Агенты и инструменты
+## Agents and Tools
 
-| Термин | Определение | Где используется |
-|--------|-------------|------------------|
-| **MCP (Model Context Protocol)** | Протокол подключения внешних инструментов к AI-агенту. Позволяет агенту "протыкивать" Telegram, браузер, API. | [PYRAMID.md §Слой 2.1](PYRAMID.md#layer-2-e2e) |
-| **Code Review Agent** | Отдельный инстанс AI-агента, который ревьюит diff **до** коммита. Не тот, кто писал код. | [templates/skills/code-review/SKILL.md](templates/skills/code-review/SKILL.md) |
-| **Skill** | Роль агента: инструкция + чеклист для конкретной задачи (аудит, ревью, онбординг). Устанавливается в `.kimi/skills/` или аналог. | `templates/skills/` |
-| **Context Marker** | Emoji-маркер в начале ответа агента, показывающий активный контекст: 🍀 (базовые правила), 🔍 (ревью), ✅ (коммит). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
-| **Focused Agent** | Принцип: один агент — одна задача. Агент-ревьюер не пишет код; агент-кодер не ревьюит. | [templates/skills/code-review/SKILL.md](templates/skills/code-review/SKILL.md) |
+| Term | Definition | Used in |
+|------|------------|---------|
+| **MCP (Model Context Protocol)** | Protocol for connecting external tools to an AI agent. Allows the agent to "touch" Telegram, browser, API. | [PYRAMID.md §Layer 2.1](PYRAMID.md#layer-2-e2e) |
+| **Code Review Agent** | A separate AI agent instance that reviews the diff **before** commit. Not the one that wrote the code. | [templates/skills/code-review/SKILL.md](templates/skills/code-review/SKILL.md) |
+| **Skill** | Agent role: instruction + checklist for a specific task (audit, review, onboarding). Installed in `.kimi/skills/` or equivalent. | `templates/skills/` |
+| **Context Marker** | Emoji marker at the beginning of an agent's reply showing active context: 🍀 (ground rules), 🔍 (review), ✅ (commit). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
+| **Focused Agent** | Principle: one agent — one task. A review agent does not write code; a code agent does not review. | [templates/skills/code-review/SKILL.md](templates/skills/code-review/SKILL.md) |
 
-## Процессы и метрики
+## Processes and Metrics
 
-| Термин | Определение | Где используется |
-|--------|-------------|------------------|
-| **Audit** | Глубокая проверка одной узкой области (security, perf, DB). Запускается раз в спринт или по триггеру, не на каждый PR. | `templates/skills/` |
-| **Cross-pollination** | Обмен находками между аудитами. Например, security-аудит находит утечку в логах, а UX-аудит обнаруживает тот же endpoint как тупиковый. | [PYRAMID.md §Внешний цикл](PYRAMID.md#outer-loop) |
-| **P50 / P95 / Max** | Персентили latency: медиана, 95-й перцентиль, максимум. Агенты часто оптимизируют P50, забывая про tail latency (Max). | [docs/traps/p50-vs-max.md](docs/traps/p50-vs-max.md) |
-| **Scope creep** | Расширение задачи: агент добавляет в PR изменения, выходящие за рамки исходного запроса. | [templates/skills/task-compliance/SKILL.md](templates/skills/task-compliance/SKILL.md) |
-| **Silent misalignment** | Безмолвная ошибка: агент не задаёт уточняющих вопросов, хотя инструкции неясны или противоречивы. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
+| Term | Definition | Used in |
+|------|------------|---------|
+| **Audit** | Deep check of one narrow area (security, perf, DB). Runs once per sprint or on trigger, not on every PR. | `templates/skills/` |
+| **Cross-pollination** | Exchange of findings between audits. For example, a security audit finds a log leak, while a UX audit finds the same endpoint as a dead-end. | [PYRAMID.md §Outer loop](PYRAMID.md#outer-loop) |
+| **P50 / P95 / Max** | Latency percentiles: median, 95th percentile, maximum. Agents often optimize P50 while forgetting tail latency (Max). | [docs/traps/p50-vs-max.md](docs/traps/p50-vs-max.md) |
+| **Scope creep** | Task expansion: an agent adds changes to a PR that go beyond the original request. | [templates/skills/task-compliance/SKILL.md](templates/skills/task-compliance/SKILL.md) |
+| **Silent misalignment** | Silent error: the agent did not ask clarifying questions even though instructions were unclear or contradictory. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
 
-## Технологии
+## Technologies
 
-| Термин | Определение | Ссылка |
-|--------|-------------|--------|
-| **TUnit** | Современный тестовый фреймворк для .NET. Используется в этом репозитории вместо xUnit/NUnit. Запуск через `dotnet run --project`. | [tests/conventions/TUnit_Guide.md](tests/conventions/TUnit_Guide.md) |
-| **NetArchTest** | Библиотека для архитектурных тестов на основе рефлексии. Проверяет зависимости между слоями, именование, интерфейсы. | [tests/patterns/ArchitectureRules.cs](tests/patterns/ArchitectureRules.cs) |
-| **NBomber** | Фреймворк нагрузочного тестирования. Ловит silent breakdown и слабые места под смешанной нагрузкой read+write, а не просто "деградацию под высокой нагрузкой". | [tests/patterns/LoadTest.cs](tests/patterns/LoadTest.cs) |
-| **Testcontainers** | Инфраструктура для запуска реальных БД (PostgreSQL, Redis) в Docker-контейнерах во время тестов. Альтернатива EF Core InMemory-провайдеру. | [docs/traps/silent-breakdown.md](docs/traps/silent-breakdown.md) |
+| Term | Definition | Link |
+|------|------------|------|
+| **TUnit** | Modern test framework for .NET. Used in this repository instead of xUnit/NUnit. Run via `dotnet run --project`. | [tests/conventions/TUnit_Guide.md](tests/conventions/TUnit_Guide.md) |
+| **NetArchTest** | Library for architecture tests based on reflection. Checks dependencies between layers, naming, interfaces. | [tests/patterns/ArchitectureRules.cs](tests/patterns/ArchitectureRules.cs) |
+| **NBomber** | Load testing framework. Catches silent breakdown and weak points under mixed read+write load, not just "degradation at high load". | [tests/patterns/LoadTest.cs](tests/patterns/LoadTest.cs) |
+| **Testcontainers** | Infrastructure for running real databases (PostgreSQL, Redis) in Docker containers during tests. Alternative to EF Core InMemory provider. | [docs/traps/silent-breakdown.md](docs/traps/silent-breakdown.md) |

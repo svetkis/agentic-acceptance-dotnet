@@ -1,7 +1,7 @@
-// TRAP: Агент добавил +1 using или ProjectReference — диф выглядит безобидно,
-// но породил циклическую зависимость между слоями или проектами.
-// GUARDRAIL: NetArchTest + парсинг .csproj ловят нарушения графа.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/DependencyDriftTest.cs
+// TRAP: An agent added +1 using or ProjectReference — the diff looks harmless,
+// but introduced a circular dependency between layers or projects.
+// GUARDRAIL: NetArchTest + .csproj parsing catch graph violations.
+// This file is a working adaptation of the template from tests/patterns/DependencyDriftTest.cs
 
 using System.Reflection;
 using System.Xml.Linq;
@@ -15,9 +15,9 @@ public class DependencyDriftTest
     private static readonly Assembly DomainAssembly = typeof(Domain.Booking).Assembly;
     private static readonly Assembly InfrastructureAssembly = typeof(Infrastructure.InfrastructureBookingService).Assembly;
 
-    // TRAP: Агент добавил ссылку на проект "ради одного extension-метода".
-    // GUARDRAIL: Граф ProjectReference (через .csproj) не содержит циклов.
-    // NOTE: Альтернатива — рефлексия Assembly.GetReferencedAssemblies() для runtime-графа.
+    // TRAP: An agent added a project reference "for the sake of one extension method".
+    // GUARDRAIL: The ProjectReference graph (via .csproj) contains no cycles.
+    // NOTE: An alternative is reflection over Assembly.GetReferencedAssemblies() for the runtime graph.
     [Test]
     public async Task ProjectReferences_ShouldNotHaveCycles()
     {
@@ -33,10 +33,10 @@ public class DependencyDriftTest
             .Because($"Circular project references detected: {string.Join(" | ", cycles)}");
     }
 
-    // TRAP: Агент внёс межслоевой using в "косметическом" рефакторинге.
-    // GUARDRAIL: NetArchTest ловит реальные IL-зависимости типов, а не строки в файлах.
-    // NOTE: Это дублирует ArchitectureRules.Domain_ShouldNotDependOn_Infrastructure
-    //       как специфичный guard для дрейфа графа. Оба теста могут сосуществовать.
+    // TRAP: An agent introduced a cross-layer using in a "cosmetic" refactoring.
+    // GUARDRAIL: NetArchTest catches real IL type dependencies, not lines in files.
+    // NOTE: This duplicates ArchitectureRules.Domain_ShouldNotDependOn_Infrastructure
+    //       as a dedicated guard for graph drift. Both tests can coexist.
     [Test]
     public async Task Domain_ShouldNotDependOn_Infrastructure()
     {
@@ -61,9 +61,9 @@ public class DependencyDriftTest
         return "Domain layer must not depend on Infrastructure layer. Failing types:\n" + string.Join("\n", lines);
     }
 
-    // TRAP: Агент добавил using Infrastructure в Domain — regex дал false negative/positive.
-    // GUARDRAIL: Рефлексия сборок подтверждает отсутствие runtime-ссылок.
-    // NOTE: Assembly reference graph — runtime view, в отличие от .csproj (build intent).
+    // TRAP: An agent added using Infrastructure in Domain — regex gave a false negative/positive.
+    // GUARDRAIL: Assembly reflection confirms the absence of runtime references.
+    // NOTE: The assembly reference graph is a runtime view, unlike .csproj (build intent).
     [Test]
     public async Task DomainAssembly_ShouldNotReference_InfrastructureRuntime()
     {

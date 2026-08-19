@@ -4,12 +4,12 @@ using DemoProject.MinimalApi.Features.Payments;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-// TRAP: Агент мог забыть маппинг endpoint'ов при рефакторинге.
-// GUARDRAIL: Integration-тесты проверяют, что endpoint отвечает.
+// TRAP: An agent might have dropped endpoint mapping during refactoring.
+// GUARDRAIL: Integration tests verify that the endpoint responds.
 app.MapOrderEndpoints();
 app.MapPaymentEndpoints();
 
 app.Run();
 
-// Для интеграционных тестов
+// For integration tests
 public partial class Program { }

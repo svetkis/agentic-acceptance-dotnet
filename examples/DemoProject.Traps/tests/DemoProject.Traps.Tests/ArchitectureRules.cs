@@ -1,6 +1,6 @@
-// GUARDRAIL: NetArchTest.eNhancedEdition ловит архитектурные ловушки AI-агента.
-// Этот проект — failing demo: каждый тест здесь ДОЛЖЕН падать,
-// потому что в src/DemoProject.Traps специально созданы нарушения.
+// GUARDRAIL: NetArchTest.eNhancedEdition catches architecture traps set by AI agents.
+// This project is a failing demo: every test here MUST fail,
+// because violations were intentionally created in src/DemoProject.Traps.
 
 using System.Reflection;
 using NetArchTest.Rules;
@@ -12,10 +12,10 @@ public class ArchitectureRules
 {
     private static readonly Assembly TrapsAssembly = typeof(Domain.MutableState).Assembly;
 
-    // TRAP: Агент добавил mutable state в Domain через public field.
-    // GUARDRAIL: BeImmutableExternally ловит public fields / mutable surface.
-    // NOTE: NetArchTest может не заполнять Explanation для этого правила.
-    //       Поэтому добавляем human-readable message в Because.
+    // TRAP: An agent added mutable state to Domain via a public field.
+    // GUARDRAIL: BeImmutableExternally catches public fields / a mutable surface.
+    // NOTE: NetArchTest may not populate Explanation for this rule.
+    //       So we add a human-readable message in Because.
     [Test]
     public async Task DomainTypes_ShouldBeImmutableExternally()
     {
@@ -34,8 +34,8 @@ public class ArchitectureRules
                   "Failing types: " + string.Join(", ", result.FailingTypes.Select(t => t.FullName)));
     }
 
-    // TRAP: Агент добавил using System.Net.Http в Domain для "одного вызова".
-    // GUARDRAIL: HaveDependencyOnAny ловит IL-зависимость от запрещённого namespace.
+    // TRAP: An agent added using System.Net.Http in Domain for "a single call".
+    // GUARDRAIL: HaveDependencyOnAny catches an IL dependency on a forbidden namespace.
     [Test]
     public async Task Domain_ShouldNotDependOn_SystemNetHttp()
     {
@@ -49,9 +49,9 @@ public class ArchitectureRules
             .Because(FormatFailingTypes(result));
     }
 
-    // TRAP: Агент добавил using из соседней фичи "ради одного DTO".
-    // GUARDRAIL: Slice().NotHaveDependenciesBetweenSlices() ловит межмодульную зависимость.
-    // NOTE: NetArchTest может не заполнять Explanation для slice-правил.
+    // TRAP: An agent added a using from a neighboring feature "for the sake of one DTO".
+    // GUARDRAIL: Slice().NotHaveDependenciesBetweenSlices() catches a cross-module dependency.
+    // NOTE: NetArchTest may not populate Explanation for slice rules.
     [Test]
     public async Task Features_ShouldNotDependOn_EachOther()
     {
@@ -70,8 +70,8 @@ public class ArchitectureRules
                   "Failing types: " + string.Join(", ", result.FailingTypes.Select(t => t.FullName)));
     }
 
-    // TRAP: Агент использовал Guid вместо strongly typed ID.
-    // GUARDRAIL: Regex + архитектурные тесты ловят сырые Guid в именах свойств.
+    // TRAP: An agent used Guid instead of a strongly typed ID.
+    // GUARDRAIL: Regex + architecture tests catch raw Guids in property names.
     [Test]
     public async Task Entities_ShouldNotUseRawGuidForIds()
     {

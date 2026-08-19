@@ -1,5 +1,5 @@
-// GUARDRAIL: Рефлексией считаем публичные типы и тесты. Если count уменьшился — агент что-то сломал.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/RatchetTest.cs
+// GUARDRAIL: Count public types and tests via reflection. If the count decreased, an agent broke something.
+// This file is a working adaptation of the template from tests/patterns/RatchetTest.cs
 
 using System.Reflection;
 using TUnit;

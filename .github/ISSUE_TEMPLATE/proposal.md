@@ -1,16 +1,16 @@
 ---
-name: Proposal / Предложение по методологии
+name: Proposal
 about: Suggest a change to the SAE methodology, pyramid, or conventions
 labels: proposal
 ---
 
-## Summary / Кратко
+## Summary
 
-## Motivation / Зачем
+## Motivation
 
-## Detailed Design / Подробно
+## Detailed Design
 
-## Impact on Existing Artifacts / Влияние
+## Impact on Existing Artifacts
 <!-- Which files/skills need updates? -->
 
-## Risks / Риски
+## Risks

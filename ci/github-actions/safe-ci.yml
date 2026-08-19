@@ -26,7 +26,7 @@ jobs:
         # dotnet restore MyProject.sln
         run: dotnet restore
 
-      # GUARDRAIL: Сборка должна проходить без warning'ов
+      # GUARDRAIL: The build must pass with no warnings
       - name: Build
         # ADAPT: pass your solution or project path, for example:
         # dotnet build MyProject.sln --no-restore --configuration Release /p:TreatWarningsAsErrors=true
@@ -43,15 +43,15 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # GUARDRAIL: dotnet test опасен — используем dotnet run --project
-      # Скрипт автоматически находит тестовые проекты в tests/ и src/.
-      # Адаптируй TEST_DIRS в ci/scripts/run-tests.sh под структуру своего проекта.
+      # GUARDRAIL: dotnet test is dangerous — we use dotnet run --project
+      # The script automatically discovers test projects in tests/ and src/.
+      # Adapt TEST_DIRS in ci/scripts/run-tests.sh to your project structure.
       - name: Run Tests
         run: |
           chmod +x ci/scripts/run-tests.sh
           ci/scripts/run-tests.sh
 
-      # GUARDRAIL: Проверяем, что тесты реально запустились (не 0 ran)
+      # GUARDRAIL: Verify that the tests actually ran (not 0 ran)
       - name: Verify Tests Ran
         run: |
           chmod +x ci/scripts/verify-tests.sh
@@ -69,7 +69,7 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # GUARDRAIL: NBomber на PR — проверяем, что нет деградации
+      # GUARDRAIL: NBomber on PRs — verify there is no degradation
       # ADAPT REQUIRED: replace tests/LoadTests/LoadTests.csproj with your load-test project.
       # Or remove this job if the target project has no load tests yet.
       - name: Run Load Tests
@@ -86,7 +86,7 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # GUARDRAIL: OpenAPI snapshot не должен расходиться
+      # GUARDRAIL: The OpenAPI snapshot must not drift
       # ADAPT REQUIRED: replace the project path, filter and snapshots directory.
       # Or remove this job if the target project has no OpenAPI snapshot yet.
       - name: Verify OpenAPI Snapshot

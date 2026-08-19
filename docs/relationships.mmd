@@ -161,25 +161,25 @@ graph LR
 
 | Relation | Meaning | Example |
 |----------|---------|---------|
-| `-->|prevents|` | Guardrail не даёт ловушке случиться (превентивный) | `PiiGuardTest.cs` prevents `Log Leak` |
-| `-->|detects|` | Guardrail находит последствия ловушки (диагностический) | `Security Audit` detects `Log Leak` |
-| `-->|compensates|` | Guardrail компенсирует врождённое ограничение (компенсирующий) | `RatchetTest.cs` compensates `Context Rot` |
-| `-->|reveals|` | Guardrail показывает скрытую проблему (ревеляционный) | `LoadTest.cs` reveals `P50 vs Max` |
-| `-->|catches|` | Guardrail ловит ловушку на ревью (ревью-специфичный) | `Code Review Agent` catches `Vibe Refactoring` |
+| `-->|prevents|` | Guardrail prevents the trap from happening (preventive) | `PiiGuardTest.cs` prevents `Log Leak` |
+| `-->|detects|` | Guardrail detects the trap's consequences (diagnostic) | `Security Audit` detects `Log Leak` |
+| `-->|compensates|` | Guardrail compensates an inherent limitation (compensating) | `RatchetTest.cs` compensates `Context Rot` |
+| `-->|reveals|` | Guardrail exposes a hidden problem (revealing) | `LoadTest.cs` reveals `P50 vs Max` |
+| `-->|catches|` | Guardrail catches the trap at review (review-specific) | `Code Review Agent` catches `Vibe Refactoring` |
 
 ### Obstacle → Trap Relationships
 
 | Relation | Meaning | Example |
 |----------|---------|---------|
-| `-->|causes|` | Obstacle создаёт условия для ловушки | `Context Rot` causes `Silent Breakdown` (agent forgets rules) |
+| `-->|causes|` | Obstacle creates conditions for the trap | `Context Rot` causes `Silent Breakdown` (agent forgets rules) |
 
 ### Cross-Guardrail Relationships
 
 | Relation | Meaning | Example |
 |----------|---------|---------|
-| `-->|enables|` | Guardrail даёт контекст другому guardrail | `Hierarchical AGENTS.md` enables `Code Review Agent` |
-| `-->|supports|` | Guardrail усиливает другой guardrail | `Decision Guards` supports `Source-level Gates` |
-| `-->|feeds into|` | Выход одного guardrail входит в другой | `Code Review` feeds into `Task Compliance` |
+| `-->|enables|` | Guardrail provides context to another guardrail | `Hierarchical AGENTS.md` enables `Code Review Agent` |
+| `-->|supports|` | Guardrail strengthens another guardrail | `Decision Guards` supports `Source-level Gates` |
+| `-->|feeds into|` | One guardrail's output feeds into another | `Code Review` feeds into `Task Compliance` |
 
 > **Note:** Pattern numbering P1–P9 in this graph is independent of paragraph numbering in `ai-patterns.md` (e.g., P6=§7, P7=§8, P8=§9, P9=§6). Graph IDs are stable references — do not renumber when `ai-patterns.md` changes.
 

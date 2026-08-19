@@ -33,13 +33,13 @@ jobs:
       - name: Restore
         run: dotnet restore ${{ matrix.solution }}
 
-      # GUARDRAIL: Сборка должна проходить без warning'ов как ошибки
+      # GUARDRAIL: The build must pass with warnings treated as errors
       - name: Build
         run: dotnet build ${{ matrix.solution }} --no-restore --configuration Release -p:TreatWarningsAsErrors=true
 
-      # GUARDRAIL: dotnet test опасен — используем dotnet run --project
-      # GUARDRAIL: Проверяем, что тесты реально запустились (не 0 ran)
-      # Единый источник test-running logic: ci/scripts/run-and-verify-tests.sh
+      # GUARDRAIL: dotnet test is dangerous — we use dotnet run --project
+      # GUARDRAIL: Verify that the tests actually ran (not 0 ran)
+      # Single source of test-running logic: ci/scripts/run-and-verify-tests.sh
       - name: Run Tests + Verify
         run: bash ci/scripts/run-and-verify-tests.sh ${{ matrix.test_project }}
 
@@ -58,12 +58,12 @@ jobs:
       - name: Restore
         run: dotnet restore examples/DemoProject.Traps/DemoProject.Traps.slnx
 
-      # GUARDRAIL: Сборка должна проходить без warning'ов как ошибки
+      # GUARDRAIL: The build must pass with warnings treated as errors
       - name: Build
         run: dotnet build examples/DemoProject.Traps/DemoProject.Traps.slnx --no-restore --configuration Release -p:TreatWarningsAsErrors=true
 
-      # GUARDRAIL: Traps — намеренно сломанный код. Тесты ДОЛЖНЫ падать.
-      # Если тесты проходят — значит guardrails сломаны и ловушки больше не ловятся.
+      # GUARDRAIL: Traps — deliberately broken code. The tests MUST fail.
+      # If the tests pass, the guardrails are broken and the traps are no longer caught.
       - name: Run Traps Tests (Expect Failure)
         run: bash ci/scripts/run-and-verify-tests.sh examples/DemoProject.Traps/tests/DemoProject.Traps.Tests/DemoProject.Traps.Tests.csproj --expect-failure
 

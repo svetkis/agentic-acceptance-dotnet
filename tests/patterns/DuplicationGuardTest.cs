@@ -1,8 +1,8 @@
-// TRAP: Агент скопировал важную бизнес-логику в новый сервис вместо реюса.
-// GUARDRAIL: Starter regex check ловит буквальное дублирование критичных бизнес-фрагментов.
-// LIMIT: Ловит только буквальное (literal) дублирование. Семантическое дублирование
-// (order.IsConfirmed() vs order.Status == Confirmed) — это задача code-review чеклиста техлида.
-// См. templates/skills/code-review/CHECKLIST.md → "Дублирование бизнес-логики (Semantic)".
+// TRAP: The agent copied important business logic into a new service instead of reusing it.
+// GUARDRAIL: A starter regex check catches literal duplication of critical business fragments.
+// LIMIT: It only catches literal duplication. Semantic duplication
+// (order.IsConfirmed() vs order.Status == Confirmed) is the job of the tech lead's code-review checklist.
+// See templates/skills/code-review/CHECKLIST.md → "Business logic duplication (Semantic)".
 
 using System.Text.RegularExpressions;
 using TUnit;
@@ -11,17 +11,17 @@ namespace Tests.Patterns;
 
 public class DuplicationGuardTest
 {
-    // TRAP: Агент добавил проверку статуса заказа в новый сервис, хотя она уже есть в Domain.
-    // GUARDRAIL: Паттерн бизнес-правила встречается только в одном production-файле.
+    // TRAP: The agent added an order status check to a new service, although it already exists in Domain.
+    // GUARDRAIL: A business rule pattern appears in only one production file.
     [Test]
     public void BusinessRule_ShouldNotBeDuplicatedAcrossServices()
     {
-        // Настрой: список regex-паттернов критичной бизнес-логики, которые должны быть уникальны
+        // Configure: the list of regex patterns of critical business logic that must be unique
         var businessPatterns = new[]
         {
-            @"Status\s*==\s*BookingStatus\.Confirmed", // Пример: проверка статуса
-            @"Total\s*\*\s*0\.\d+",                    // Пример: расчёт скидки
-            @"DateTime\.Now",                           // Anti-pattern: должен быть UtcNow или IClock
+            @"Status\s*==\s*BookingStatus\.Confirmed", // Example: status check
+            @"Total\s*\*\s*0\.\d+",                    // Example: discount calculation
+            @"DateTime\.Now",                           // Antipattern: must be UtcNow or IClock
         };
 
         var srcPath = Path.Combine("..", "..", "..", "..", "src");
@@ -49,16 +49,16 @@ public class DuplicationGuardTest
             .Because("Critical business logic must live in one place (Domain or shared service)");
     }
 
-    // TRAP: Агент захардкодил магическую строку/число в нескольких местах.
-    // GUARDRAIL: Константы домена должны быть объявлены один раз.
+    // TRAP: The agent hardcoded a magic string/number in several places.
+    // GUARDRAIL: Domain constants must be declared once.
     [Test]
     public void MagicValues_ShouldBeCentralized()
     {
-        // Настрой: магические значения, которые не должны размазываться
+        // Configure: magic values that must not be scattered around
         var magicPatterns = new[]
         {
-            @"\"Bearer \"",          // Должно быть в константе AuthScheme
-            @"MaxItems\s*=\s*50",    // Должно быть в доменной константе
+            @"\"Bearer \"",          // Must be in the AuthScheme constant
+            @"MaxItems\s*=\s*50",    // Must be in a domain constant
         };
 
         var srcPath = Path.Combine("..", "..", "..", "..", "src");

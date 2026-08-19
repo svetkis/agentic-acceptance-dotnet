@@ -1,5 +1,5 @@
-// GUARDRAIL: Количество методов с нарушениями S3776/S1541 не растёт.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/ComplexityRatchetTest.cs
+// GUARDRAIL: The number of methods violating S3776/S1541 does not grow.
+// This file is a working adaptation of the template from tests/patterns/ComplexityRatchetTest.cs
 
 using System.Diagnostics;
 using System.Text.RegularExpressions;

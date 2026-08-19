@@ -1,5 +1,5 @@
-// GUARDRAIL: Аллокации [HotPath] методов не превышают baseline + 10%.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/AllocationBudgetTest.cs
+// GUARDRAIL: Allocations of [HotPath] methods do not exceed baseline + 10%.
+// This file is a working adaptation of the template from tests/patterns/AllocationBudgetTest.cs
 
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -21,7 +21,7 @@ public class AllocationBudgetTests
             warmupIterations: 3,
             measureIterations: 1000);
 
-        const long baselineBytes = 0; // GetPendingCount не аллоцирует
+        const long baselineBytes = 0; // GetPendingCount does not allocate
         var threshold = (long)(baselineBytes * 1.10);
 
         await Assert.That(budget.BytesAllocated)

@@ -1,11 +1,11 @@
-// TRAP: Агент нарушает слоистую архитектуру, добавляет антипаттерны или создаёт дубли ID решений.
-// GUARDRAIL: NetArchTest ловит архитектурные зависимости.
-// NOTE: Regex-проверки ниже — starter/fallback для артефактов и временных C# spikes.
-// Для стабильных C# semantic rules предпочитай Roslyn analyzer (Layer 1.1).
-// NOTE: Для EF Core-специфичных правил см. EfCoreGuardRules.cs.
-//       Для Dapper-специфичных правил см. DapperGuardRules.cs.
+// TRAP: The agent breaks layered architecture, adds antipatterns, or creates duplicate decision IDs.
+// GUARDRAIL: NetArchTest catches architectural dependencies.
+// NOTE: The regex checks below are a starter/fallback for artifacts and temporary C# spikes.
+// For stable C# semantic rules, prefer a Roslyn analyzer (Layer 1.1).
+// NOTE: For EF Core-specific rules see EfCoreGuardRules.cs.
+//       For Dapper-specific rules see DapperGuardRules.cs.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(result.IsSuccessful).IsTrue()
 // - xUnit:  [Fact] + Assert.True(result.IsSuccessful)
 // - NUnit:  [Test] + Assert.That(result.IsSuccessful, Is.True)
@@ -19,8 +19,8 @@ namespace Tests.Patterns;
 
 public class ArchitectureRules
 {
-    // TRAP: Агент зареференсил Infrastructure из Api напрямую.
-    // GUARDRAIL: Api → Application → Domain. Infrastructure только через DI.
+    // TRAP: The agent referenced Infrastructure from Api directly.
+    // GUARDRAIL: Api → Application → Domain. Infrastructure only via DI.
     [Test]
     public void Api_ShouldNotReferenceInfrastructureDirectly()
     {
@@ -32,8 +32,8 @@ public class ArchitectureRules
         Assert.That(result.IsSuccessful).IsTrue();
     }
 
-    // TRAP: Агент создал сервис без интерфейса в Application.
-    // GUARDRAIL: Все сервисы должны иметь интерфейс (Port).
+    // TRAP: The agent created a service without an interface in Application.
+    // GUARDRAIL: All services must have an interface (Port).
     [Test]
     public void Services_ShouldHaveInterfaces()
     {
@@ -46,9 +46,9 @@ public class ArchitectureRules
         Assert.That(result.IsSuccessful).IsTrue();
     }
 
-    // TRAP: Агент добавил mutable state в Domain через public field/setter.
-    // GUARDRAIL: BeImmutableExternally ловит mutable public API (eNhancedEdition 1.4.5+).
-    // NOTE: Авто-свойства (auto-properties) могут не детектироваться — используйте Roslyn analyzers для точной проверки.
+    // TRAP: The agent added mutable state to Domain via a public field/setter.
+    // GUARDRAIL: BeImmutableExternally catches mutable public API (eNhancedEdition 1.4.5+).
+    // NOTE: Auto-properties may not be detected — use Roslyn analyzers for precise checking.
     [Test]
     public void DomainTypes_ShouldBeImmutableExternally()
     {
@@ -61,9 +61,9 @@ public class ArchitectureRules
         Assert.That(result.IsSuccessful).IsTrue();
     }
 
-    // TRAP: Агент добавил кэширование без указания размера — OOM в проде.
-    // GUARDRAIL: Каждый bare cache.Set() ловится сканированием.
-    // NOTE: Универсальное правило, не зависит от ORM.
+    // TRAP: The agent added caching without specifying a size — OOM in production.
+    // GUARDRAIL: Every bare cache.Set() is caught by scanning.
+    // NOTE: A universal rule, independent of the ORM.
     [Test]
     public void CacheSet_ShouldAlwaysSpecifySize()
     {
@@ -76,8 +76,8 @@ public class ArchitectureRules
             .Because("MemoryCache SizeLimit requires every entry to specify .Size");
     }
 
-    // TRAP: Агент создал дубликат ID для задокументированного решения.
-    // GUARDRAIL: PERF-###, DB-###, AUD-### должны быть уникальны по всей кодбазе.
+    // TRAP: The agent created a duplicate ID for a documented decision.
+    // GUARDRAIL: PERF-###, DB-###, AUD-### must be unique across the entire codebase.
     [Test]
     public void PerfAndDbDecisions_ShouldHaveUniqueIds()
     {

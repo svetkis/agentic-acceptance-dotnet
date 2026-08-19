@@ -1,10 +1,10 @@
-// TRAP: Агент пишет непараметризованный SQL, использует string interpolation в запросах
-// или забывает таймауты при Dapper-вызовах.
-// GUARDRAIL: Starter regex checks ловят очевидные SQL-инъекции и антипаттерны Dapper.
-// NOTE: Для стабильных C# semantic rules предпочитай Roslyn analyzer; для SQL — parser/DB audit.
-// Этот файл — только для проектов с Dapper / Raw SQL. Для EF Core см. EfCoreGuardRules.cs.
+// TRAP: The agent writes non-parameterized SQL, uses string interpolation in queries,
+// or forgets timeouts in Dapper calls.
+// GUARDRAIL: Starter regex checks catch obvious SQL injections and Dapper antipatterns.
+// NOTE: For stable C# semantic rules prefer a Roslyn analyzer; for SQL — parser/DB audit.
+// This file is only for projects using Dapper / Raw SQL. For EF Core see EfCoreGuardRules.cs.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(violations).IsEmpty()
 // - xUnit:  [Fact] + Assert.Empty(violations)
 // - NUnit:  [Test] + Assert.That(violations, Is.Empty)
@@ -17,8 +17,8 @@ namespace Tests.Patterns;
 
 public class DapperGuardRules
 {
-    // TRAP: Агент использовал C# string interpolation ($"...") в SQL-запросе.
-    // GUARDRAIL: Любая строковая интерполяция в SQL — потенциальная инъекция.
+    // TRAP: The agent used C# string interpolation ($"...") in an SQL query.
+    // GUARDRAIL: Any string interpolation in SQL is a potential injection.
     [Test]
     public void RawSql_ShouldNotUseStringInterpolation()
     {
@@ -31,8 +31,8 @@ public class DapperGuardRules
             .Because("SQL queries must use parameterized statements (@param), never C# string interpolation");
     }
 
-    // TRAP: Агент сконкатенировал user input в SQL-строку.
-    // GUARDRAIL: Конкатенация строк с SQL-ключевыми словами — запрещена.
+    // TRAP: The agent concatenated user input into an SQL string.
+    // GUARDRAIL: Concatenating strings with SQL keywords is forbidden.
     [Test]
     public void RawSql_ShouldNotUseStringConcatenation()
     {
@@ -45,14 +45,14 @@ public class DapperGuardRules
             .Because("SQL must be static or parameterized. Concatenation enables injection.");
     }
 
-    // TRAP: Агент вызвал QueryAsync / ExecuteAsync без commandTimeout — риск вечного ожидания.
-    // GUARDRAIL: Каждый Dapper-вызов должен явно передавать timeout или использовать глобальный default.
+    // TRAP: The agent called QueryAsync / ExecuteAsync without commandTimeout — a risk of waiting forever.
+    // GUARDRAIL: Every Dapper call must explicitly pass a timeout or use a global default.
     [Test]
     public void DapperCalls_ShouldHaveCommandTimeout()
     {
-        // Ищем вызовы Dapper без третьего аргумента commandTimeout
-        // Примеры: connection.QueryAsync<Order>(sql, param) — нарушение
-        //          connection.QueryAsync<Order>(sql, param, commandTimeout: 30) — ок
+        // Look for Dapper calls without the third commandTimeout argument
+        // Examples: connection.QueryAsync<Order>(sql, param) — violation
+        //           connection.QueryAsync<Order>(sql, param, commandTimeout: 30) — ok
         var violations = ScanSourceFiles(
             pattern: @"\.(QueryAsync|ExecuteAsync|QueryFirstAsync|QuerySingleAsync)<.*?>\s*\([^,]+,[^,]+\)",
             fileGlob: "*.cs",
@@ -62,8 +62,8 @@ public class DapperGuardRules
             .Because("Dapper calls must specify commandTimeout to prevent hanging queries");
     }
 
-    // TRAP: Агент построил динамический IN-клауз через string.Join без whitelist.
-    // GUARDRAIL: IN с динамическим списком — только через TVP или ORM-генерацию.
+    // TRAP: The agent built a dynamic IN clause via string.Join without a whitelist.
+    // GUARDRAIL: IN with a dynamic list — only via TVP or ORM generation.
     [Test]
     public void DynamicInClause_ShouldBeParameterized()
     {
@@ -76,9 +76,9 @@ public class DapperGuardRules
             .Because("Dynamic IN clauses must use Table-Valued Parameters (TVP) or parameterized ORM, not string.Join");
     }
 
-    // TRAP: Агент использовал FromSqlRaw / ExecuteSqlRaw с интерполяцией в EF-проекте.
-    // GUARDRAIL: Даже в EF raw SQL должен быть параметризован (FromSqlInterpolated).
-    // NOTE: Это пересечение EF + raw SQL — ставим в Dapper-файл, т.к. относится к raw SQL hygiene.
+    // TRAP: The agent used FromSqlRaw / ExecuteSqlRaw with interpolation in an EF project.
+    // GUARDRAIL: Even in EF, raw SQL must be parameterized (FromSqlInterpolated).
+    // NOTE: This is an EF + raw SQL overlap — placed in the Dapper file because it concerns raw SQL hygiene.
     [Test]
     public void EfRawSql_ShouldNotUseInterpolation()
     {

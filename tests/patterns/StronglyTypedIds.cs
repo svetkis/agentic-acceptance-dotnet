@@ -1,8 +1,8 @@
-// TRAP: Агент по привычке использует Guid/string/int для идентификаторов в Domain-сущностях,
-// вместо создания strongly typed ID (BookingId, ClientId, AgentId).
-// Это открывает дверь для подстановки ClientId в метод, ожидающий AgentId.
-// GUARDRAIL: Архитектурный тест сканирует Domain-сборку и падает, если найдёт
-// "голый" примитив в свойстве с именем, оканчивающимся на Id.
+// TRAP: Out of habit the agent uses Guid/string/int for identifiers in Domain entities
+// instead of creating a strongly typed ID (BookingId, ClientId, AgentId).
+// This opens the door to passing a ClientId into a method expecting an AgentId.
+// GUARDRAIL: An architectural test scans the Domain assembly and fails if it finds
+// a "bare" primitive in a property whose name ends with Id.
 
 using System.Reflection;
 using TUnit;
@@ -11,13 +11,13 @@ namespace Tests.Patterns;
 
 public class StronglyTypedIds
 {
-    // TRAP: Агент создал new Booking { Id = Guid.NewGuid() } вместо BookingId.New().
-    // GUARDRAIL: Все свойства с именем *Id в Domain-сущностях должны иметь тип,
-    // оканчивающийся на Id (не Guid/string/int/long).
+    // TRAP: The agent wrote new Booking { Id = Guid.NewGuid() } instead of BookingId.New().
+    // GUARDRAIL: All *Id properties in Domain entities must have a type
+    // ending with Id (not Guid/string/int/long).
     [Test]
     public void DomainEntities_ShouldNotUseRawPrimitivesForIds()
     {
-        // Адаптация: замените на свою assembly и convention.
+        // Adaptation: replace with your assembly and convention.
         // var domainAssembly = typeof(YourDomainEntity).Assembly;
         // var violations = GetRawIdViolations(domainAssembly);
         //
@@ -28,17 +28,17 @@ public class StronglyTypedIds
             .Because("Template: adapt this test to your assembly. See commented code and helper below.");
     }
 
-    // TRAP: Агент добавил сущность с Guid Id, но baseline не обновлён — тест молча проходит.
-    // GUARDRAIL: Ratchet — считаем текущее количество сущностей с strongly typed ID
-    // и проверяем, что оно не уменьшается (или что количество нарушений не растёт).
+    // TRAP: The agent added an entity with a Guid Id, but the baseline was not updated — the test silently passes.
+    // GUARDRAIL: Ratchet — count the current number of entities with strongly typed IDs
+    // and verify it does not decrease (or that the number of violations does not grow).
     [Test]
     public void StronglyTypedIdUsage_ShouldNotDecrease()
     {
-        // Адаптация:
+        // Adaptation:
         // var domainAssembly = typeof(YourDomainEntity).Assembly;
         // var stronglyTypedCount = CountStronglyTypedIds(domainAssembly);
         //
-        // const int baseline = 5; // Зафиксируй текущее значение
+        // const int baseline = 5; // Pin the current value
         // Assert.That(stronglyTypedCount).IsGreaterThanOrEqualTo(baseline)
         //     .Because($"Strongly typed IDs must not decrease. Current: {stronglyTypedCount}, baseline: {baseline}");
 
@@ -46,7 +46,7 @@ public class StronglyTypedIds
             .Because("Template: adapt this test to count strongly typed IDs. See commented code.");
     }
 
-    // --- Helper: находит свойства *Id с "голыми" примитивами в Domain-сущностях ---
+    // --- Helper: finds *Id properties with "bare" primitives in Domain entities ---
     private static IEnumerable<string> GetRawIdViolations(Assembly domainAssembly)
     {
         var rawTypes = new HashSet<string> { "Guid", "String", "Int32", "Int64" };

@@ -1,6 +1,6 @@
-// GUARDRAIL: [HotPath] методы не должны аллоцировать сверх baseline + 10%.
-// Этот проект — failing demo: AllocationBudgetHotspot.Process специально
-// использует new List<int>, поэтому тест ДОЛЖЕН падать.
+// GUARDRAIL: [HotPath] methods must not allocate beyond baseline + 10%.
+// This project is a failing demo: AllocationBudgetHotspot.Process intentionally
+// uses new List<int>, so the test MUST fail.
 
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;

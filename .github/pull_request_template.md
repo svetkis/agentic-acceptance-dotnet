@@ -1,8 +1,8 @@
-## What / Что изменено
+## What
 
-## Why / Зачем
+## Why
 
-## How Verified / Как проверено
+## How Verified
 - [ ] `dotnet build` passes without warnings in `examples/DemoProject/` (if code changed)
 - [ ] If adding a skill — `SKILL.md` + `CHECKLIST.md` are present
 - [ ] If adding a pattern — comments `// TRAP:` and `// GUARDRAIL:` are present

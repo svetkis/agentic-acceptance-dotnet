@@ -1,22 +1,22 @@
 ---
-name: Bug Report / Ошибка
+name: Bug Report
 about: Report a problem with an artifact, skill, or pattern
 labels: bug
 ---
 
-## Description / Описание
+## Description
 <!-- A clear description of the bug -->
 
-## Location / Где найдено
+## Location
 <!-- File path or skill name -->
 
-## Expected / Ожидалось
+## Expected
 
-## Actual / Получилось
+## Actual
 
-## Reproduction / Как воспроизвести
+## Reproduction
 <!-- Steps or code snippet -->
 
-## Context / Контекст
+## Context
 - .NET version:
 - Agent used (Kimi / Claude / Cursor / etc.):

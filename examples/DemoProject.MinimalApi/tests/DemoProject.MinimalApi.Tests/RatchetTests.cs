@@ -1,7 +1,7 @@
-// TRAP: Агент при рефакторинге тихо удаляет типы, сервисы или ломает test runner.
-// GUARDRAIL: Рефлексией считаем публичные типы и тесты. Если count уменьшился — агент что-то сломал.
+// TRAP: During refactoring, an agent silently removes types and services or breaks the test runner.
+// GUARDRAIL: Count public types and tests via reflection. If the count decreased, an agent broke something.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(...).IsGreaterThanOrEqualTo(...)
 // - xUnit:  [Fact] + Assert.True(current >= baseline)
 // - NUnit:  [Test] + Assert.That(current, Is.GreaterThanOrEqualTo(baseline))

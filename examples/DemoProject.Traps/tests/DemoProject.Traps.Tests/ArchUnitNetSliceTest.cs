@@ -1,5 +1,5 @@
-// GUARDRAIL: ArchUnitNET ловит циклические зависимости между слайсами.
-// TRAP: Агент создал цикл Orders -> Payments -> Shipping -> Orders.
+// GUARDRAIL: ArchUnitNET catches circular dependencies between slices.
+// TRAP: An agent created the cycle Orders -> Payments -> Shipping -> Orders.
 using ArchUnitNET.Domain;
 using ArchUnitNET.Fluent;
 using ArchUnitNET.Fluent.Slices;

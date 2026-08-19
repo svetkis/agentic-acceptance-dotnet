@@ -1,333 +1,333 @@
-# Онбординг Skeptical AI Engineering
+# Skeptical AI Engineering Onboarding
 
-> Пошаговый гайд по внедрению guardrails в существующий .NET-проект.  
-> **Аудитория:** Tech Lead, CTO, Lead Developer.  
-> **Формат:** делай сам или делегируй агенту по этому документу.
+> Step-by-step guide for implementing guardrails in an existing .NET project.  
+> **Audience:** Tech Lead, CTO, Lead Developer.  
+> **Format:** do it yourself or delegate to an agent using this document.
 >
-> **Модель контроля:** Engineering Assurance Levels — см. [README.md](../README.md#как-это-работает).
-> Ниже используются legacy-имена слоёв (0, 1.1–2.3) из `PYRAMID.md` как ссылки на
-> конкретные шаги; их соответствие уровням: Слой 0 → Control Foundation,
+> **Control model:** Engineering Assurance Levels — see [README.md](../README.md#how-it-works).
+> The steps below use legacy layer names (0, 1.1–2.3) from `PYRAMID.md` as
+> references to concrete steps; mapping: Layer 0 → Control Foundation,
 > 1.1/1.4 → Change Checks, 1.2/1.3 → Behavior Checks, 1.5/2.1/2.3 → System Checks,
-> 2.2 → Periodic Assurance, внешний цикл → Engineering Governance,
-> груминг артефактов → Control Maintenance.
+> 2.2 → Periodic Assurance, outer loop → Engineering Governance,
+> artifact grooming → Control Maintenance.
 
 ---
 
-## Сколько это займёт
+## How Long It Takes
 
-| Режим | Время | Что внедряем | Когда выбирать |
-|-------|-------|--------------|----------------|
-| **Fast** | 1–2 дня | Слой 0 (AGENTS.md) + Слой 1.1 (компилятор) + Слой 1.2 (базовые арх-тесты) | Пилот. Хотим быстро проверить, работает ли методология. |
-| **Standard** | 2–4 недели, инкрементально | Слой 0 → Change Checks → Behavior Checks; затем по одному подслою/аудиту за спринт | Основной сценарий. Большинство проектов начинают здесь. |
-| **High-assurance** | 1–2 месяца, инкрементально | Все уровни + Engineering Governance + Control Maintenance | Проект с высокими рисками (fintech, health, high-load). |
+| Mode | Time | What we implement | When to choose |
+|------|------|-------------------|----------------|
+| **Fast** | 1–2 days | Layer 0 (AGENTS.md) + Layer 1.1 (compiler) + Layer 1.2 (basic arch tests) | Pilot. Want to quickly check if the methodology works. |
+| **Standard** | 2–4 weeks, incrementally | Layer 0 → Change Checks → Behavior Checks; then one sub-layer/audit per sprint | Main scenario. Most projects start here. |
+| **High-assurance** | 1–2 months, incrementally | All levels + Engineering Governance + Control Maintenance | High-risk project (fintech, health, high-load). |
 
-> **Не пытайся внедрить всё за один день.** Guardrails работают только если команда их понимает и поддерживает. Сроки выше — календарные, внедрение всегда инкрементальное: один control за раз, с проверкой, что предыдущий работает.
-
----
-
-## Предварительные требования
-
-- [ ] Доступ к `.sln` и всем `.csproj`
-- [ ] Понимание текущей архитектуры (Clean / VSlice / Modular / Big Ball of Mud)
-- [ ] Права на изменение CI/CD и добавление файлов в корень репозитория
-- [ ] Решение, какой AI-агент используется (Kimi / Claude / Cursor / Codex / несколько)
-- [ ] 30 минут на заполнение [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md)
+> **Do not try to implement everything in one day.** Guardrails work only if the team understands and supports them. Timelines above are calendar estimates; adoption is always incremental: one control at a time, verified working before the next.
 
 ---
 
-## Пошаговый план
+## Prerequisites
 
-### Шаг 0. Зафиксировать текущую архитектуру
-
-**Цель:** Агент (и ты сам) должен понимать, с чем работает, а не угадывать.
-
-1. Заполни [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md):
-   - Нарисуй C4 Container diagram (4–6 блоков)
-   - Заполни таблицу Assembly Boundaries
-   - Выдели 3–5 Critical Paths
-   - Заполни Technology Inventory
-2. Сохрани файл в `docs/ARCHITECTURE-INVENTORY.md` своего проекта.
-3. Если есть осознанные отклонения от стандартов — зафиксируй их как `PERF-###` / `DB-###` / `ARCH-###` по шаблону [`DECISION-GUARDS.md`](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md).
-
-**Выход:** ground truth для всех последующих guardrails.
+- [ ] Access to `.sln` and all `.csproj`
+- [ ] Understanding of current architecture (Clean / VSlice / Modular / Big Ball of Mud)
+- [ ] Permission to change CI/CD and add files to the repository root
+- [ ] Decision on which AI agent is used (Kimi / Claude / Cursor / Codex / multiple)
+- [ ] 30 minutes to fill out [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md)
 
 ---
 
-### Шаг 1. Оценить зрелость
+## Step-by-Step Plan
 
-**Цель:** Понять, что уже есть, а что нужно создать с нуля.
+### Step 0. Capture Current Architecture
 
-**Вариант А — через агента (рекомендуется):**
-1. Установи скилл `skeptical-ai-bootstrap` в свой проект ([`INSTALL.md`](../templates/skills/skeptical-ai-bootstrap/INSTALL.md))
-2. Запусти: `kimi run skeptical-ai-bootstrap` (или аналог для своего агента)
-3. Получи отчёт `.backlog/onboarding-{дата}.md`
+**Goal:** The agent (and you) must understand what they are working with, not guess.
 
-**Вариант Б — ручная оценка:**
-1. Открой [`PYRAMID.md`](../PYRAMID.md)
-2. Для каждого подслоя (1.1→2.3) ответь:
-   - Принцип соблюдён? (Да / Частично / Нет)
-   - Что реализовано сейчас?
-   - Что нужно добавить?
-3. Запиши в `.backlog/onboarding-manual.md`
+1. Fill out [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md):
+   - Draw a C4 Container diagram (4–6 blocks)
+   - Fill in the Assembly Boundaries table
+   - Identify 3–5 Critical Paths
+   - Fill in the Technology Inventory
+2. Save the file to `docs/ARCHITECTURE-INVENTORY.md` in your project.
+3. If there are intentional deviations from standards — record them as `PERF-###` / `DB-###` / `ARCH-###` using the [`DECISION-GUARDS.md`](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) template.
 
-**Выход:** бэклог задач с приоритетами Must / Should / Could.
+**Output:** ground truth for all subsequent guardrails.
 
 ---
 
-### Шаг 2. Адаптировать артефакты под стек
+### Step 1. Assess Maturity
 
-**Цель:** Вычеркнуть неприменимое ДО первого запуска.
+**Goal:** Understand what already exists and what needs to be built from scratch.
 
-1. Открой [`templates/skills/ADAPTATION.md`](../templates/skills/ADAPTATION.md)
-2. Найди свой стек в таблице «Если в проекте… → пропусти…»
-3. Для каждого скилла, который планируешь использовать:
-   - Открой `CHECKLIST.md`
-   - Пометь пункты `[-]` (N/A) или `[ ]` (проверим)
-4. Если >50% скилла неприменимо — не адаптируй, создай новый ([`NEW-SKILL-TEMPLATE.md`](../templates/skills/skeptical-ai-bootstrap/NEW-SKILL-TEMPLATE.md))
+**Option A — via agent (recommended):**
+1. Install the `skeptical-ai-bootstrap` skill into your project ([`INSTALL.md`](../templates/skills/skeptical-ai-bootstrap/INSTALL.md))
+2. Run: `kimi run skeptical-ai-bootstrap` (or equivalent for your agent)
+3. Get the report `.backlog/onboarding-{date}.md`
 
-**Выход:** адаптированные чеклисты, которые не генерируют false positives.
+**Option B — manual assessment:**
+1. Open [`PYRAMID.md`](../PYRAMID.md)
+2. For each sub-layer (1.1→2.3) answer:
+   - Is the principle followed? (Yes / Partially / No)
+   - What is implemented now?
+   - What needs to be added?
+3. Record in `.backlog/onboarding-manual.md`
 
----
-
-### Шаг 3. Написать Конституцию (Слой 0)
-
-**Цель:** Агент читает правила ДО кода.
-
-1. Скопируй [`rules/AGENTS_TEMPLATE.md`](../rules/AGENTS_TEMPLATE.md) в корень своего проекта
-2. Отредактируй под свой стек:
-   - Убери неприменимые правила (например, `[Authorize]` для Minimal API)
-   - Добавь специфичные (например, «В нашем проекте `FindAsync()` разрешён только в `*CommandService.cs`»)
-   - Зафиксируй naming conventions
-3. Если проект большой — добавь `AGENTS.md` в подпапки (глубинные инструкции превалируют)
-4. Добавь `rules/CONVENTIONS.md` — именование тестов, workflow, CI guardrails
-
-**Выход:** `AGENTS.md` + `CONVENTIONS.md` в корне проекта, которые читает агент.
+**Output:** backlog of tasks with Must / Should / Could priorities.
 
 ---
 
-### Шаг 4. Внедрить Слой 1.1. Компилятор
+### Step 2. Adapt Artifacts to Your Stack
 
-**Цель:** Самый быстрый feedback loop — падает сборка.
+**Goal:** Strike out what does not apply BEFORE the first run.
 
-1. В `Directory.Build.props` (или `.csproj` если single-project):
+1. Open [`templates/skills/ADAPTATION.md`](../templates/skills/ADAPTATION.md)
+2. Find your stack in the table "If the project has… → skip…"
+3. For each skill you plan to use:
+   - Open `CHECKLIST.md`
+   - Mark items `[-]` (N/A) or `[ ]` (we will check)
+4. If >50% of a skill does not apply — do not adapt it, create a new one ([`NEW-SKILL-TEMPLATE.md`](../templates/skills/skeptical-ai-bootstrap/NEW-SKILL-TEMPLATE.md))
+
+**Output:** adapted checklists that do not generate false positives.
+
+---
+
+### Step 3. Write the Constitution (Layer 0)
+
+**Goal:** The agent reads the rules BEFORE code.
+
+1. Copy [`rules/AGENTS_TEMPLATE.md`](../rules/AGENTS_TEMPLATE.md) to your project root
+2. Edit for your stack:
+   - Remove inapplicable rules (e.g., `[Authorize]` for Minimal API)
+   - Add specific ones (e.g., "In our project `FindAsync()` is allowed only in `*CommandService.cs`")
+   - Fix naming conventions
+3. If the project is large — add `AGENTS.md` to subfolders (deeper instructions prevail)
+4. Add `rules/CONVENTIONS.md` — test naming, workflow, CI guardrails
+
+**Output:** `AGENTS.md` + `CONVENTIONS.md` in the project root that the agent reads.
+
+---
+
+### Step 4. Implement Layer 1.1. Compiler
+
+**Goal:** The fastest feedback loop — the build fails.
+
+1. In `Directory.Build.props` (or `.csproj` if single-project):
    ```xml
    <Nullable>enable</Nullable>
    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
    ```
-2. Добавь `.editorconfig` с severity=error для критичных правил
-3. Для frontend (если есть): `tsc --noEmit` в strict mode + генерация типов из OpenAPI
-4. Проверь: `dotnet build` падает на warning'ах?
+2. Add `.editorconfig` with severity=error for critical rules
+3. For frontend (if any): `tsc --noEmit` in strict mode + generate types from OpenAPI
+4. Check: does `dotnet build` fail on warnings?
 
-**Критерий готовности:** `dotnet build` без warning'ов = зелёный CI.
-
----
-
-### Шаг 5. Внедрить Слой 1.2. Архитектура
-
-**Цель:** Автоматическая проверка слоёв и антипаттернов.
-
-1. Установи `NetArchTest.eNhancedEdition` в тестовый проект (форк с исправленными багами и новыми фичами: Slices, Immutable-правила, проверка пути файла)
-2. Скопируй [`tests/patterns/ArchitectureRules.cs`](../tests/patterns/ArchitectureRules.cs)
-3. Адаптируй namespace и имена сборок под свой проект (используй таблицу из Шага 0)
-4. Добавь `RatchetTest.cs` — baseline публичных типов и тестов
-5. **Modular Monolith / Vertical Slice:** используй `Slice().ByNamespacePrefix(...).Should().NotHaveDependenciesBetweenSlices()` для проверки межмодульных зависимостей
-6. Если правило смотрит на C#-исходники — предпочитай Roslyn analyzer (см. [`roslyn-analyzers.md`](solutions/roslyn-analyzers.md)); regex оставляй для config/markdown/manifests или временного spike
-7. Запусти: `dotnet run --project tests/YourProject.Tests` — тесты проходят?
-8. Посмотри живой failing demo: [`examples/DemoProject.Traps/`](../examples/DemoProject.Traps/) — 7 intentionally broken guardrails с `IType.Explanation` и ArchUnitNET
-
-**Критерий готовности:** Новый `using Infrastructure` в Application = красный CI.
+**Readiness criterion:** `dotnet build` without warnings = green CI.
 
 ---
 
-### Шаг 6. Внедрить Слой 1.3. Тесты
+### Step 5. Implement Layer 1.2. Architecture
 
-**Цель:** Каждое изменение покрыто тестами, и тесты реально запускаются.
+**Goal:** Automatic verification of layers and anti-patterns.
 
-1. **Проверка "0 tests ran":** скопируй [`ci/scripts/verify-tests.sh`](../ci/scripts/verify-tests.sh) в CI
-2. **BUG-regression convention:** для каждого баг-фикса создавай `BUG###_DescriptiveName.cs` ([`BUG_TEMPLATE.cs`](../tests/conventions/BUG_TEMPLATE.cs))
-3. **Snapshot test:** если есть API — добавь OpenAPI snapshot test ([`SnapshotTest.cs`](../tests/patterns/SnapshotTest.cs))
-4. **Characterization tests:** зафиксируй поведение критичных алгоритмов (см. [`ai-patterns.md`](solutions/ai-patterns.md))
-5. Если используешь TUnit — прочитай [`TUnit_Guide.md`](../tests/conventions/TUnit_Guide.md)
+1. Install `NetArchTest.eNhancedEdition` in the test project (fork with fixed bugs and new features: Slices, Immutable rules, file path checks)
+2. Copy [`tests/patterns/ArchitectureRules.cs`](../tests/patterns/ArchitectureRules.cs)
+3. Adapt namespaces and assembly names to your project (use the table from Step 0)
+4. Add `RatchetTest.cs` — baseline of public types and tests
+5. **Modular Monolith / Vertical Slice:** use `Slice().ByNamespacePrefix(...).Should().NotHaveDependenciesBetweenSlices()` to check inter-module dependencies
+6. If a rule looks at C# sources — prefer a Roslyn analyzer (see [`roslyn-analyzers.md`](solutions/roslyn-analyzers.md)); leave regex for config/markdown/manifests or temporary spikes
+7. Run: `dotnet run --project tests/YourProject.Tests` — do tests pass?
+8. See a live failing demo: [`examples/DemoProject.Traps/`](../examples/DemoProject.Traps/) — 7 intentionally broken guardrails with `IType.Explanation` and ArchUnitNET
 
-**Критерий готовности:**
-- CI падает, если `0 tests ran`
-- Каждый `fix:` коммит имеет `BUG*Tests.cs`
-- Backend поменял DTO → snapshot test падает
+**Readiness criterion:** New `using Infrastructure` in Application = red CI.
 
 ---
 
-### Шаг 7. Внедрить Слой 1.4. Code review агентом
+### Step 6. Implement Layer 1.3. Tests
 
-**Цель:** Второй агент проверяет код первого.
+**Goal:** Every change is covered by tests, and tests actually run.
 
-1. Скопируй [`templates/skills/code-review/`](../templates/skills/code-review/) в `.kimi/skills/code-review/` (или формат своего агента)
-2. Адаптируй `SKILL.md` под свой стек (см. Шаг 2)
-3. Настрой запуск на каждый PR / перед коммитом:
+1. **"0 tests ran" check:** copy [`ci/scripts/verify-tests.sh`](../ci/scripts/verify-tests.sh) into CI
+2. **BUG-regression convention:** for every bug fix create `BUG###_DescriptiveName.cs` ([`BUG_TEMPLATE.cs`](../tests/conventions/BUG_TEMPLATE.cs))
+3. **Snapshot test:** if there is an API — add an OpenAPI snapshot test ([`SnapshotTest.cs`](../tests/patterns/SnapshotTest.cs))
+4. **Characterization tests:** capture behavior of critical algorithms (see [`ai-patterns.md`](solutions/ai-patterns.md))
+5. If using TUnit — read [`TUnit_Guide.md`](../tests/conventions/TUnit_Guide.md)
+
+**Readiness criterion:**
+- CI fails if `0 tests ran`
+- Every `fix:` commit has a `BUG*Tests.cs`
+- Backend changed DTO → snapshot test fails
+
+---
+
+### Step 7. Implement Layer 1.4. Code Review by Agent
+
+**Goal:** A second agent checks the first agent's code.
+
+1. Copy [`templates/skills/code-review/`](../templates/skills/code-review/) to `.kimi/skills/code-review/` (or your agent's format)
+2. Adapt `SKILL.md` to your stack (see Step 2)
+3. Set up execution on every PR / before commit:
    - Kimi: `kimi run code-review --git-diff HEAD~1`
-   - Claude: `/{command}` в чате
-4. Проверь на 3–5 последних PR — агент находит реальные проблемы?
+   - Claude: `/{command}` in chat
+4. Check on 3–5 recent PRs — does the agent find real issues?
 
-**Критерий готовности:** Code review агент ловит минимум 1 проблему из 5 PR.
-
----
-
-### Шаг 8. Внедрить Слой 1.5. Smoke тесты
-
-**Цель:** Быстрая проверка, что критичные пути не сломаны.
-
-1. Определи 10 критичных сценариев (см. Critical Paths из Шага 0)
-2. Напиши автоматизированные smoke-тесты — минимум 1 на каждый путь
-3. Запускай smoke перед каждым мержем или в CI на каждый PR
-
-**Критерий готовности:** Smoke падает, если сломан критичный путь (авторизация, оплата, бронирование).
+**Readiness criterion:** Code review agent catches at least 1 issue out of 5 PRs.
 
 ---
 
-### Шаг 9. Внедрить Слой 2.1. E2E / MCP
+### Step 8. Implement Layer 1.5. Smoke Tests
 
-**Цель:** Агент "протыкивает" приложение реальными руками.
+**Goal:** Fast check that critical paths are not broken.
 
-1. Определи, какие MCP-тулы доступны (browser, Telegram, API, DB)
-2. Напиши 3–5 E2E-сценария для критичных путей (см. Critical Paths из Шага 0)
-3. Если есть frontend — добавь визуальные проверки (скриншоты)
-4. Запускай в CI ночью или перед релизом
+1. Identify 10 critical scenarios (see Critical Paths from Step 0)
+2. Write automated smoke tests — at least 1 per path
+3. Run smoke before every merge or in CI on every PR
 
-**Критерий готовности:** E2E находит проблему, которую не ловят юнит-тесты (например, stale cache).
-
----
-
-### Шаг 10. Внедрить Слой 2.2. Аудиты
-
-**Цель:** Глубинные проверки по расписанию.
-
-| Аудит | Частота | Когда начинать |
-|-------|---------|----------------|
-| Security audit | Раз в спринт | После внедрения Слоя 1.3 |
-| DBA audit | Раз в спринт / при миграциях | Если используешь EF Core / Dapper |
-| Performance audit | Перед релизом | После стабилизации архитектуры |
-| Complexity audit | Раз в спринт | Когда методы начинают разрастаться |
-| Allocation budget audit | Перед релизом / при изменении hot paths | Если есть latency-sensitive пути |
-| Spellcheck audit | Раз в спринт | Если есть публичные API / документация |
-| Release readiness audit | Перед релизом / бета-запуском | Перед выходом в прод |
-| Mutation audit | Раз в спринт | Если Stryker совместим с тестовым фреймворком |
-| Analyzer tests audit | При создании / обновлении Roslyn-анализаторов | Если есть кастомные analyzers |
-| Tech debt audit | Раз в спринт | Сразу — ловит дублирование и мёртвый код |
-| Test audit | После 3–5 фич | Когда появляются новые фичи без тестов |
-
-**Как внедрять:**
-1. Скопируй `templates/skills/{audit}/` в `.kimi/skills/{audit}/`
-2. Адаптируй `CHECKLIST.md` (Шаг 2)
-3. Запланируй в календаре команды (recurring meeting или CI-trigger)
-4. Для ручного аудита — используй [`human-audit-bridge.md`](solutions/human-audit-bridge.md)
-
-**Критерий готовности:** Каждый аудит проведён хотя бы 1 раз, результаты зафиксированы.
+**Readiness criterion:** Smoke fails if a critical path is broken (auth, payment, booking).
 
 ---
 
-### Шаг 11. Внедрить Слой 2.3. Нагрузка (NBomber)
+### Step 9. Implement Layer 2.1. E2E / MCP
 
-**Цель:** Не дать агенту сломать production нагрузкой.
+**Goal:** The agent "touches" the application with real hands.
 
-1. Установи `NBomber` в тестовый проект
-2. Скопируй [`tests/patterns/LoadTest.cs`](../tests/patterns/LoadTest.cs)
-3. Напиши сценарий: read + write mix для критичного пути
-4. Запускай перед релизом или при подозрении на деградацию
+1. Identify available MCP tools (browser, Telegram, API, DB)
+2. Write 3–5 E2E scenarios for critical paths (see Critical Paths from Step 0)
+3. If there is a frontend — add visual checks (screenshots)
+4. Run in CI nightly or before release
 
-**Критерий готовности:** NBomber показывает tail latency (Max, P95), а не только среднее.
+**Readiness criterion:** E2E finds a problem that unit tests do not catch (e.g., stale cache).
 
 ---
 
-### Шаг 12. Настроить AI-агента
+### Step 10. Implement Layer 2.2. Audits
 
-**Цель:** Агент знает, как работать с твоим проектом.
+**Goal:** Deep checks on schedule.
 
-1. Выбери своего агента:
+| Audit | Frequency | When to start |
+|-------|-----------|---------------|
+| Security audit | Once per sprint | After implementing Layer 1.3 |
+| DBA audit | Once per sprint / on migrations | If using EF Core / Dapper |
+| Performance audit | Before release | After architecture stabilizes |
+| Complexity audit | Once per sprint | When methods start growing |
+| Allocation budget audit | Before release / when hot paths change | If there are latency-sensitive paths |
+| Spellcheck audit | Once per sprint | If there are public APIs / documentation |
+| Release readiness audit | Before release / beta launch | Before going to production |
+| Mutation audit | Once per sprint | If Stryker is compatible with test framework |
+| Analyzer tests audit | When creating / updating Roslyn analyzers | If there are custom analyzers |
+| Tech debt audit | Once per sprint | Immediately — catches duplication and dead code |
+| Test audit | After 3–5 features | When new features appear without tests |
+
+**How to implement:**
+1. Copy `templates/skills/{audit}/` to `.kimi/skills/{audit}/`
+2. Adapt `CHECKLIST.md` (Step 2)
+3. Schedule in the team calendar (recurring meeting or CI-trigger)
+4. For manual audit — use [`human-audit-bridge.md`](solutions/human-audit-bridge.md)
+
+**Readiness criterion:** Every audit has been run at least once, results recorded.
+
+---
+
+### Step 11. Implement Layer 2.3. Load (NBomber)
+
+**Goal:** Do not let the agent break production with load.
+
+1. Install `NBomber` in the test project
+2. Copy [`tests/patterns/LoadTest.cs`](../tests/patterns/LoadTest.cs)
+3. Write a scenario: read + write mix for a critical path
+4. Run before release or when degradation is suspected
+
+**Readiness criterion:** NBomber shows tail latency (Max, P95), not just average.
+
+---
+
+### Step 12. Set Up the AI Agent
+
+**Goal:** The agent knows how to work with your project.
+
+1. Choose your agent:
    - **Kimi Code CLI** → [`docs/agents/KIMI.md`](agents/KIMI.md)
    - **Claude Code** → [`docs/agents/CLAUDE-CODE.md`](agents/CLAUDE-CODE.md)
    - **Cursor** → [`docs/agents/CURSOR.md`](agents/CURSOR.md)
    - **Codex** → [`docs/agents/CODEX.md`](agents/CODEX.md)
    - **OpenCode** → [`docs/agents/OPENCODE.md`](agents/OPENCODE.md)
-2. Скопируй конфигурацию в свой проект
-3. Убедись, что агент видит `AGENTS.md` и скиллы
+2. Copy the configuration into your project
+3. Make sure the agent sees `AGENTS.md` and skills
 
-**Критерий готовности:** Агент генерирует код, который проходит архитектурные тесты с первого раза.
-
----
-
-## Антипаттерны внедрения (чего НЕ делать)
-
-| Антипаттерн | Почему вредно | Что делать вместо |
-|-------------|---------------|-------------------|
-| **Big Bang** — внедрить все слои за один спринт | Команда не усваивает, guardrails ломаются и отключаются | По одному подслою за спринт, начиная с 1.1 |
-| **Копипаста без адаптации** — скопировать все скиллы 1-к-1 | False positives заглушают команду, чеклисты игнорируются | Вычеркни N/A перед первым запуском |
-| **Только агент, без human review** | Агенты галлюцинируют, пропускают контекст | Human-audit раз в спринт ([`human-audit-bridge.md`](solutions/human-audit-bridge.md)) |
-| **AGENTS.md из другого проекта** | Правила про чужой стек вводят команду в заблуждение | Напиши свой, используя [`rules/AGENTS_TEMPLATE.md`](../rules/AGENTS_TEMPLATE.md) как шаблон |
-| **Архитектурные тесты без инвентаря** | NetArchTest настроен на несуществующие сборки | Сначала Шаг 0 — зафиксируй границы |
-| **"Мы ещё не готовы к guardrails"** | Guardrails нужны именно когда код пишет агент | Начни с Fast-режима (1–2 дня) |
-| **Клонирование DemoProject** | Агент создаёт `examples/DemoProject/` в целевом репо, копируя структуру из `dotnet-ai-guardrails` | `examples/` — это демонстрация методологии, не шаблон для копирования. Не создавай демо-проекты в рабочем репо. |
+**Readiness criterion:** The agent generates code that passes architecture tests on the first try.
 
 ---
 
-## Проверочный чеклист: готов ли проект?
+## Implementation Anti-Patterns (What NOT to Do)
 
-Пройди этот список после внедрения. Если всё отмечено — guardrails работают.
+| Anti-pattern | Why harmful | What to do instead |
+|--------------|-------------|--------------------|
+| **Big Bang** — implement all layers in one sprint | The team does not absorb, guardrails break and get disabled | One sub-layer per sprint, starting with 1.1 |
+| **Copy-paste without adaptation** — copy all skills 1-to-1 | False positives overwhelm the team, checklists are ignored | Strike N/A before first run |
+| **Agent only, no human review** | Agents hallucinate, miss context | Human audit once per sprint ([`human-audit-bridge.md`](solutions/human-audit-bridge.md)) |
+| **AGENTS.md from another project** | Rules about another stack mislead the team | Write your own using [`rules/AGENTS_TEMPLATE.md`](../rules/AGENTS_TEMPLATE.md) as a template |
+| **Architecture tests without inventory** | NetArchTest configured for non-existent assemblies | Step 0 first — fix boundaries |
+| **"We are not ready for guardrails"** | Guardrails are needed exactly when an agent writes code | Start with Fast mode (1–2 days) |
+| **Cloning DemoProject** | Agent creates `examples/DemoProject/` in the target repo, copying structure from `dotnet-ai-guardrails` | `examples/` is a demonstration of the methodology, not a template to copy. Do not create demo projects in the working repo. |
 
-### Слой 0 + Слой 1.1–1.2 (Must have)
-- [ ] `AGENTS.md` в корне проекта, команда знает о его существовании
-- [ ] `dotnet build` падает на warning'ах
-- [ ] Архитектурные тесты проходят (NetArchTest или аналог)
-- [ ] `verify-tests.sh` проверяет, что тесты реально запускались
+---
 
-### Слой 1.3–1.5 + Слой 2.1 (Should have)
-- [ ] Regression-тесты покрывают все воспроизводимые баг-фиксы (capability: ни один закрытый баг без `BUG###_` теста или обоснованной альтернативы)
-- [ ] OpenAPI snapshot test (если есть API) или аналогичный контрактный тест
-- [ ] Code review агентом — часть PR-процесса (встроен в workflow каждого PR, а не разовая акция)
-- [ ] Smoke проходят на каждый PR
-- [ ] E2E проходил хотя бы 1 раз и нашёл или подтвердил работу критичного пути
+## Readiness Checklist: Is the Project Ready?
 
-### Внешний цикл (Could have)
-- [ ] Security audit проведён, находки зафиксированы в бэклоге
-- [ ] DBA audit проведён, планы выполнения новых запросов проверены
-- [ ] Tech debt audit проведён, семантическое дублирование зафиксировано
+Go through this list after implementation. If everything is checked — guardrails work.
 
-### Экосистема
-- [ ] Агент настроен и видит `AGENTS.md`
-- [ ] Скиллы лежат в `.kimi/skills/` (или аналогичной папке для другого агента)
-- [ ] CI запускает архитектурные тесты + verify-tests на каждый PR
+### Layer 0 + Layer 1.1–1.2 (Must have)
+- [ ] `AGENTS.md` in the project root, team knows it exists
+- [ ] `dotnet build` fails on warnings
+- [ ] Architecture tests pass (NetArchTest or equivalent)
+- [ ] `verify-tests.sh` checks that tests actually ran
+
+### Layer 1.3–1.5 + Layer 2.1 (Should have)
+- [ ] Regression tests cover all reproducible bug fixes (capability: no closed bug without a `BUG###_` test or a justified alternative)
+- [ ] OpenAPI snapshot test (if there is an API) or equivalent contract test
+- [ ] Agent code review is part of the PR process (built into every PR's workflow, not a one-off exercise)
+- [ ] Smoke tests pass on every PR
+- [ ] E2E ran at least once and found or confirmed a critical path
+
+### Outer Loop (Could have)
+- [ ] Security audit performed, findings recorded in backlog
+- [ ] DBA audit performed, execution plans of new queries checked
+- [ ] Tech debt audit performed, semantic duplication recorded
+
+### Ecosystem
+- [ ] Agent is configured and sees `AGENTS.md`
+- [ ] Skills live in `.kimi/skills/` (or equivalent folder for another agent)
+- [ ] CI runs architecture tests + verify-tests on every PR
 
 ---
 
 ## FAQ
 
-**Q: У нас .NET Framework 4.8. SAE применима?**  
-A: Да, но адаптируй. Nullable включай файлом (`#nullable enable`), NetArchTest замени на Roslyn analyzers, E2E — на интеграционные тесты через `HttpClient`.
+**Q: We use .NET Framework 4.8. Is SAE applicable?**  
+A: Yes, but adapt. Enable nullable per file (`#nullable enable`), replace NetArchTest with Roslyn analyzers, E2E — with integration tests via `HttpClient`.
 
-**Q: У нас Single-project MVP, нет Clean Architecture. Что проверять архитектурными тестами?**  
-A: Не слои, а конвенции: именование, запрещённые API-вызовы, ratchet на публичные типы. См. [`ADAPTATION.md`](../templates/skills/ADAPTATION.md).
+**Q: We have a single-project MVP, no Clean Architecture. What should architecture tests check?**  
+A: Not layers, but conventions: naming, forbidden API calls, ratchet on public types. See [`ADAPTATION.md`](../templates/skills/ADAPTATION.md).
 
-**Q: Команда сопротивляется — "это замедляет разработку".**  
-A: Начни с Fast-режима (1–2 дня). Покажи, как `AGENTS.md` предотвращает переписывание кода агентом. Guardrails экономят время, а не тратят.
+**Q: The team resists — "this slows down development".**  
+A: Start with Fast mode (1–2 days). Show how `AGENTS.md` prevents the agent from rewriting code. Guardrails save time, not waste it.
 
-**Q: Можно ли внедрять без AI-агента (просто для команды)?**  
-A: Можно, но значительная часть ценности (estimate) — в защите ОТ агентов. Без агента это просто хорошие engineering practices.
+**Q: Can we implement without an AI agent (just for the team)?**  
+A: Yes, but a significant part of the value (estimate) is protection FROM agents. Without an agent it is just good engineering practices.
 
-**Q: Сколько стоит поддержка?**  
-A: Слои 0 + 1.1–1.2 — "поставил и забыл" (минимальная поддержка). Аудиты — 1–2 часа раз в спринт. E2E — настройка 1 день, далее self-running.
-
----
-
-## Навигация по онбордингу
-
-| Застрял на шаге | Куда идти |
-|-----------------|-----------|
-| Не понимаю, какая у нас архитектура | [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md) |
-| Не знаю, какие скиллы выбрать | [`ADAPTATION.md`](../templates/skills/ADAPTATION.md) |
-| Не знаю, как настроить агента | [`docs/agents/`](agents/) → выбери своего |
-| Не понимаю, как работает слой | [`PYRAMID.md`](../PYRAMID.md) |
-| Хочу провести аудит руками | [`human-audit-bridge.md`](solutions/human-audit-bridge.md) |
-| Агент не находит скиллы | [`INSTALL.md`](../templates/skills/skeptical-ai-bootstrap/INSTALL.md) |
-| Готовые артефакты не подходят | [`NEW-SKILL-TEMPLATE.md`](../templates/skills/skeptical-ai-bootstrap/NEW-SKILL-TEMPLATE.md) + [`SKILL-ARCHITECTURE.md`](../templates/skills/skeptical-ai-bootstrap/SKILL-ARCHITECTURE.md) |
+**Q: How much does maintenance cost?**  
+A: Layers 0 + 1.1–1.2 are "set and forget" (minimal maintenance). Audits — 1–2 hours per sprint. E2E — setup 1 day, then self-running.
 
 ---
 
-> **Принцип:** SAE — не про идеальность. Это про то, чтобы агент не ломал код быстрее, чем команда успевает чинить. Начни с малого, добавляй слои по мере роста проекта.
+## Onboarding Navigation
+
+| Stuck at step | Where to go |
+|---------------|-------------|
+| I don't understand our architecture | [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md) |
+| I don't know which skills to choose | [`ADAPTATION.md`](../templates/skills/ADAPTATION.md) |
+| I don't know how to configure the agent | [`docs/agents/`](agents/) → choose yours |
+| I don't understand how a layer works | [`PYRAMID.md`](../PYRAMID.md) |
+| I want to perform an audit manually | [`human-audit-bridge.md`](solutions/human-audit-bridge.md) |
+| The agent does not find skills | [`INSTALL.md`](../templates/skills/skeptical-ai-bootstrap/INSTALL.md) |
+| Ready-made artifacts do not fit | [`NEW-SKILL-TEMPLATE.md`](../templates/skills/skeptical-ai-bootstrap/NEW-SKILL-TEMPLATE.md) + [`SKILL-ARCHITECTURE.md`](../templates/skills/skeptical-ai-bootstrap/SKILL-ARCHITECTURE.md) |
+
+---
+
+> **Principle:** SAE is not about perfection. It is about preventing the agent from breaking code faster than the team can fix it. Start small, add layers as the project grows.

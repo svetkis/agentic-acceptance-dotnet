@@ -1,14 +1,14 @@
-// TRAP: Агент добавляет ветвления и вложенность в метод, превращая его в нечитаемый клубок.
-// GUARDRAIL: Количество методов с нарушениями S3776 (cognitive) / S1541 (cyclomatic) не растёт.
+// TRAP: The agent keeps adding branches and nesting to a method, turning it into an unreadable tangle.
+// GUARDRAIL: The number of methods violating S3776 (cognitive) / S1541 (cyclomatic) does not grow.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
 //
-// NOTE: Этот паттерн предпочитает SonarAnalyzer.CSharp (S3776/S1541) как источник сложности.
-//       Альтернатива — Microsoft.CodeAnalysis.Metrics, но она медленнее и требует доп. пакетов.
+// NOTE: This pattern prefers SonarAnalyzer.CSharp (S3776/S1541) as the complexity source.
+//       An alternative is Microsoft.CodeAnalysis.Metrics, but it is slower and requires extra packages.
 
 using System.Diagnostics;
 using System.Text.RegularExpressions;
@@ -22,8 +22,8 @@ public class ComplexityRatchetTests
 {
     private static readonly string RepoRoot = FindRepoRoot();
 
-    // TRAP: Агент написал метод с 5 уровнями вложенности if/switch/foreach.
-    // GUARDRAIL: Фиксируем baseline нарушений и не даём ему расти.
+    // TRAP: The agent wrote a method with 5 levels of if/switch/foreach nesting.
+    // GUARDRAIL: We pin the violation baseline and do not let it grow.
     [Test]
     public void SonarComplexityViolations_ShouldNotIncrease()
     {
@@ -36,8 +36,8 @@ public class ComplexityRatchetTests
                      $"Current={violationCount}, Baseline={baseline}. Refactor the new method or update the baseline consciously.");
     }
 
-    // TRAP: В legacy-проекте нарушений слишком много, и ratchet не работает.
-    // GUARDRAIL: Проверяем, что worst-методы не стали сложнее (топ-10 hotspots ratchet).
+    // TRAP: In a legacy project there are too many violations, and the ratchet does not work.
+    // GUARDRAIL: We verify that the worst methods did not get more complex (top-10 hotspots ratchet).
     [Test]
     public void TopHotspotComplexity_ShouldNotIncrease()
     {

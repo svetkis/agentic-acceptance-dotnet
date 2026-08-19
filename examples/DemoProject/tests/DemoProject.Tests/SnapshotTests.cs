@@ -1,6 +1,6 @@
-// GUARDRAIL: OpenAPI snapshot тест ловит любое изменение API контракта.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/SnapshotTest.cs
-// Для демонстрации используем JSON-сериализацию доменной модели вместо HTTP.
+// GUARDRAIL: An OpenAPI snapshot test catches any change in the API contract.
+// This file is a working adaptation of the template from tests/patterns/SnapshotTest.cs
+// For the demo we use JSON serialization of the domain model instead of HTTP.
 
 using System.Text.Json;
 using DemoProject.Domain;

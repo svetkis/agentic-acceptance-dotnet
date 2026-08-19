@@ -1,5 +1,5 @@
-// GUARDRAIL: NetArchTest + regex-сканирование исходников ловят нарушения архитектуры.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/ArchitectureRules.cs
+// GUARDRAIL: NetArchTest + regex source scanning catch architecture violations.
+// This file is a working adaptation of the template from tests/patterns/ArchitectureRules.cs
 
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -65,9 +65,9 @@ public class ArchitectureRules
             .Because(FormatFailingTypes(result));
     }
 
-    // TRAP: Агент добавил public set в доменный тип, нарушая иммутабельность value object.
-    // GUARDRAIL: AreImmutableExternally ловит mutable public API в Domain-слое.
-    // NOTE: Для чистой иммутабельности используй BeImmutable(); здесь — external surface.
+    // TRAP: An agent added a public setter to a domain type, breaking value object immutability.
+    // GUARDRAIL: AreImmutableExternally catches a mutable public API in the Domain layer.
+    // NOTE: For full immutability use BeImmutable(); here we check the external surface.
     [Test]
     public async Task DomainTypes_ShouldBeImmutableExternally()
     {
@@ -82,8 +82,8 @@ public class ArchitectureRules
             .Because(FormatFailingTypes(result));
     }
 
-    // TRAP: Агент создал дубликат ID для задокументированного решения.
-    // GUARDRAIL: PERF-###, DB-###, AUD-### должны быть уникальны по всей кодбазе.
+    // TRAP: An agent created a duplicate ID for a documented decision.
+    // GUARDRAIL: PERF-###, DB-###, AUD-### must be unique across the codebase.
     [Test]
     public async Task DecisionIds_ShouldBeUnique()
     {

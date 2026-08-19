@@ -1,7 +1,7 @@
-// TRAP: Агент добавил +1 using или ProjectReference — диф выглядит безобидно,
-// но породил циклическую зависимость между слоями или проектами.
-// GUARDRAIL: NetArchTest + парсинг .csproj + Assembly-рефлексия ловят нарушения графа.
-// Аналогично работает для C++ #include или любого import-графа.
+// TRAP: The agent added +1 using or ProjectReference — the diff looks harmless,
+// but it introduced a circular dependency between layers or projects.
+// GUARDRAIL: NetArchTest + .csproj parsing + assembly reflection catch graph violations.
+// It works the same way for C++ #include or any import graph.
 
 using System.Reflection;
 using System.Xml.Linq;
@@ -12,8 +12,8 @@ namespace Tests.Patterns;
 
 public class DependencyDriftTest
 {
-    // TRAP: Агент добавил ссылку на проект "ради одного extension-метода".
-    // GUARDRAIL: Граф ProjectReference не содержит циклов.
+    // TRAP: The agent added a project reference "for the sake of one extension method".
+    // GUARDRAIL: The ProjectReference graph contains no cycles.
     [Test]
     public void ProjectReferences_ShouldNotHaveCycles()
     {
@@ -29,14 +29,14 @@ public class DependencyDriftTest
             .Because($"Circular project references detected: {string.Join(" | ", cycles)}");
     }
 
-    // TRAP: Агент внёс межслоевой using в "косметическом" рефакторинге.
-    // GUARDRAIL: NetArchTest ловит реальные IL-зависимости, а не строки в файлах.
-    // NOTE: Замените "MyProject.Domain" и "MyProject.Infrastructure" на свои сборки.
-    //       Для чистой рефлексии см. DomainAssembly_ShouldNotReference_InfrastructureRuntime ниже.
+    // TRAP: The agent introduced a cross-layer using in a "cosmetic" refactoring.
+    // GUARDRAIL: NetArchTest catches real IL dependencies, not lines in files.
+    // NOTE: Replace "MyProject.Domain" and "MyProject.Infrastructure" with your assemblies.
+    //       For pure reflection see DomainAssembly_ShouldNotReference_InfrastructureRuntime below.
     [Test]
     public void Domain_ShouldNotDependOn_Infrastructure()
     {
-        // Адаптация: загрузите свои сборки через typeof(DomainType).Assembly
+        // Adaptation: load your assemblies via typeof(DomainType).Assembly
         // var domain = typeof(YourDomainEntity).Assembly;
         // var infra = typeof(YourInfrastructureService).Assembly;
         //
@@ -51,13 +51,13 @@ public class DependencyDriftTest
             .Because("Template: adapt this test to your assembly names. See commented code.");
     }
 
-    // TRAP: Regex-сканирование using-ов даёт false positive на мёртвый код.
-    // GUARDRAIL: Assembly.GetReferencedAssemblies() показывает runtime-граф, а не текст.
-    // NOTE: Замените на свои сборки.
+    // TRAP: Regex scanning of usings gives false positives on dead code.
+    // GUARDRAIL: Assembly.GetReferencedAssemblies() shows the runtime graph, not the text.
+    // NOTE: Replace with your assemblies.
     [Test]
     public void DomainAssembly_ShouldNotReference_InfrastructureRuntime()
     {
-        // Адаптация:
+        // Adaptation:
         // var domainRefs = typeof(YourDomainEntity).Assembly
         //     .GetReferencedAssemblies()
         //     .Select(a => a.Name)

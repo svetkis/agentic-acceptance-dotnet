@@ -1,7 +1,7 @@
-// GUARDRAIL: Domain-сущности используют strongly typed IDs (BookingId, CustomerId),
-// а не голые Guid/string/int. Это бесплатная защита от подстановки ID одной сущности
-// в метод, ожидающий ID другой — ловится на этапе компиляции.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/StronglyTypedIds.cs
+// GUARDRAIL: Domain entities use strongly typed IDs (BookingId, CustomerId),
+// not raw Guid/string/int. This is free protection against substituting one entity's ID
+// into a method expecting another's — caught at compile time.
+// This file is a working adaptation of the template from tests/patterns/StronglyTypedIds.cs
 
 using System.Reflection;
 using DemoProject.Domain;

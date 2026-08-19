@@ -1,7 +1,7 @@
-// TRAP: Агент использует preview SDK или устаревшие NuGet-пакеты,
-// опираясь на training data вместо актуального состояния экосистемы.
-// GUARDRAIL: Regex-сканирование global.json, *.csproj, package.json
-// ловит preview-флаги и рассогласование версий.
+// TRAP: The agent uses a preview SDK or outdated NuGet packages,
+// relying on training data instead of the actual state of the ecosystem.
+// GUARDRAIL: Regex scanning of global.json, *.csproj, package.json
+// catches preview flags and version mismatches.
 
 using System.Text.RegularExpressions;
 using TUnit;
@@ -10,8 +10,8 @@ namespace Tests.Patterns;
 
 public class VersionAuditTest
 {
-    // TRAP: Агент притащил .NET 10 preview, хотя в команде стандарт — stable SDK.
-    // GUARDRAIL: global.json не должен содержать preview/rc/beta в version.
+    // TRAP: The agent brought in .NET 10 preview, although the team standard is a stable SDK.
+    // GUARDRAIL: global.json must not contain preview/rc/beta in version.
     [Test]
     public void GlobalJson_ShouldNotReferencePreviewSdk()
     {
@@ -25,8 +25,8 @@ public class VersionAuditTest
             .Because("Stable SDK only. Preview versions require explicit whitelist entry");
     }
 
-    // TRAP: Агент использует EF Core 8 в проекте на .NET 9.
-    // GUARDRAIL: PackageReference Microsoft.* должен совпадать с TargetFramework.
+    // TRAP: The agent uses EF Core 8 in a .NET 9 project.
+    // GUARDRAIL: Microsoft.* PackageReferences must match the TargetFramework.
     [Test]
     public void MicrosoftPackages_ShouldMatchTargetFramework()
     {
@@ -59,8 +59,8 @@ public class VersionAuditTest
             .Because($"Microsoft.* packages major version must match TargetFramework major ({majorVersion})");
     }
 
-    // TRAP: Агент добавил preview-версию NuGet-пакета.
-    // GUARDRAIL: PackageReference не должен содержать preview/rc/beta.
+    // TRAP: The agent added a preview version of a NuGet package.
+    // GUARDRAIL: PackageReferences must not contain preview/rc/beta.
     [Test]
     public void PackageReferences_ShouldNotBePrerelease()
     {
@@ -74,8 +74,8 @@ public class VersionAuditTest
             .Because("Pre-release packages require explicit whitelist entry with justification");
     }
 
-    // TRAP: Агент оставил frontend-зависимость на alpha/beta.
-    // GUARDRAIL: package.json dependencies не содержат prerelease.
+    // TRAP: The agent left a frontend dependency on alpha/beta.
+    // GUARDRAIL: package.json dependencies contain no prereleases.
     [Test]
     public void PackageJson_ShouldNotContainPrereleaseDependencies()
     {
@@ -96,8 +96,8 @@ public class VersionAuditTest
             .Because("Frontend dependencies must be stable releases");
     }
 
-    // TRAP: Агент использует устаревший actions/checkout@v2/v3 в CI.
-    // GUARDRAIL: GitHub Actions используют современные major versions.
+    // TRAP: The agent uses outdated actions/checkout@v2/v3 in CI.
+    // GUARDRAIL: GitHub Actions use modern major versions.
     [Test]
     public void GitHubActions_ShouldNotUseLegacyActionVersions()
     {

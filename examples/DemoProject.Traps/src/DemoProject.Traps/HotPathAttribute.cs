@@ -1,6 +1,6 @@
 namespace DemoProject.Traps;
 
-// TRAP: Агент добавляет тяжёлые аллокации в метод, который вызывается часто.
-// GUARDRAIL: [HotPath] + AllocationBudgetTests ловит регресс аллокаций.
+// TRAP: An agent adds heavy allocations to a method that is called frequently.
+// GUARDRAIL: [HotPath] + AllocationBudgetTests catch allocation regressions.
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class HotPathAttribute : Attribute { }

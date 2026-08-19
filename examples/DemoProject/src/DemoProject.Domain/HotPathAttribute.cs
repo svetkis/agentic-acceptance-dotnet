@@ -1,6 +1,6 @@
 namespace DemoProject.Domain;
 
-// TRAP: Агент добавляет тяжёлые аллокации или async в метод, который вызывается 1000 раз в секунду.
-// GUARDRAIL: [HotPath] + Roslyn-анализатор ловит new/async/boxing до запуска тестов.
+// TRAP: An agent adds heavy allocations or async to a method that is called 1000 times per second.
+// GUARDRAIL: [HotPath] + a Roslyn analyzer catch new/async/boxing before tests run.
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class HotPathAttribute : Attribute { }

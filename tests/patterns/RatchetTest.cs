@@ -1,7 +1,7 @@
-// TRAP: Агент при рефакторинге тихо удаляет типы, сервисы или ломает test runner.
-// GUARDRAIL: Рефлексией считаем публичные типы и тесты. Если count уменьшился — агент что-то сломал.
+// TRAP: During refactoring the agent silently deletes types and services, or breaks the test runner.
+// GUARDRAIL: We count public types and tests via reflection. If the count decreased, the agent broke something.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(...).IsGreaterThanOrEqualTo(...)
 // - xUnit:  [Fact] + Assert.True(current >= baseline)
 // - NUnit:  [Test] + Assert.That(current, Is.GreaterThanOrEqualTo(baseline))
@@ -14,8 +14,8 @@ namespace Tests.Patterns;
 
 public class RatchetTests
 {
-    // TRAP: Агент удалил сервисы или DTO при "cleanup", думая что они не нужны.
-    // GUARDRAIL: Этот тест падает, если количество публичных типов в слое уменьшилось.
+    // TRAP: The agent deleted services or DTOs during "cleanup", thinking they were unused.
+    // GUARDRAIL: This test fails if the number of public types in the layer decreased.
     [Test]
     public void PublicTypeCount_ShouldNotDecrease()
     {
@@ -23,22 +23,22 @@ public class RatchetTests
         var assembly = typeof(YourApplicationAssembly).Assembly;
         var currentCount = CountPublicTypes(assembly);
 
-        // Базовое значение — зафиксировано вручную при аудите
+         // Baseline value — recorded manually during the audit
         const int baselineCount = 12;
 
         // Assert
         Assert.That(currentCount).IsGreaterThanOrEqualTo(baselineCount);
     }
 
-    // TRAP: Агент сломал test runner или удалил тестовый проект — "0 tests ran, exit 0".
-    // GUARDRAIL: Архитектурный тест проверяет, что количество тестов не уменьшилось.
+    // TRAP: The agent broke the test runner or deleted the test project — "0 tests ran, exit 0".
+    // GUARDRAIL: An architectural test verifies that the test count did not decrease.
     [Test]
     public void TestCount_ShouldNotDecrease()
     {
         var testAssembly = typeof(RatchetTests).Assembly;
         var currentCount = GetTestMethods(testAssembly).Count();
 
-        // Базовое значение — зафиксировано при аудите. Обновлять вручную после роста покрытия.
+         // Baseline value — recorded during the audit. Update manually after coverage grows.
         const int baselineCount = 10;
 
         Assert.That(currentCount).IsGreaterThanOrEqualTo(baselineCount)

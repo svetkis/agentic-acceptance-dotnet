@@ -1,14 +1,14 @@
-// TRAP: Кастомный Roslyn-анализатор ломается после обновления Roslyn или начинает давать false positives.
-// GUARDRAIL: Unit-тесты на анализатор с positive/negative cases.
+// TRAP: A custom Roslyn analyzer breaks after a Roslyn upgrade or starts producing false positives.
+// GUARDRAIL: Unit tests for the analyzer with positive/negative cases.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
 //
-// NOTE: Этот паттерн — шаблон. Замени YourAnalyzer на реальный анализатор проекта
-//       и адаптируй positive/negative cases под его диагностики.
+// NOTE: This pattern is a template. Replace YourAnalyzer with the project's real analyzer
+//       and adapt the positive/negative cases to its diagnostics.
 
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
@@ -20,8 +20,8 @@ namespace Tests.Patterns;
 
 public class AnalyzerTests
 {
-    // TRAP: Анализатор не срабатывает на нарушении.
-    // GUARDRAIL: Positive case — код с нарушением должен породить diagnostic.
+    // TRAP: The analyzer does not fire on a violation.
+    // GUARDRAIL: Positive case — code with a violation must produce a diagnostic.
     [Test]
     public async Task YourAnalyzer_FlagsViolation()
     {
@@ -41,8 +41,8 @@ public class AnalyzerTests
             .Because("The analyzer must report SAE001 for the positive case.");
     }
 
-    // TRAP: Анализатор срабатывает там, где не должен (false positive).
-    // GUARDRAIL: Negative case — корректный код не порождает diagnostic.
+    // TRAP: The analyzer fires where it should not (false positive).
+    // GUARDRAIL: Negative case — valid code must not produce a diagnostic.
     [Test]
     public async Task YourAnalyzer_IgnoresValidCode()
     {

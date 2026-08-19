@@ -1,7 +1,7 @@
 namespace DemoProject.MinimalApi.Domain;
 
-// TRAP: Агент добавляет public setters, ломая инварианты.
-// GUARDRAIL: record с init-only properties — immutable by default.
+// TRAP: An agent adds public setters, breaking invariants.
+// GUARDRAIL: a record with init-only properties is immutable by default.
 public record Order
 {
     public required Guid Id { get; init; }

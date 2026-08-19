@@ -1,6 +1,6 @@
-// GUARDRAIL: NBomber показывает, что $Max$ latency не деградировал.
-// Этот файл — рабочая адаптация шаблона из tests/patterns/LoadTest.cs
-// Для демонстрации используем in-memory нагрузку без внешних HTTP-зависимостей.
+// GUARDRAIL: NBomber shows that $Max$ latency has not degraded.
+// This file is a working adaptation of the template from tests/patterns/LoadTest.cs
+// For the demo we use in-memory load without external HTTP dependencies.
 
 using DemoProject.Domain;
 using NBomber.Contracts;

@@ -1,7 +1,7 @@
-// TRAP: Агент добавляет логирование с email, phone, password —
-// PII утекает в лог-систему (Elastic, Kibana, Seq).
-// GUARDRAIL: [SensitiveData] inventory + starter regex checks для Log* вызовов.
-// NOTE: Для стабильной проверки C# логирования предпочитай Roslyn analyzer.
+// TRAP: The agent adds logging with email, phone, password —
+// PII leaks into the logging system (Elastic, Kibana, Seq).
+// GUARDRAIL: [SensitiveData] inventory + starter regex checks for Log* calls.
+// NOTE: For stable checking of C# logging, prefer a Roslyn analyzer.
 
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -14,8 +14,8 @@ public class SensitiveDataAttribute : Attribute { }
 
 public class PiiGuardTest
 {
-    // TRAP: Агент создал свойство Email/Phone/Password без [SensitiveData].
-    // GUARDRAIL: Все PII-поля обязаны иметь [SensitiveData].
+    // TRAP: The agent created an Email/Phone/Password property without [SensitiveData].
+    // GUARDRAIL: All PII fields must have [SensitiveData].
     [Test]
     public void AllPiiProperties_ShouldHaveSensitiveDataAttribute()
     {
@@ -45,8 +45,8 @@ public class PiiGuardTest
             .Because("Properties matching PII patterns must have [SensitiveData] attribute");
     }
 
-    // TRAP: Агент использует string interpolation в Log* — данные попадают в лог.
-    // GUARDRAIL: Log* вызовы не содержат $"..." (interpolated strings).
+    // TRAP: The agent uses string interpolation in Log* — data ends up in the log.
+    // GUARDRAIL: Log* calls must not contain $"..." (interpolated strings).
     [Test]
     public void LogCalls_ShouldNotUseInterpolatedStrings()
     {
@@ -61,8 +61,8 @@ public class PiiGuardTest
                      "Use _logger.LogInformation(\"User {UserId} logged in\", user.Id) instead");
     }
 
-    // TRAP: Агент передаёт email/phone/password в Log* как аргумент.
-    // GUARDRAIL: Log* вызовы не содержат переменных с PII-именами.
+    // TRAP: The agent passes email/phone/password to Log* as an argument.
+    // GUARDRAIL: Log* calls must not contain variables with PII names.
     [Test]
     public void LogCalls_ShouldNotContainPiiVariables()
     {
@@ -80,8 +80,8 @@ public class PiiGuardTest
                      "Log identifiers (UserId) instead of sensitive data");
     }
 
-    // TRAP: Агент добавил PII-поле, но не увеличил инвентарь [SensitiveData].
-    // GUARDRAIL: Количество [SensitiveData] свойств не уменьшается (ratchet).
+    // TRAP: The agent added a PII field but did not grow the [SensitiveData] inventory.
+    // GUARDRAIL: The number of [SensitiveData] properties does not decrease (ratchet).
     [Test]
     public void SensitiveDataAttributes_ShouldNotDecrease()
     {

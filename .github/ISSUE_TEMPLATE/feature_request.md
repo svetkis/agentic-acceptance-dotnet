@@ -1,18 +1,18 @@
 ---
-name: Feature Request / Предложение
+name: Feature Request
 about: Suggest a new skill, pattern, or improvement
 labels: enhancement
 ---
 
-## Problem / Проблема
+## Problem
 <!-- What gap does this fill? -->
 
-## Proposal / Предложение
+## Proposal
 <!-- Describe the solution -->
 
-## Alternatives / Альтернативы
+## Alternatives
 <!-- What else have you considered? -->
 
-## Checklist / Чеклист
+## Checklist
 - [ ] I have read `AGENTS.md` and `rules/AGENTS_TEMPLATE.md`
 - [ ] This aligns with the Skeptical AI Engineering methodology

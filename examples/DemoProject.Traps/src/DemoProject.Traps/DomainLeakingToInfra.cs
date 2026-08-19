@@ -2,8 +2,8 @@ using System.Net.Http;
 
 namespace DemoProject.Traps.Domain;
 
-// TRAP: Агент добавил using System.Net.Http в Domain для "одного вызова".
-// GUARDRAIL: HaveDependencyOnAny ловит IL-зависимость от запрещённого namespace.
+// TRAP: An agent added using System.Net.Http in Domain for "a single call".
+// GUARDRAIL: HaveDependencyOnAny catches an IL dependency on a forbidden namespace.
 public class DomainLeakingToInfra
 {
     public void DoSomething()

@@ -1,6 +1,6 @@
-// GUARDRAIL: Методы с cyclomatic complexity выше порога не проходят ratchet.
-// Этот проект — failing demo: метод ComplexityHotspot.Calculate специально
-// нарушает порог, поэтому тест ДОЛЖЕН падать.
+// GUARDRAIL: Methods with cyclomatic complexity above the threshold do not pass the ratchet.
+// This project is a failing demo: the method ComplexityHotspot.Calculate intentionally
+// violates the threshold, so the test MUST fail.
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;

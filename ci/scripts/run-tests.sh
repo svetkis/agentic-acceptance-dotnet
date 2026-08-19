@@ -1,10 +1,10 @@
 #!/bin/bash
-# GUARDRAIL: Запускает все тестовые проекты через `dotnet run --project`.
-# Автоматически находит тестовые проекты, чтобы не захардкоживать пути.
+# GUARDRAIL: Runs all test projects via `dotnet run --project`.
+# Automatically discovers test projects to avoid hardcoding paths.
 #
-# Адаптация под проект:
-# - Если тесты лежат в папке `tests/` — скрипт найдёт их сам.
-# - Если тесты разбросаны по `src/` — измени `TEST_DIRS` ниже.
+# Project adaptation:
+# - If tests live in a `tests/` folder — the script will find them itself.
+# - If tests are scattered across `src/` — change `TEST_DIRS` below.
 
 set -e
 
@@ -16,7 +16,7 @@ for dir in "${TEST_DIRS[@]}"; do
         continue
     fi
 
-    # Ищем проекты с TUnit, xUnit, NUnit или MSTest
+    # Look for projects using TUnit, xUnit, NUnit, or MSTest
     while IFS= read -r -d '' proj; do
         FOUND=1
         echo "========================================"

@@ -6,10 +6,10 @@ using System.Collections.Immutable;
 
 namespace DemoProject.Analyzers;
 
-// TRAP: Агент добавляет аллокации (new, async state machine, boxing) в методы,
-// которые вызываются на каждый запрос — перформанс деградирует незаметно.
-// GUARDRAIL: Анализатор ловит new/async/boxing в методах с [HotPath] прямо в IDE.
-// Обратная связь: ~0.5 секунды (еще до dotnet build), а не профилировщик на проде.
+// TRAP: An agent adds allocations (new, async state machines, boxing) to methods
+// that run on every request — performance degrades silently.
+// GUARDRAIL: The analyzer catches new/async/boxing in [HotPath] methods right in the IDE.
+// Feedback loop: ~0.5 seconds (even before dotnet build), not a profiler in production.
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class HotPathAnalyzer : DiagnosticAnalyzer
 {
@@ -143,7 +143,7 @@ public class HotPathAnalyzer : DiagnosticAnalyzer
 
     private static bool HasHotPathAttribute(ISymbol symbol)
     {
-        // NOTE: при копировании анализатора в другой проект измени namespace на свой
+        // NOTE: when copying this analyzer into another project, change the namespace to your own
         return symbol.GetAttributes().Any(a =>
             a.AttributeClass?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
             == "global::DemoProject.Domain.HotPathAttribute");

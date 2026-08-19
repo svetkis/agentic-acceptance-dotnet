@@ -1,10 +1,10 @@
-// TRAP: Агент использует EF Core антипаттерны, которые рефлексия не видит
-// или нарушает read/write path конвенции.
-// GUARDRAIL: NetArchTest + starter regex checks ловят нарушения EF-специфичных правил.
-// NOTE: Для стабильных C# semantic rules (FindAsync/Include/read-path) предпочитай Roslyn analyzer.
-// Этот файл — только для проектов с EF Core. Для Dapper см. DapperGuardRules.cs.
+// TRAP: The agent uses EF Core antipatterns that reflection cannot see,
+// or breaks read/write path conventions.
+// GUARDRAIL: NetArchTest + starter regex checks catch violations of EF-specific rules.
+// NOTE: For stable C# semantic rules (FindAsync/Include/read-path) prefer a Roslyn analyzer.
+// This file is only for projects using EF Core. For Dapper see DapperGuardRules.cs.
 //
-// Адаптация под фреймворк:
+// Framework adaptation:
 // - TUnit:  [Test] + Assert.That(result.IsSuccessful).IsTrue()
 // - xUnit:  [Fact] + Assert.True(result.IsSuccessful)
 // - NUnit:  [Test] + Assert.That(result.IsSuccessful, Is.True)
@@ -18,10 +18,10 @@ namespace Tests.Patterns;
 
 public class EfCoreGuardRules
 {
-    // TRAP: Агент добавил FindAsync в query-handler, "потому что так короче".
-    // GUARDRAIL: Regex-сканирование ловит FindAsync в read-path (QueryHandlers / QueryServices).
-    // NOTE: Также ловится compile-time через BannedApiAnalyzers (RS0030) в BannedSymbols.txt.
-    //       Regex тут — fallback / double-check.
+    // TRAP: The agent added FindAsync to a query handler, "because it is shorter".
+    // GUARDRAIL: Regex scanning catches FindAsync in the read path (QueryHandlers / QueryServices).
+    // NOTE: It is also caught at compile time via BannedApiAnalyzers (RS0030) in BannedSymbols.txt.
+    //       Regex here is a fallback / double-check.
     [Test]
     public void FindAsync_ShouldNotBeUsedInReadPath()
     {
@@ -34,8 +34,8 @@ public class EfCoreGuardRules
             .Because("FindAsync is only allowed in write-path / command handlers.");
     }
 
-    // TRAP: Агент добавил DbContext в Application layer.
-    // GUARDRAIL: Application знает только про Ports (интерфейсы).
+    // TRAP: The agent added a DbContext to the Application layer.
+    // GUARDRAIL: Application only knows about Ports (interfaces).
     [Test]
     public void Application_ShouldNotReferenceEfCore()
     {
@@ -47,8 +47,8 @@ public class EfCoreGuardRules
         Assert.That(result.IsSuccessful).IsTrue();
     }
 
-    // TRAP: Агент использовал .Include() в QueryService — N+1 и лишние данные.
-    // GUARDRAIL: Regex-сканирование ловит то, что рефлексия не видит.
+    // TRAP: The agent used .Include() in a QueryService — N+1 and extra data.
+    // GUARDRAIL: Regex scanning catches what reflection cannot see.
     [Test]
     public void QueryServices_ShouldNotUse_Include()
     {

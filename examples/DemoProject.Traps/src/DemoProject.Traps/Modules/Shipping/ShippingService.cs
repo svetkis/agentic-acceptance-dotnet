@@ -2,10 +2,10 @@ using DemoProject.Traps.Modules.Orders;
 
 namespace DemoProject.Traps.Modules.Shipping;
 
-// TRAP: Замыкание цикла — Shipping зависит от Orders.
-// GUARDRAIL: ArchUnitNET BeFreeOfCycles ловит этот цикл.
-// NetArchTest.NotHaveDependenciesBetweenSlices тоже словил бы,
-// но запретил бы ВСЕ межмодульные зависимости, даже легальные DAG.
+// TRAP: The cycle closes — Shipping depends on Orders.
+// GUARDRAIL: ArchUnitNET BeFreeOfCycles catches this cycle.
+// NetArchTest.NotHaveDependenciesBetweenSlices would also have caught it,
+// but it would forbid ALL cross-module dependencies, even legal DAGs.
 public class ShippingService
 {
     public void Ship(IOrderRepository order) { }
