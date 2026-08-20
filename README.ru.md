@@ -27,10 +27,10 @@ AI-агенты (Cursor, Claude, Copilot) ускоряют написание к
 | Уровень | Когда срабатывает | Что входит | Главный вопрос |
 |---------|-------------------|------------|----------------|
 | **Control Foundation** | До изменения кода | `AGENTS.md`, architecture boundaries, Decision Guards, policies | Какие ограничения и решения уже приняты? |
-| **1. Change Checks** | IDE, build, pre-commit | Компилятор, nullable, analyzers, formatting, banned APIs, dependency checks, pre-commit review | Может ли изменение технически существовать? |
-| **2. Behavior Checks** | Локальный или CI test run | Unit, regression, contract, characterization, architecture tests, ratchets | Сохранились ли ожидаемые свойства и поведение? |
-| **3. System Checks** | PR, CI, release pipeline | Integration, E2E, smoke, Testcontainers, load (NBomber), deployment verification | Работает ли система целиком? |
-| **4. Periodic Assurance** | По расписанию или risk-trigger | Security, database, performance, UX, API, i18n, tech-debt audits | Какие системные риски не видны автоматическим проверкам? |
+| **1. Change Checks** | IDE, build, pre-commit | Компилятор, nullable, анализаторы, formatting, banned APIs | Может ли изменение технически существовать? |
+| **2. Behavior Checks** | Локальный или CI test run | Unit, regression, contract, архитектурные тесты, ratchets; уровень замыкает **ревью агента** (гейт перед PR) | Сохранились ли ожидаемые свойства и поведение? |
+| **3. System Checks** | PR, CI, release pipeline | Integration, характеризующие, E2E, smoke, Testcontainers, нагрузочные (NBomber), deployment verification | Работает ли система целиком? |
+| **4. Reality Checks** | По расписанию или risk-trigger | LLM-аудиты (security, database, performance, UX, API, i18n, tech-debt), дрейф сложности (когнитивная/цикломатическая через baseline + ratchet), устаревшие и уязвимые зависимости | Какие свойства кодовой базы дрейфуют со временем и не видны на уровне отдельного изменения? |
 
 Отдельные процессы, не являющиеся уровнями:
 
@@ -46,10 +46,10 @@ AI-агенты (Cursor, Claude, Copilot) ускоряют написание к
 | Уровень / процесс | Артефакты репозитория |
 |-------------------|-----------------------|
 | Control Foundation | `rules/AGENTS_TEMPLATE.md` (+ efcore/dapper add-ons), `rules/CONVENTIONS.md`, Decision Guards (`PERF-###`/`DB-###`) |
-| 1. Change Checks | Banned APIs, Roslyn-анализаторы (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml`, `templates/skills/code-review/`, `templates/skills/frontend-code-review/`, `templates/skills/task-compliance/` |
-| 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests), `tests/conventions/` |
+| 1. Change Checks | Banned APIs, Roslyn-анализаторы (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml` |
+| 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests), `tests/conventions/`, `templates/skills/code-review/`, `templates/skills/frontend-code-review/`, `templates/skills/task-compliance/` |
 | 3. System Checks | E2E/smoke паттерны, NBomber (`tests/patterns/LoadTest.cs`) |
-| 4. Periodic Assurance | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, simplicity, complexity, version, test, mutation, spellcheck, business-risk) |
+| 4. Reality Checks | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, simplicity, complexity, version, test, mutation, spellcheck, business-risk) |
 | Control Maintenance | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
 | Engineering Governance | `docs/solutions/human-audit-bridge.md`, release decision |
 
@@ -102,15 +102,15 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   ├── doc-hygiene/               # Control Maintenance: документация
 │   ├── backlog-hygiene/           # Control Maintenance: бэклог
 │   ├── skeptical-ai-bootstrap/    # Оценка зрелости + бэклог guardrails
-│   ├── code-review/               # Change Checks: pre-commit / PR review (.NET)
+│   ├── code-review/               # Behavior Checks: ревью агента — гейт перед PR
 │   ├── task-compliance/           # Change Checks: проверка scope
-│   ├── security-audit/            # Periodic Assurance: по триггеру
-│   ├── dba-audit/                 # Periodic Assurance: по триггеру (EF Core)
-│   ├── dba-audit-dapper/          # Periodic Assurance: по триггеру (Dapper / Raw SQL)
-│   ├── api-design-audit/          # Periodic Assurance: по триггеру
-│   ├── bot-audit/                 # Periodic Assurance: по триггеру
-│   ├── performance-audit/         # Periodic Assurance: по триггеру
-│   └── i18n-audit/                # Periodic Assurance: по триггеру
+│   ├── security-audit/            # Reality Checks: по триггеру
+│   ├── dba-audit/                 # Reality Checks: по триггеру (EF Core)
+│   ├── dba-audit-dapper/          # Reality Checks: по триггеру (Dapper / Raw SQL)
+│   ├── api-design-audit/          # Reality Checks: по триггеру
+│   ├── bot-audit/                 # Reality Checks: по триггеру
+│   ├── performance-audit/         # Reality Checks: по триггеру
+│   └── i18n-audit/                # Reality Checks: по триггеру
 ├── docs/
 │   ├── traps/                     # Ловушки агента
 │   └── solutions/

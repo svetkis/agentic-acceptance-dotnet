@@ -14,26 +14,43 @@
 
 ---
 
-## Inner Loop
+## 1. Change Checks
 
-Trigger on every change. Feedback loop: seconds → minutes.
+Fast feedback on every change. Gate: before commit.
+
+| Skill | Role | Mechanism | Trigger | Gate | Status |
+|-------|------|-----------|---------|------|--------|
+| compiler-guard | Fast Feedback | MSBuild | Build | BLOCKER | ✅ Active |
+
+## 2. Behavior Checks
+
+Expected properties preserved. Gate: review agent before PR.
 
 | Skill | Role | Mechanism | Trigger | Gate | Status |
 |-------|------|-----------|---------|------|--------|
 | code-review | Reviewer | AI Agent | PR | BLOCKER | ✅ Active |
 | task-compliance | Scope Guard | AI Agent | PR | BLOCKER | ✅ Active |
 | architecture-audit | Build Guard | Unit Tests | Build | BLOCKER | ✅ Active |
-| compiler-guard | Fast Feedback | MSBuild | Build | BLOCKER | ✅ Active |
 
-## Outer Loop
+## 3. System Checks
 
-Trigger on schedule or event. Feedback loop: hours → days.
+The system works as a whole. Gate: PR / release pipeline.
+
+| Skill | Role | Mechanism | Trigger | Gate | Status |
+|-------|------|-----------|---------|------|--------|
+| e2e-smoke | Critical Paths | Testcontainers | PR + Nightly | BLOCKER | 🚧 WIP |
+| load-test | Perf Under Load | NBomber | Release | WARNING | 📋 Backlog |
+
+## 4. Reality Checks
+
+Systemic drift invisible to any single change. Trigger: schedule / risk event.
 
 | Skill | Role | Mechanism | Trigger | Gate | Status |
 |-------|------|-----------|---------|------|--------|
 | security-audit | Security Auditor | AI Agent | Weekly | WARNING | ✅ Active |
 | dba-audit | DBA Auditor | AI Agent + Script | Sprint | BLOCKER | ✅ Active |
-| performance-audit | Perf Auditor | AI Agent + NBomber | Release | BLOCKER | 🚧 WIP |
+| complexity-ratchet | Complexity Guard | SonarAnalyzer + Ratchet | Build + Sprint | WARNING | 🚧 WIP |
+| version-audit | Dependency Guard | CI check | Weekly | WARNING | 📋 Backlog |
 | api-design-audit | API Design Auditor | AI Agent | Sprint | WARNING | 📋 Backlog |
 | bot-audit | Bot Auditor | AI Agent | Sprint | WARNING | 📋 Backlog |
 
@@ -60,9 +77,9 @@ Unique to this project.
 
 ## Gaps (what's missing)
 
-| Layer | What's missing | Priority | Plan |
+| Level | What's missing | Priority | Plan |
 |-------|----------------|----------|------|
-| {layer} | {gap} | {priority} | {plan} |
+| {level} | {gap} | {priority} | {plan} |
 
 ---
 

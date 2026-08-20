@@ -65,7 +65,7 @@ agent writing most of the code.
 
 ## Takeaway
 
-For a single-project MVP the entire Periodic Assurance layer and most
+For a single-project MVP the entire Reality Checks level and most
 System Checks are **unjustified**: no incident history, no sensitive data, no
 production load. Control Foundation + a handful of Change/Behavior Checks cover
 the actual risk profile at ~3 h of setup. Adopting the full artifact set would

@@ -2,7 +2,7 @@
 
 ## Pre-flight
 - [ ] Path to the .NET solution root obtained
-- [ ] Mode determined: `fast` | `standard` | `paranoid`
+- [ ] Mode determined: `fast` | `standard` | `high-assurance`
 - [ ] Stack determined (don't assume — check `.csproj`)
 
 ## Discovery — honest codebase inspection
@@ -15,14 +15,19 @@
 - [ ] Architecture determined (Clean / VSlice / Modular / None / BBoM)
 - [ ] Existing `AGENTS.md`, conventions found
 
-## Layer 1 — Compiler (principle: fast feedback)
+## Foundation — Constitution (agent instructions)
+- [ ] Is there `AGENTS.md` or equivalent?
+- [ ] Is there `CONVENTIONS.md`?
+- [ ] Are there decision guards?
+
+## Level 1 — Change Checks (principle: fast feedback, gate before commit)
 - [ ] `<TreatWarningsAsErrors>`?
 - [ ] `<Nullable>` or `#nullable`?
 - [ ] Is there `.editorconfig`?
 - [ ] Does the build pass without warnings?
 - [ ] **If .NET Framework:** are there Roslyn analyzers?
 
-## Layer 2 — Architecture (principle: auto-check layers)
+## Level 2 — Behavior Checks: Architecture tests (principle: auto-check layers)
 - [ ] Are there architectural tests of ANY kind?
 - [ ] Does NetArchTest fit the stack?
   - [ ] .NET 6+? → NetArchTest is possible
@@ -32,7 +37,7 @@
 - [ ] Are critical attributes checked (ratchet)?
 - [ ] **Decision:** Adapt / Create new skill / Skip
 
-## Layer 3 — Tests (principle: coverage + real DB, not InMemory)
+## Level 2 — Behavior Checks: Tests (principle: coverage + real DB, not InMemory)
 - [ ] Are there unit tests?
 - [ ] Are there integration tests?
 - [ ] Is there a "0 tests ran" check?
@@ -40,7 +45,7 @@
 - [ ] **If Worker/Desktop/Game/ML:** E2E tests will be different — propose creating
 - [ ] **Decision:** Adapt / Create new skill / Skip
 
-## Layer 4 — Code Review (principle: agent checks agent)
+## Level 2 (gate) — Code Review (principle: agent checks agent; closes Behavior Checks before PR)
 - [ ] Are there agent rules?
 - [ ] Does the ready `code-review` skill fit the stack?
   - [ ] Razor Pages? → need `code-review-razor`
@@ -52,8 +57,9 @@
   - [ ] Minimal API + EF Core? → ✅ adapt
 - [ ] **Decision:** Adapt / Create new skill / Skip
 
-## Layer 5 — E2E / MCP (principle: end-to-end via external systems)
+## Level 3 — System Checks (principle: the system works as a whole)
 - [ ] Are there E2E checks?
+- [ ] Are there integration tests? Characterization tests (for legacy afraid to touch)?
 - [ ] Does the project type allow OpenAPI snapshot?
   - [ ] Web API → ✅ can snapshot
   - [ ] gRPC → ❌ need proto compatibility check
@@ -61,12 +67,7 @@
 - [ ] Are there load tests?
 - [ ] **Decision:** Adapt / Create new skill / Skip
 
-## Layer 0 — Instructions
-- [ ] Is there `AGENTS.md` or equivalent?
-- [ ] Is there `CONVENTIONS.md`?
-- [ ] Are there decision guards?
-
-## Outer Loop — Audits
+## Level 4 — Reality Checks (principle: systemic drift, invisible to any single change)
 - [ ] Are there security artifacts?
 - [ ] Is DBA audit applicable to project ORM?
   - [ ] EF Core → ✅ ready skill
@@ -74,6 +75,8 @@
   - [ ] Mongo → ❌ create `dba-audit-mongo`
 - [ ] Are Perf / UX / i18n audits needed?
   - [ ] Russian only → i18n not needed, document
+- [ ] Complexity drift controlled? (cognitive `S3776` / cyclomatic `S1541`: error at build for new code, baseline + ratchet for legacy)
+- [ ] Dependency drift controlled? (outdated / vulnerable packages — `version-audit` or CI check)
 - [ ] **Decision:** Adapt / Create new skill / Skip
 
 ## New Skill Design (if required)
@@ -81,7 +84,7 @@
 - [ ] **Role** defined: when and who checks?
 - [ ] **Mechanism** selected: Roslyn / Test / Script / AI Agent / MSBuild?
 - [ ] **Name** invented: `{what-checks}-{context}`
-- [ ] **Place** defined: `.kimi/skills/{name}/`
+- [ ] **Place** defined: agent-specific skills dir (see Phase 5 of SKILL.md)
 - [ ] **Integration** defined:
   - [ ] Input: where do we get context?
   - [ ] Output: where do we send results?
@@ -95,7 +98,7 @@
 ## Ecosystem Map (generated in report)
 - [ ] Table of all project skills created
 - [ ] Each skill has status: Active / WIP / Backlog
-- [ ] Gaps between layers defined
+- [ ] Gaps between levels defined
 - [ ] New skills added to the map
 
 ## Anti-Patterns Check (do not impose!)
@@ -109,10 +112,10 @@
 - [ ] Did not create a skill "for the sake of skill" — there is a real threat
 
 ## Report Quality Gates
-- [ ] Each layer has status + rationale
-- [ ] For each layer specified: Adapt / Create / Deploy / Skip
+- [ ] Each level has status + rationale
+- [ ] For each level specified: Adapt / Create / Deploy / Skip
 - [ ] New skills described with rationale (why ready-made don't fit)
 - [ ] Each new skill has: role, mechanism, place, integration
-- [ ] Non-applicable layers documented (why)
+- [ ] Non-applicable levels documented (why)
 - [ ] Skill ecosystem map generated
 - [ ] No hallucinations — only facts from the codebase

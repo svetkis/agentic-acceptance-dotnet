@@ -143,11 +143,11 @@ done
 ```markdown
 # Project Skills
 
-## Inner Loop (on every PR)
-- `code-review` — diff-based review
+## 2. Behavior Checks — gates (every PR)
+- `code-review` — diff-based review, closes the level before PR
 - `task-compliance` — scope check
 
-## Outer Loop (audits)
+## 4. Reality Checks (audits)
 - `security-audit` — once per sprint
 - `dba-audit` — on migrations
 - `dba-audit-dapper` — if the stack is Dapper

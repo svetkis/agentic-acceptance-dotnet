@@ -15,15 +15,15 @@
 
 ## Summary by Principles
 
-| Layer | Principle Adhered | Current State | Decision |
+| Level | Principle Adhered | Current State | Decision |
 |------|-------------------|---------------|----------|
-| 1. Compiler | 🟡 | Nullable enable, but no TreatWarningsAsErrors | **Adapt**: Directory.Build.props |
-| 2. Architecture | 🔴 | No arch tests. Vertical Slice — standard NetArchTest rules (about layers) are not applicable | **Adapt**: NetArchTest with custom rules about feature boundaries |
-| 3. Tests | 🟡 | xUnit, 340 tests, no "0 ran" check | **Adapt**: verify-tests.sh for xUnit |
-| 4. Code Review | 🔴 | No AGENTS.md. Dapper + MediatR — ready-made skill does not fit | **Create skill**: `code-review-dapper` |
-| 5. E2E / MCP | 🔴 | Worker Service, no HTTP. OpenAPI snapshot impossible | **Create skill**: `e2e-worker` |
-| 0. Instructions | 🔴 | No AGENTS.md | **Implement**: `rules/AGENTS_TEMPLATE.md` |
-| Outer loop | 🔴 | No audits. Dapper + SQL Server — ready-made DBA does not fit | **Create skill**: `dba-audit-dapper` |
+| Foundation | 🔴 | No AGENTS.md | **Implement**: `rules/AGENTS_TEMPLATE.md` |
+| 1. Change Checks | 🟡 | Nullable enable, but no TreatWarningsAsErrors | **Adapt**: Directory.Build.props |
+| 2. Behavior — architecture | 🔴 | No arch tests. Vertical Slice — standard NetArchTest rules (about layers) are not applicable | **Adapt**: NetArchTest with custom rules about feature boundaries |
+| 2. Behavior — tests | 🟡 | xUnit, 340 tests, no "0 ran" check | **Adapt**: verify-tests.sh for xUnit |
+| 2. (gate) Code review | 🔴 | Dapper + MediatR — ready-made skill does not fit | **Create skill**: `code-review-dapper` |
+| 3. System Checks | 🔴 | Worker Service, no HTTP. OpenAPI snapshot impossible | **Create skill**: `e2e-worker` |
+| 4. Reality Checks | 🔴 | No audits. Dapper + SQL Server — ready-made DBA does not fit | **Create skill**: `dba-audit-dapper` |
 
 ---
 
@@ -221,17 +221,20 @@ The agent designed each new skill fully — not just a name, but role, mechanism
 ```markdown
 # Project Skills: Logistics.Worker
 
-## Inner Loop
+## 2. Behavior Checks (gate before PR)
 | Skill | Role | Mechanism | Trigger | Gate | Status |
 |-------|------|-----------|---------|------|--------|
 | code-review-dapper | Reviewer | AI Agent | PR | BLOCKER | 🚧 WIP |
 | task-compliance | Scope Guard | AI Agent | PR | BLOCKER | 📋 Backlog |
 | architecture-audit (VSlice) | Build Guard | NetArchTest custom | Build | BLOCKER | 🚧 WIP |
-| compiler-guard | Fast Feedback | MSBuild props | Build | BLOCKER | ✅ Active* |
 
-* Sprint 0 activates TreatWarningsAsErrors
+* compiler-guard (Level 1) is ✅ Active — Sprint 0 activates TreatWarningsAsErrors
 
-## Outer Loop
+## 3. System Checks
+No ready-made artifact fits (Worker Service, no HTTP) —
+covered by the project-specific `e2e-worker` below.
+
+## 4. Reality Checks
 | Skill | Role | Mechanism | Trigger | Gate | Status |
 |-------|------|-----------|---------|------|--------|
 | security-audit | Security Auditor | AI Agent | Weekly | WARNING | 📋 Backlog |

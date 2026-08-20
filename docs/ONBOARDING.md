@@ -7,8 +7,8 @@
 > **Control model:** Engineering Assurance Levels — see [README.md](../README.md#how-it-works).
 > The steps below use legacy layer names (0, 1.1–2.3) from `PYRAMID.md` as
 > references to concrete steps; mapping: Layer 0 → Control Foundation,
-> 1.1/1.4 → Change Checks, 1.2/1.3 → Behavior Checks, 1.5/2.1/2.3 → System Checks,
-> 2.2 → Periodic Assurance, outer loop → Engineering Governance,
+> 1.1 → Change Checks, 1.2/1.3/1.4 → Behavior Checks, 1.5/2.1/2.3 → System Checks,
+> 2.2 → Reality Checks, outer loop → Engineering Governance,
 > artifact grooming → Control Maintenance.
 
 ---
@@ -285,7 +285,7 @@ Go through this list after implementation. If everything is checked — guardrai
 - [ ] Smoke tests pass on every PR
 - [ ] E2E ran at least once and found or confirmed a critical path
 
-### Outer Loop (Could have)
+### Reality Checks (Could have)
 - [ ] Security audit performed, findings recorded in backlog
 - [ ] DBA audit performed, execution plans of new queries checked
 - [ ] Tech debt audit performed, semantic duplication recorded

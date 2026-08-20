@@ -105,4 +105,4 @@ See `docs/agents/` for details on each agent:
 
 - `fast` — only critical (1-2 days)
 - `standard` — all pyramid layers (1-2 weeks)
-- `high-assurance` — everything + outer loop (1 month)
+- `high-assurance` — everything + Reality Checks (1 month)

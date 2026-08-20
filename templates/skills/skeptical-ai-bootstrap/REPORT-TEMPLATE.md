@@ -16,15 +16,15 @@
 
 ## 1. Check Structure (What we built for this project)
 
-| Layer | Mechanism | Files / Skills | Status |
+| Level | Mechanism | Files / Skills | Status |
 |------|-----------|----------------|--------|
-| 1. Compiler | `Directory.Build.props` + `.editorconfig` | `Directory.Build.props` | ✅ Implemented |
-| 2. Architecture | NetArchTest | `tests/ArchitectureRules.cs` | 🚧 Backlog |
-| 3. Tests | TUnit + `dotnet run` | `tests/*.cs` | ✅ Implemented |
-| 4. Code Review | Agent by diff | `.kimi/skills/code-review/` | ✅ Adapted |
-| 5. E2E / MCP | OpenAPI snapshot | `tests/SnapshotTests.cs` | ❌ Not applicable |
-| 0. Instructions | AGENTS.md | `rules/AGENTS_TEMPLATE.md` | ✅ Implemented |
-| Outer loop | Batch audits | `.kimi/skills/security-audit/` | 🚧 Backlog |
+| Foundation (Constitution) | AGENTS.md | `AGENTS.md` (from `rules/AGENTS_TEMPLATE.md`) | ✅ Implemented |
+| 1. Change Checks | `Directory.Build.props` + `.editorconfig` | `Directory.Build.props` | ✅ Implemented |
+| 2. Behavior — tests | TUnit + `dotnet run` | `tests/*.cs` | ✅ Implemented |
+| 2. Behavior — architecture | NetArchTest | `tests/ArchitectureRules.cs` | 🚧 Backlog |
+| 2. (gate) Code review | Agent by diff, before PR | `.kimi/skills/code-review/` | ✅ Adapted |
+| 3. System | E2E / smoke / load | `tests/E2ETests.cs` | ❌ Not applicable |
+| 4. Reality | Batch audits, complexity ratchet, dependency check | `.kimi/skills/security-audit/` | 🚧 Backlog |
 
 **Legend:** ✅ Implemented / 🚧 Backlog / ❌ Not applicable
 
@@ -72,13 +72,13 @@ For each adapted skill:
 
 ## 5. Skill Ecosystem (Ecosystem map)
 
-### Inner loop (every PR)
+### 2. Behavior Checks — gates (every PR, before merge)
 | Skill | Status | Note |
 |-------|--------|------|
 | `code-review` | ✅ Active | Adapted for Minimal API |
 | `task-compliance` | ✅ Active | No changes |
 
-### Outer loop (once per sprint)
+### 4. Reality Checks (schedule / trigger)
 | Skill | Status | Note |
 |-------|--------|------|
 | `security-audit` | 🚧 WIP | Adapted for Minimal API |
@@ -94,15 +94,15 @@ For each adapted skill:
 
 ## 6. Implementation Backlog
 
-### Sprint 0 — Layer 0 + Compiler (1 day)
+### Sprint 0 — Foundation + Change Checks (1 day)
 - [ ] **Implement** `rules/AGENTS_TEMPLATE.md` → adapt to stack
 - [ ] **Implement** `rules/CONVENTIONS.md`
 - [ ] **Adapt** `Directory.Build.props`
 
-### Sprint 1 — Architecture (3 days)
+### Sprint 1 — Behavior Checks: architecture tests (3 days)
 - [ ] **Adapt** `ArchitectureRules.cs` → custom rules for project architecture
 
-### Sprint 2 — Code Review + Audits (2 days)
+### Sprint 2 — Review gate + Reality Checks (2 days)
 - [ ] **Adapt** `code-review` → remove layer checks, add Minimal API
 - [ ] **Adapt** `security-audit` → `.RequireAuthorization()`, webhook protection
 

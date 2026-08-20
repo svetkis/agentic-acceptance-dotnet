@@ -79,14 +79,14 @@ All project skills live in `.kimi/skills/`:
     ├── skeptical-ai-bootstrap/          # This skill (installed once)
     │   └── SKILL.md
     │
-    ├── code-review/                 # Inner loop: every PR
+    ├── code-review/                 # 2. Behavior Checks: gate before PR
     │   ├── SKILL.md
     │   └── CHECKLIST.md
     │
-    ├── architecture-audit/          # Inner loop: build
+    ├── architecture-audit/          # 2. Behavior Checks: build
     │   └── SKILL.md
     │
-    ├── security-audit/              # Outer loop: once per sprint
+    ├── security-audit/              # 4. Reality Checks: once per sprint
     │   ├── SKILL.md
     │   └── CHECKLIST.md
     │
@@ -340,14 +340,14 @@ The agent must maintain a "skill map" of the project:
 
 ## Project Skills: {ProjectName}
 
-### Inner Loop (Inner Loop)
+### 2. Behavior Checks — gates (every PR)
 | Skill | Role | Trigger | Gate | Status |
 |-------|------|---------|------|--------|
 | code-review-dapper | Reviewer | PR | BLOCKER | ✅ Active |
 | task-compliance | Scope Guard | PR | BLOCKER | ✅ Active |
 | architecture-audit (VSlice) | Build Guard | NetArchTest custom | Build | BLOCKER | 🚧 WIP |
 
-### Outer Loop (Outer Loop)
+### 4. Reality Checks (schedule / trigger)
 | Skill | Role | Trigger | Gate | Status |
 |-------|------|---------|------|--------|
 | security-audit | Security Auditor | Weekly | WARNING | ✅ Active |
@@ -364,7 +364,7 @@ This map helps the agent understand:
 - What already exists
 - What is in progress
 - What is not yet created
-- What gaps exist between layers
+- What gaps exist between levels
 
 ---
 

@@ -1,4 +1,4 @@
-# Case Study: Production-Like — Layered Service with Periodic Assurance
+# Case Study: Production-Like — Layered Service with Reality Checks
 
 > **Evidence class:** *illustrative composite* — the control set and green/trap
 > behavior are reproducible in this repository (`examples/DemoProject/`,
@@ -35,9 +35,9 @@ the service handles PII (customer names, phones).
 | Snapshot tests (JSON contracts) | 2. Behavior Checks | External consumer |
 | Allocation budget tests (`[HotPath]`) | 2. Behavior Checks | Measured hot path exists |
 | NBomber load test (read/write mix, Max latency gate) | 3. System Checks | `tests/patterns/LoadTest.cs` |
-| Security audit (PII focus) | 4. Periodic Assurance | Sensitive data in the risk profile |
-| DBA audit (migrations, indexes) | 4. Periodic Assurance | EF Core + growing tables |
-| Simplicity audit | 4. Periodic Assurance | Complexity risk rated High |
+| Security audit (PII focus) | 4. Reality Checks | Sensitive data in the risk profile |
+| DBA audit (migrations, indexes) | 4. Reality Checks | EF Core + growing tables |
+| Simplicity audit | 4. Reality Checks | Complexity risk rated High |
 | `memory-hygiene` / `doc-hygiene` / `backlog-hygiene` | Control Maintenance | Agent artifacts drift |
 
 ## Rejected and Removed Controls
@@ -77,7 +77,7 @@ the service handles PII (customer names, phones).
 | Change Checks (analyzers, review skill) | ~2 days | ~2 min/commit |
 | Behavior Checks (arch, ratchet, snapshot, allocation) | ~3 days | baselines ~1 h/month |
 | System Checks (NBomber) | ~1 day | ~30 min/scenario |
-| Periodic Assurance (3 audits) | ~0 (skills) | ~2 h/audit, ~3 per quarter |
+| Reality Checks (3 audits) | ~0 (skills) | ~2 h/audit, ~3 per quarter |
 | Control Maintenance (3 hygiene skills) | ~0 | ~2 h/sprint |
 
 ## Takeaway

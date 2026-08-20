@@ -9,13 +9,13 @@
 > |------------------|-----------------------------|
 > | Layer 0. Agent instructions (AGENTS.md + Decision Guards) | Control Foundation |
 > | 1.1 Compiler + types | 1. Change Checks |
-> | 1.4 Pre-commit code review | 1. Change Checks |
+> | 1.4 Pre-commit code review | 2. Behavior Checks (gate before PR) |
 > | 1.2 Architecture + Ratchet | 2. Behavior Checks |
 > | 1.3 Tests | 2. Behavior Checks |
 > | 1.5 Smoke | 3. System Checks |
 > | 2.1 E2E / MCP | 3. System Checks |
 > | 2.3 Load (NBomber) | 3. System Checks |
-> | 2.2 Audits | 4. Periodic Assurance |
+> | 2.2 Audits | 4. Reality Checks |
 > | Outer loop (human) | Engineering Governance (process, not a level) |
 > | Artifact grooming | Control Maintenance (process, not a level) |
 

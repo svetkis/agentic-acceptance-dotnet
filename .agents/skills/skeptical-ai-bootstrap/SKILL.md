@@ -1,7 +1,7 @@
 ---
 name: skeptical-ai-bootstrap
 description: >
-  Scans a .NET project through the lens of pyramid principles,
+  Scans a .NET project through the Engineering Assurance Levels model,
   determines guardrail maturity, and produces a backlog.
   Key feature: if ready-made artifacts don't fit the project stack,
   the agent proposes creating new skills instead of forcing foreign patterns.
@@ -11,9 +11,13 @@ description: >
 
 ## Context Marker
 
-When this skill is active, add 🚀 to your STARTER_CHARACTER stack.
+Convention from the [Context Markers pattern](https://github.com/lexler/augmented-coding-patterns/blob/main/documents/patterns/context-markers.md):
+emoji markers stacked at the start of each reply make invisible context visible —
+which ground rules are loaded and which roles are active. Markers stack, they don't replace.
+
+When this skill is active, add 🚀 to your STARTER_CHARACTER stack (🍀 = base ground rules loaded).
 Example: `🍀 🚀` = base rules + Bootstrap role active.
-When re-reading this skill, prepend `♻️` to the skill marker.
+When re-reading this skill, prepend `♻️` (rules just re-read) to the skill marker.
 
 
 ## Role
@@ -56,29 +60,19 @@ This is a project-scope skill.
 
 ## Philosophy
 
-**Layer 0:** Instructions for the agent (`AGENTS.md`) — what is allowed, what is not.
+The control model is **Engineering Assurance Levels** (canonical table in the repository `README.md`).
+An artifact is classified by **what it verifies**, not by where it runs.
 
-### Layer 1. Development cycle (fast feedback)
+**Control Foundation (Constitution):** instructions for the agent (`AGENTS.md`), Decision Guards, architecture boundaries — constraints set before any code is written.
 
-| Sub-layer | Principle | What we catch |
-|-----------|-----------|---------------|
-| 1.1 Compiler | Fast feedback from the compiler | Types, nullable, warnings |
-| 1.2 Architecture | Automatic architecture verification | Layers, anti-patterns, regression |
-| 1.3 Tests | Every change is covered by tests | Silent breakdown, PII leaks, vibe-refactoring, API contracts |
-| 1.4 Code Review | Agent checks agent's code | XSS, await, data leak before deploy |
-| 1.5 Smoke | Fast run of critical scenarios | Broken critical paths |
+| Level | What it includes | What we catch | Gate |
+|-------|------------------|---------------|------|
+| 1. Change Checks | Compiler, nullable, analyzers, banned APIs | Types, warnings, forbidden APIs | Before commit |
+| 2. Behavior Checks | Unit, contract, architecture tests, ratchets; the level ends with **agent code review** | Silent breakdown, arch regression, vibe-refactoring, XSS, data leak | Review agent — before PR |
+| 3. System Checks | Integration, characterization, E2E, smoke, load | Broken critical flows, tail latency, cache issues | PR / release pipeline |
+| 4. Reality Checks | LLM audits, complexity drift (cognitive/cyclomatic via baseline + ratchet), outdated and vulnerable packages | Drift that accumulates over time, invisible to any single change | Schedule / risk-trigger |
 
-### Layer 2. Acceptance cycle
-
-| Sub-layer | Principle | What we catch |
-|-----------|-----------|---------------|
-| 2.1 E2E / MCP | End-to-end verification via external tools | Cache, UI flow, self-booking |
-| 2.2 Audits | Deep checks on trigger | Security, DBA, perf, UX, i18n |
-| 2.3 Load | Verification under mixed load | Tail latency, silent breakdown |
-
-### Outer loop
-
-Final human validation, business and product decisions.
+**Engineering Governance** (process, not a level): final human validation, business and product decisions.
 
 ## Scanning Process
 
@@ -112,7 +106,7 @@ Final human validation, business and product decisions.
 
 ### Phase 2: Fact-based Assessment
 
-For each sub-layer answer the questions:
+For each level answer the questions:
 - **Is the principle followed?** (Yes / Partially / No)
 - **What is implemented now?** (facts from the codebase)
 - **Do ready-made artifacts fit?**
@@ -123,7 +117,10 @@ For each sub-layer answer the questions:
 
 ### Phase 3: Decision Tree
 
-#### Layer 1: Compiler
+> **Legend:** ✅ ready-made artifact fits as-is · ⚠️ adapt a ready-made artifact ·
+> 🔴 gap in existing setup — fill it · ❌ no artifact exists — create a new skill.
+
+#### Level 1: Change Checks — Compiler
 **Principle:** The compiler catches errors in seconds.
 
 | What we found | Decision |
@@ -134,7 +131,7 @@ For each sub-layer answer the questions:
 | No `.editorconfig` | 🔴 Create with severity=error for critical rules |
 | No complexity checks | 🟡 Add `SonarAnalyzer.CSharp` (`S3776` / `S1541`), see `complexity-audit` |
 | Custom Roslyn analyzers without tests | 🟡 Add `tests/patterns/AnalyzerTests.cs`, see `analyzer-tests-audit` |
-#### Layer 2: Architecture
+#### Level 2: Behavior Checks — Architecture Tests
 **Principle:** Architecture violations are caught automatically, before code review.
 
 | Project stack | Ready-made artifacts | Decision |
@@ -146,7 +143,7 @@ For each sub-layer answer the questions:
 | Big Ball of Mud | No layers to check | 🔴 Refactor first, then arch tests |
 | Methods with high complexity | `tests/patterns/ComplexityRatchetTest.cs` + `templates/skills/complexity-audit/` | ⚠️ **Adapt**: baseline + ratchet for legacy |
 | `[HotPath]` methods exist | `tests/patterns/AllocationBudgetTest.cs` + `templates/skills/allocation-budget-audit/` | ⚠️ **Adapt**: record allocation baseline |
-#### Layer 3: Tests
+#### Level 2: Behavior Checks — Tests
 **Principle:** Every change is covered by tests, and tests actually run.
 
 | What we found | Decision |
@@ -158,8 +155,8 @@ For each sub-layer answer the questions:
 | Worker Service project, no HTTP | ❌ **Create integration tests for messaging/queues** |
 | Desktop project (WPF/MAUI) | ❌ **Create UI tests or unit tests for ViewModels** |
 
-#### Layer 4: Code Review Agent
-**Principle:** Reviewer agent checks changes against project rules.
+#### Level 2 (gate): Code Review Agent
+**Principle:** Reviewer agent checks changes against project rules. This closes Behavior Checks — the last check before the change becomes a PR. It verifies the *process* (were tests written, is the constitution followed), not just the artifact.
 
 | Project stack | Ready-made artifacts | Decision |
 |---------------|----------------------|----------|
@@ -168,7 +165,7 @@ For each sub-layer answer the questions:
 | Dapper (no EF) | EF-specific rules | ❌ **Create `code-review-dapper`** (parameterization, SQL injection) |
 | .NET Framework 4.8 | Rules about .NET 10 | ❌ **Create `code-review-netframework`** |
 
-#### Layer 5: E2E / MCP
+#### Level 3: System Checks — E2E / Load
 **Principle:** End-to-end verification via external systems.
 
 | Project type | Ready-made artifacts | Decision |
@@ -179,7 +176,9 @@ For each sub-layer answer the questions:
 | Desktop app | No HTTP | ❌ **Create `e2e-desktop`** (UI automation or backend API) |
 | Microservices | One OpenAPI snapshot is not enough | ❌ **Create `e2e-integration`** (consumer-driven contracts) |
 
-#### Outer Loop (Audits)
+#### Level 4: Reality Checks — Audits and Drift
+
+Systemic properties that degrade over time regardless of any single change. For stack-specific audits:
 
 | Stack | Ready-made artifacts | Decision |
 |-------|----------------------|----------|
@@ -193,10 +192,10 @@ For each sub-layer answer the questions:
 | Preparing for release / beta | `templates/skills/release-readiness-audit/` | ✅ **Adopt**: batch audit before release |
 | Critical assemblies with tests | `templates/skills/mutation-audit/` | ⚠️ **Adapt**: Stryker.NET |
 | Custom Roslyn analyzers exist | `templates/skills/analyzer-tests-audit/` | ✅ **Adopt**: positive / negative tests |
+| Any .NET project | Dependency drift: `templates/skills/version-audit/`, CI check for outdated / vulnerable packages | ⚠️ **Adapt**: threshold policy per project |
 
-#### Layer 1.5: Complexity & Allocation Budget (addendum)
-
-**Principle:** Methods must not quietly grow into knots, and critical paths must not regress in allocations.
+#### Addendum: Complexity & Allocation Budget (Levels 1 and 4)
+Build-time thresholds are Level 1 (analyzer, `error`); legacy baselines + ratchets are Level 4 (drift control).
 
 | Situation | Recommendation for a new project | Recommendation for legacy |
 |-----------|----------------------------------|---------------------------|
@@ -233,14 +232,14 @@ The backlog contains 5 types of tasks:
 1. **Adapt** — take an artifact from `dotnet-ai-guardrails`, change namespace/ORM/framework
 2. **Create skill** — write a new skill/command/prompt for project specifics
 3. **Deploy** — simply copy if it fits 1-to-1
-4. **Document** — explain why a layer is not applicable
+4. **Document** — explain why a level is not applicable
 5. **Convert format** — rewrite existing rules into the target agent's format
 
 ### Phase 7: Creating New Skills (if needed)
 
 If the agent decides a new skill is needed, it uses the [`NEW-SKILL-TEMPLATE.md`](../../../templates/skills/skeptical-ai-bootstrap/NEW-SKILL-TEMPLATE.md) template.
 
-**Language:** the new skill is created in the user's language (RU or EN from Phase 0).
+**Language:** the new skill is created in the user's language (RU or EN from Phase 4).
 If the user selected Russian — generate only `SKILL.md` (RU).
 If English — only `SKILL.md` (EN).
 
@@ -269,7 +268,7 @@ The report MUST contain **all 6 sections**:
 2. **What we created** — created skills / tests / rules with rationale.
 3. **What didn't fit and why** — for each rejected ready-made artifact: reason and replacement.
 4. **Adaptations of ready-made artifacts** — specific changes: what to remove, what to add.
-5. **Skill ecosystem** — Inner loop / Outer loop / Project-specific tables.
+5. **Skill ecosystem** — table by assurance level (Foundation / 1–4 / Maintenance) + Project-specific.
 6. **Implementation backlog** — Sprint 0+ with tasks of type Adapt / Create / Deploy.
 
 > **Critical:** Sections 3 and 4 prevent re-copying unsuitable skills.
@@ -280,10 +279,13 @@ Brief summary (for chat):
 # Onboarding Report: {ProjectName}
 
 ## Principle Summary
-| Layer | Status | Decision |
+| Level | Status | Decision |
 |-------|--------|----------|
-| 1. Compiler | 🟢/🟡/🔴 | ... |
-| ... | ... | ... |
+| Foundation (Constitution) | 🟢/🟡/🔴 | ... |
+| 1. Change Checks | 🟢/🟡/🔴 | ... |
+| 2. Behavior Checks (+ review gate) | 🟢/🟡/🔴 | ... |
+| 3. System Checks | 🟢/🟡/🔴 | ... |
+| 4. Reality Checks | 🟢/🟡/🔴 | ... |
 
 ## Project Stack
 - .NET: {version}, Type: {Web API / Worker}, ORM: {EF Core / Dapper}, Architecture: {Clean / VSlice / None}
@@ -310,7 +312,7 @@ Full report: `.backlog/onboarding-{date}.md`
 
 - **Input:** Human (project path + fast/standard/high-assurance mode)
 - **Output:** `.backlog/onboarding-{date}.md` + list of new skills to create
-- **Next step:** Human decides: a) start with adapting ready-made, b) create new skills, c) skip layer
+- **Next step:** Human decides: a) start with adapting ready-made, b) create new skills, c) skip a level
 
 ## Limitations
 
