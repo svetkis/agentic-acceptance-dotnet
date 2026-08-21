@@ -2,7 +2,7 @@
 
 > **Evidence class:** *illustrative composite* — the control set and green/trap
 > behavior are reproducible in this repository (`examples/DemoProject/`,
-> `examples/DemoProject.Traps/`, 33 tests); the incident narrative is a composite
+> `examples/DemoProject/TRAPS.md`, 33 tests); the incident narrative is a composite
 > of the trap catalog (`docs/traps/`) and talk material, not a single measured
 > project. Costs are *estimates*, marked `~`.
 
@@ -54,12 +54,12 @@ the service handles PII (customer names, phones).
 ## Findings (reproducible + composite)
 
 - **Reproducible here:** all 33 tests green in `examples/DemoProject/`;
-  every trap in `examples/DemoProject.Traps/` is caught (CI job "Traps —
+  every trap in `examples/DemoProject/TRAPS.md` is caught (CI job "Traps —
   Guardrails Must Catch").
 - **Composite (from `docs/traps/`):** stale cache survived compiler + unit
   tests + review and was caught only by system-level exercise
-  (`docs/traps/silent-breakdown.md`); P50 looked fine while Max latency
-  degraded (`docs/traps/p50-vs-max.md`).
+  (`docs/traps/testing.md#silent-breakdown`); P50 looked fine while Max latency
+  degraded (`docs/traps/runtime.md#p50-vs-max`).
 
 ## False Positives Observed
 

@@ -128,6 +128,6 @@ does not support the project's test platform); not on every PR because of durati
 
 - Equivalent mutants (behavior-identical code changes) are unavoidable — document them, do not chase them.
 - Stryker.NET may not support TUnit / Microsoft Testing Platform — adapt the runner before reporting tool failures.
-- Structurally weak tests (no assertions, tautological or conditional assertions) are faster to find without Stryker — see the Test Validity section of the Test Audit skill and `docs/traps/non-validating-tests.md`.
+- Structurally weak tests (no assertions, tautological or conditional assertions) are faster to find without Stryker — see the Test Validity section of the Test Audit skill and `docs/traps/testing.md#non-validating-tests`.
 - Mutation score is assembly-scoped: a good overall score can hide weak tests in a new module.
 - A single surviving mutant is an investigation signal, not proof of a defect — strengthen the test or mark NEEDS_REVIEW.

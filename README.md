@@ -121,9 +121,8 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   └── conventions/               # Naming, TUnit guide
 ├── ci/                            # CI/CD guardrails
 └── examples/
-    ├── DemoProject/               # Working .NET 10 example (Clean Architecture)
-    ├── DemoProject.MinimalApi/    # Single-project MVP (Minimal API, no layers)
-    └── DemoProject.Traps/         # Intentionally broken code — guardrails demo
+    ├── DemoProject/               # Working .NET 10 example (Clean Architecture + Traps)
+    └── DemoProject.MinimalApi/    # Single-project MVP (Minimal API, no layers)
 ```
 
 ## DemoProject
@@ -145,10 +144,10 @@ dotnet run --project tests/DemoProject.Tests
 
 ## DemoProject.Traps
 
-`examples/DemoProject.Traps/` — intentionally broken code demonstrating guardrails in action. Every test here fails, showing what an architectural test catches when an agent violates the rules.
+`examples/DemoProject/traps-src/DemoProject.Traps/` (see [TRAPS.md](examples/DemoProject/TRAPS.md)) — intentionally broken code demonstrating guardrails in action. Every test here fails, showing what an architectural test catches when an agent violates the rules.
 
 ```bash
-cd examples/DemoProject.Traps
+cd examples/DemoProject
 dotnet run --project tests/DemoProject.Traps.Tests
 ```
 
@@ -159,7 +158,7 @@ dotnet run --project tests/DemoProject.Traps.Tests
 - `Modules/` — cyclic dependencies between modules (ArchUnitNET)
 - `RawGuidEntity` — raw `Guid` instead of strongly typed ID
 
-See also [`examples/DemoProject.Traps/README.md`](examples/DemoProject.Traps/README.md).
+See also [`examples/DemoProject/TRAPS.md`](examples/DemoProject/TRAPS.md).
 
 ## DemoProject.MinimalApi
 
@@ -210,12 +209,9 @@ Lost? Start with [docs/README.md](docs/README.md).
 | Project onboarding | `templates/skills/skeptical-ai-bootstrap/` |
 | Working example (Clean Architecture) | `examples/DemoProject/` |
 | Working example (Single-project MVP) | `examples/DemoProject.MinimalApi/` |
-| Failing demo (guardrails) | `examples/DemoProject.Traps/` |
-| Kimi integration | `docs/agents/KIMI.md` |
-| Claude Code integration | `docs/agents/CLAUDE-CODE.md` |
-| Cursor integration | `docs/agents/CURSOR.md` |
-| Codex integration | `docs/agents/CODEX.md` |
-| OpenCode integration | `docs/agents/OPENCODE.md` |
+| Failing demo (guardrails) | `examples/DemoProject/TRAPS.md` |
+| Frontier agents (Kimi, Claude Code, Codex) | `docs/agents/FRONTIER-AGENTS.md` |
+| Step-by-step agents (Cursor, OpenCode) | `docs/agents/STEP-BY-STEP-AGENTS.md` |
 | Bootstrap Protocol | `docs/agents/BOOTSTRAP-PROTOCOL.md` |
 | Agent comparison | `docs/agents/README.md` |
 

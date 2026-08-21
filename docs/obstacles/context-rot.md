@@ -23,7 +23,7 @@ Context fades unevenly, in zones:
 | Red | Systematic rule violation | `AsNoTracking()` in write-path, missing `BUG###`, leaks in DTO |
 
 - The same question may produce completely different results later in the thread
-- The agent "optimizes" read-path and silently breaks write-path (see `docs/traps/silent-breakdown.md`)
+- The agent "optimizes" read-path and silently breaks write-path (see `docs/traps/testing.md#silent-breakdown`)
 - The agent adds new PII fields without `[SensitiveData]`, because the attribute rule faded
 - The agent uses preview SDK, because the "use latest" instruction from a later message overrode "stable only" from message 3
 

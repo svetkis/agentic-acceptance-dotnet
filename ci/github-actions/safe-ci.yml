@@ -44,18 +44,14 @@ jobs:
           dotnet-version: '10.0.x'
 
       # GUARDRAIL: dotnet test is dangerous — we use dotnet run --project
-      # The script automatically discovers test projects in tests/ and src/.
-      # Adapt TEST_DIRS in ci/scripts/run-tests.sh to your project structure.
-      - name: Run Tests
-        run: |
-          chmod +x ci/scripts/run-tests.sh
-          ci/scripts/run-tests.sh
-
       # GUARDRAIL: Verify that the tests actually ran (not 0 ran)
-      - name: Verify Tests Ran
+      # The script automatically discovers test projects in tests/ and src/
+      # and verifies that tests actually ran. Single source of test-running logic.
+      # Adapt TEST_DIRS in ci/scripts/run-and-verify-tests.sh to your project structure.
+      - name: Run Tests + Verify
         run: |
-          chmod +x ci/scripts/verify-tests.sh
-          ci/scripts/verify-tests.sh
+          chmod +x ci/scripts/run-and-verify-tests.sh
+          ci/scripts/run-and-verify-tests.sh
 
   load-tests:
     runs-on: ubuntu-latest

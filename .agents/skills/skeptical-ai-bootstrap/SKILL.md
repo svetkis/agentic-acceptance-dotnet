@@ -148,8 +148,8 @@ For each level answer the questions:
 
 | What we found | Decision |
 |---------------|----------|
-| TUnit + `dotnet run --project` + verify-tests.sh | 🟢 Green |
-| xUnit/NUnit, 1000+ tests | ⚠️ Do NOT migrate! Adapt verify-tests.sh for `dotnet test` |
+| TUnit + `dotnet run --project` + run-and-verify-tests.sh | 🟢 Green |
+| xUnit/NUnit, 1000+ tests | ⚠️ Do NOT migrate! Adapt run-and-verify-tests.sh for `dotnet test` |
 | Tests exist, but no "0 ran" check | 🔴 Add verify script |
 | Few tests (<20% coverage by feel) | 🔴 Backlog: write critical tests |
 | Worker Service project, no HTTP | ❌ **Create integration tests for messaging/queues** |
@@ -301,7 +301,7 @@ Full report: `.backlog/onboarding-{date}.md`
 
 ## Onboarding Anti-Patterns (what NOT to do)
 
-- ❌ **Don't force test framework migration.** If 5000 tests on xUnit — adapt verify-tests.sh, don't rewrite everything to TUnit.
+- ❌ **Don't force test framework migration.** If 5000 tests on xUnit — adapt run-and-verify-tests.sh, don't rewrite everything to TUnit.
 - ❌ **Don't impose Clean Architecture.** If the project is Vertical Slice — adapt rules to feature boundaries, don't copy layer tests.
 - ❌ **Don't copy EF-specific tests into a Dapper project.** They will be silently useless or harmful.
 - ❌ **Don't require OpenAPI snapshot for Worker Service.** It's meaningless.

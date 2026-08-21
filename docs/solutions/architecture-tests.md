@@ -1,7 +1,7 @@
 # Architecture Tests in .NET — Catching Violations Before Review
 
 > 25+ tests in 4 files — catch violations BEFORE code review.  
-> **Failing demo:** [`examples/DemoProject.Traps/`](../../examples/DemoProject.Traps/) — intentionally broken code with 7 failing tests demonstrating guardrails in action.
+> **Failing demo:** [`examples/DemoProject/TRAPS.md`](../../examples/DemoProject/TRAPS.md) — intentionally broken code with 7 failing tests demonstrating guardrails in action.
 
 ## Tools
 
@@ -198,7 +198,7 @@ rule.Check(Architecture);
 | NetArchTest.eNhancedEdition | `NotHaveDependenciesBetweenSlices` — zero-tolerance | Modules must be fully isolated; any `using` into a neighbour feature is an error |
 | ArchUnitNET | `BeFreeOfCycles` — DAG validation | Modules may depend on each other hierarchically, but closed cycles are forbidden |
 
-**Working example:** `examples/DemoProject.Traps/tests/DemoProject.Traps.Tests/ArchUnitNetSliceTest.cs`
+**Working example:** `examples/DemoProject/tests/DemoProject.Traps.Tests/ArchUnitNetSliceTest.cs`
 
 ---
 

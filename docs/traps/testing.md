@@ -1,11 +1,58 @@
-# Non-Validating Tests — Green Without Verification
+# Testing Traps
 
+> How a green test suite can still prove nothing.
+
+
+## False Safety
+### Scenario
+
+The agent updates TUnit or changes `.csproj`. As a result, `dotnet test` silently outputs:
+
+```
+Build succeeded.
+Test run finished: 0 tests ran
+```
+
+Exit code: 0. CI is green. Code gets merged.
+
+### Why This Is Dangerous
+
+For two weeks the team thinks everything is checked. In reality:
+- A new bug is not caught
+- Regression goes through
+- The agent broke the runner settings
+
+### Root Causes
+
+- TUnit + .NET 10 + MTP: `dotnet test` doesn't always correctly run TUnit
+- The agent removed `<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>`
+- The agent renamed the test project, but CI still points to the old path
+
+### Solution
+
+1. **`dotnet run --project`** instead of `dotnet test`
+2. **Verify script** — `ci/scripts/verify-tests.sh` parses output and checks that count > 0
+3. **CI guardrail** — a separate step that fails if "0 tests ran"
+
+### Related Traps
+
+- [non-validating-tests](testing.md#non-validating-tests) — the test-level instance of
+  false safety: the test runs and is green, but its assertions cannot fail when
+  the promised behavior breaks. Runner-level verification (this trap) does not
+  detect it — use assertion reachability analysis and fault-injection checks.
+
+### Pattern
+
+See `tests/conventions/TUnit_Guide.md` and `ci/github-actions/safe-ci.yml`
+
+
+## Non-Validating Tests
 > **Status:** in force — wired into `rules/AGENTS_TEMPLATE.md` (Tests), Test Audit, Mutation Audit and `frontend-code-review` skills. Part of the [Self-Checking Tests workstream](../SELF-CHECKING-TESTS-WORKSTREAM.md) (SV-006 analyzer blockers still open).
 
 A test can be discovered, executed, and green while proving nothing about the
 behavior named by the test.
 
-## Terminology
+### Terminology
 
 Three distinct properties (do not merge them):
 
@@ -19,7 +66,7 @@ Self-checking is the baseline this trap assumes. The trap itself lives in the
 other two: assertions exist but are unreachable on the green path, or reachable
 but insensitive to the defect.
 
-## The trap
+### The trap
 
 AI agents are good at producing tests that look structurally complete:
 
@@ -31,7 +78,7 @@ The presence of an assertion is not enough. A test is useful only if a relevant
 defect makes it fail. Non-validating tests preserve the appearance of coverage
 while allowing broken behavior through CI.
 
-## Common forms
+### Common forms
 
 | Pattern | Why it stays green |
 |---------|--------------------|
@@ -44,7 +91,7 @@ while allowing broken behavior through CI.
 | Test name promises more than assertions check | Readers trust the name; the gap is invisible |
 | `waitForTimeout` instead of condition wait (frontend) | Timing races pass on fast machines, and body-only checks miss behavior |
 
-## Why agents produce them
+### Why agents produce them
 
 Observed mechanism (no mind-reading required):
 
@@ -55,7 +102,7 @@ Observed mechanism (no mind-reading required):
   sensitive to the defect is not visible without control-flow analysis or
   fault injection, so reviews pass.
 
-## Guardrails
+### Guardrails
 
 1. **Constitution rule** (`rules/AGENTS_TEMPLATE.md`): tests must be
    self-checking with assertion reachability and fault sensitivity — a test
@@ -78,9 +125,51 @@ Observed mechanism (no mind-reading required):
    postconditions (state, output, effects) — not merely execution or object
    existence.
 
-## Relation to other traps
+### Relation to other traps
 
-- [false-safety](false-safety.md) — green CI ≠ working code; non-validating
+- [false-safety](testing.md#false-safety) — green CI ≠ working code; non-validating
   tests are the test-level instance of that trap.
-- [over-engineering](over-engineering.md) — the opposite failure: test fixtures
+- [over-engineering](agent-behavior.md#over-engineering) — the opposite failure: test fixtures
   so complex that nobody notices they verify mocks, not behavior.
+
+
+## Silent Breakdown
+### Scenario
+
+The agent optimizes read queries for performance. Adds `.AsNoTracking()` to all queries indiscriminately, without understanding the difference between read-path and write-path.
+
+```csharp
+// Agent optimized "ticket list"
+var tickets = await dbContext.Tickets
+    .AsNoTracking()  // ✅ OK here — pure read
+    .ToListAsync();
+
+// But then copied the same pattern into a command
+var ticket = await dbContext.Tickets
+    .AsNoTracking()  // ❌ HORROR! Change tracking disabled
+    .FirstAsync(t => t.Id == id);
+
+ticket.Resolve();     // Changing status
+await dbContext.SaveChangesAsync();  // Silently not saving! 0 rows affected
+```
+
+### Why InMemory Tests Swallow It
+
+The EF Core InMemory provider **does not emulate change tracking**. `SaveChanges()` always "succeeds", even with `AsNoTracking`.
+
+### Consequences
+
+- CI is green
+- Unit tests pass
+- In production, write fails for 21 hours
+- A bug without an exception is the most expensive one
+
+### Solution
+
+1. **AGENTS.md** — explicit rule: `AsNoTracking` only in read-path with `.Select()`
+2. **NBomber** — run read + write mix under load. $Max$ write latency spikes or failed requests appear
+3. **Integration tests** — only on a real DB (TestContainers), no InMemory for logic
+
+### Pattern
+
+See `tests/patterns/LoadTest.cs`

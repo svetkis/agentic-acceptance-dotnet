@@ -88,7 +88,7 @@ Fill in once — use when adapting all skills (`ADAPTATION.md`).
 | Framework | Minimal API | — | No `[Authorize]` → check `.RequireAuthorization()` |
 | ORM | EF Core + PostgreSQL | 9.x | There is `AsNoTracking`, `Include`, migrations |
 | Cache | Redis (IDistributedCache) | — | No `SetSized()` — check via regex |
-| Tests | xUnit | 2.x | Adapt `verify-tests.sh`, don't migrate to TUnit |
+| Tests | xUnit | 2.x | Adapt `run-and-verify-tests.sh`, don't migrate to TUnit |
 | CI | GitHub Actions | — | `safe-ci.yml` template fits 1-to-1 |
 | Arch | Clean Architecture | 4 projects | NetArchTest applicable directly |
 

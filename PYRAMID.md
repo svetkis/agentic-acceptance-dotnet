@@ -80,13 +80,13 @@ Everything that runs in seconds and minutes — while the developer (or agent) i
 | Naming | 3 | Job classes end with `Job` |
 | Structure and anti-patterns | 12 | Forbid `.FindAsync()` and `.Include()` in read-path; forbid duplicated business logic; forbid cyclic dependencies; entity leak guard; forbid raw Guid/string/int for identifiers in Domain |
 | Complexity | 1 | Number of methods violating `S3776`/`S1541` must not grow (baseline + ratchet) |
-| Allocation budget | 1 | Every `[HotPath]` method has a `{MethodName}_AllocationBudget` test; allocations stay within baseline + 10%. Green: [`examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs`](examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs). Red: [`examples/DemoProject.Traps/src/DemoProject.Traps/AllocationBudgetHotspot.cs`](examples/DemoProject.Traps/src/DemoProject.Traps/AllocationBudgetHotspot.cs) + [`tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs`](examples/DemoProject.Traps/tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs) — `new List<int>` in a hot path exceeds the budget |
+| Allocation budget | 1 | Every `[HotPath]` method has a `{MethodName}_AllocationBudget` test; allocations stay within baseline + 10%. Green: [`examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs`](examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs). Red: [`examples/DemoProject/traps-src/DemoProject.Traps/AllocationBudgetHotspot.cs`](examples/DemoProject/traps-src/DemoProject.Traps/AllocationBudgetHotspot.cs) + [`tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs`](examples/DemoProject/tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs) — `new List<int>` in a hot path exceeds the budget |
 | Performance | 1 | Number of public types and tests must not decrease |
 | Test inventory | 1 | Number of tests must not decrease (protection against "0 tests ran") |
 
 ### Failing demo
 
-See the live example of broken guardrails: [`examples/DemoProject.Traps/`](examples/DemoProject.Traps/) — 7 intentionally broken tests with `IType.Explanation` and ArchUnitNET. Run `dotnet run --project tests/DemoProject.Traps.Tests` to see what a failure looks like for each violated rule.
+See the live example of broken guardrails: [`examples/DemoProject/TRAPS.md`](examples/DemoProject/TRAPS.md) — 7 intentionally broken tests with `IType.Explanation` and ArchUnitNET. Run `dotnet run --project tests/DemoProject.Traps.Tests` to see what a failure looks like for each violated rule.
 
 ### Roslyn-first, regex-last
 
@@ -213,7 +213,7 @@ From practice: 8 review commits with findings:
 - Unit tests ✅ (mock cache)
 - Code review ✅ (caching diff looked correct)
 
-**Pattern:** `docs/traps/silent-breakdown.md`
+**Pattern:** `docs/traps/testing.md#silent-breakdown`
 
 ---
 

@@ -1,5 +1,98 @@
-# Trap: Dependency Drift
+# Code Quality Traps
 
+> How codebase structure degrades one small diff at a time.
+
+
+## Code Duplication
+### Scenario
+
+The agent implements a new feature without noticing that similar logic already exists:
+
+- Copies validation from one service to another
+- Duplicates discount/fee calculation in an API controller
+- Inserts an order status check into 3 different handlers
+
+```csharp
+// Agent: "I need to check that the order is confirmed"
+// Service 1:
+if (order.Status == BookingStatus.Confirmed && order.Total > 0)
+
+// Service 2 (copied):
+if (order.Status == BookingStatus.Confirmed && order.Total > 0)
+
+// Service 3 (copied):
+if (order.Status == BookingStatus.Confirmed && order.Total > 0)
+```
+
+### Consequences
+
+- Fixing a bug in one place does not fix it in others
+- The agent changes logic in one service but is unaware of the duplicates
+- Compliance rules diverge (in one place `>= 100`, in another `> 100`)
+- Refactoring regressions — "I fixed it" (but only in one place)
+
+### Why the agent duplicates
+
+- The agent looks at the diff, not the whole codebase
+- Context window is insufficient to search for similar fragments
+- "Vibe coding" — faster to copy than to find a shared abstraction
+
+### Why automated tests are not enough
+
+Regex scanning only catches **literal** duplication. Reality is worse:
+
+```csharp
+// Service 1
+if (order.Status == BookingStatus.Confirmed)
+
+// Service 2
+if (order.IsConfirmed())
+
+// Service 3
+order.EnsureConfirmed();
+```
+
+This is the same business rule, but the automated test **will not see it**.
+
+### Solution
+
+#### 1. Automated test: Literal Duplication Guard
+Regex scanning for literal copying. Catches agent copy-paste. See `tests/patterns/DuplicationGuardTest.cs`.
+
+#### 2. Code Review: Semantic Duplication in diff
+The reviewer agent checks: if validation/calculation was added in the PR — does similar logic already exist in other services? See `templates/skills/code-review/CHECKLIST.md`.
+
+#### 3. Tech Debt Audit: Semantic Duplication across codebase
+An agent (and regex) cannot recognize **semantic** duplication across the entire codebase. This is the task of the Tech Lead persona-audit, run once per sprint. See `templates/skills/tech-debt-audit/SKILL.md`.
+
+Audit checklist:
+- [ ] New validation/status calculation — does similar logic exist in other services?
+- [ ] Can the rule be extracted into a Domain Service / Value Object?
+- [ ] Is there an existing `BR-###` (numbered business rule) that covers this case?
+
+#### 4. Numbered business rules `BR-###`
+Like `PERF-###` / `DB-###`, but for business logic:
+
+```csharp
+// BR-001: An order is considered confirmed only at Confirmed status and non-zero total
+public static class BookingRules
+{
+    public static bool IsConfirmed(this Booking b) =>
+        b.Status == BookingStatus.Confirmed && b.Total > 0;
+}
+```
+
+If an agent encounters `BR-###` in code — it must use the existing method rather than writing a new check.
+
+#### 5. Domain Services
+Move business rules into the domain; prohibit hardcoding in Application/API.
+
+### Pattern
+
+See `tests/patterns/DuplicationGuardTest.cs`
+
+
+## Dependency Drift
 > **TL;DR:** Code duplication and dependency drift are different metrics. The diff looks harmless — +1 `using`, +1 `#include`, +1 `ProjectReference` — but breaks the topology of the dependency graph.
 
 | | Duplication | Dependency Drift |
@@ -11,7 +104,7 @@
 
 ---
 
-## Scenario
+### Scenario
 
 The agent performs a "cosmetic" refactoring or adds a feature:
 
@@ -27,7 +120,7 @@ The agent performs a "cosmetic" refactoring or adds a feature:
 
 In code review the diff looks benign. But that single line closes a cycle in the dependency graph.
 
-### Real-world case: CERN ACTS
+#### Real-world case: CERN ACTS
 
 A colleague performed a "cosmetic" refactoring in the ACTS project (CERN). Added **+1 `#include` in 70 files**. In review the diff looked like a trivial header cleanup. The result — **40 new circular dependencies**. Compiler passed, tests passed, but the architecture was broken: full rebuild time grew from 12 to 47 minutes, parallel module compilation became impossible.
 
@@ -37,7 +130,7 @@ A colleague performed a "cosmetic" refactoring in the ACTS project (CERN). Added
 // Cause: added #include <C.hpp> in A "for just one constant"
 ```
 
-### Types of drift
+#### Types of drift
 
 **Type 1: "Convenient using" — gradual penetration**
 ```
@@ -81,7 +174,7 @@ Test immediately red
 "But the code works!" — yes, but the architecture is broken
 ```
 
-## Consequences
+### Consequences
 
 - **Layers stop being independent.** Domain depends on Application, Application on Infrastructure, Infrastructure on Domain.
 - **Parallel compilation breaks.** Build becomes sequential, CI time grows.
@@ -89,23 +182,23 @@ Test immediately red
 - **Entity leak — hidden cycle.** Application returns `Booking` (Entity) instead of DTO. This is not a cycle in `.csproj`, but a semantic cycle: Application pulls ORM logic, lazy loading, navigation properties — and testing the layer in isolation becomes impossible.
 - **Agent amplifies drift.** Seeing that "others already do this", it adds more usings to the same layer.
 
-## Why the agent doesn't see it
+### Why the agent doesn't see it
 
 - The agent looks at the **diff**, not the dependency graph.
 - Context window is insufficient to analyze the entire `#include` or `using` graph.
 - The compiler **does not fail** — the code is syntactically correct. The agent thinks everything is fine.
 - "Vibe coding" — faster to add a using than to extract a shared constant into a separate header/namespace.
 
-## Why automated tests are not enough
+### Why automated tests are not enough
 
 NetArchTest checks dependencies **between assemblies**, but:
 - In C++ there are no assemblies — there is an `#include` graph.
 - In .NET a cycle can be **within a single assembly** between namespaces/types (Entity leak).
 - `dotnet build` catches cycles between projects, but not between namespaces inside one project.
 
-## Solution
+### Solution
 
-### 1. Automated test: Cycle Detection Guard
+#### 1. Automated test: Cycle Detection Guard
 Parse `.csproj` (or `#include` / `using`) and search for cycles in the graph. See `tests/patterns/DependencyDriftTest.cs`.
 
 ```csharp
@@ -114,12 +207,12 @@ var cycles = FindCycles(graph);
 Assert.That(cycles).IsEmpty();
 ```
 
-### 2. Architectural test: Layer Boundaries
+#### 2. Architectural test: Layer Boundaries
 NetArchTest catches real assembly dependencies between layers, while a Roslyn analyzer fits C# source-level rules such as forbidden `using` statements, API calls and attributes. See `tests/patterns/ArchitectureRules.cs` and `docs/solutions/roslyn-analyzers.md`.
 
 **Rule:** add architecture tests **in the very first commit** with layered architecture. A test added after 3 months and immediately failing does not mean the test is bad. It means the graph has been drifting unnoticed.
 
-### 3. Code Review: Import/Using diff analysis
+#### 3. Code Review: Import/Using diff analysis
 The reviewer agent checks: if new `using` or `#include` statements were added in the PR, do they close a cycle?
 
 Review checklist:
@@ -128,7 +221,7 @@ Review checklist:
 - [ ] If the agent adds the **same using in 3+ files of the same layer** — this is a signal: the type lives in the wrong layer, an abstraction is needed.
 - [ ] Did a cycle appear in the assembly graph (`.csproj`) or header graph (`#include`)?
 
-### 4. Tech Debt Audit: Dependency graph
+#### 4. Tech Debt Audit: Dependency graph
 Once per sprint the tech lead builds the dependency graph and compares it with `ARCHITECTURE-INVENTORY.md`. See `templates/skills/tech-debt-audit/SKILL.md`.
 
 Audit metrics:
@@ -137,7 +230,7 @@ Audit metrics:
 - Entity leak count: interfaces returning Entity instead of DTO
 - Lifetime of TODOs in architectural tests
 
-### 5. Shared Kernel / Common Contracts
+#### 5. Shared Kernel / Common Contracts
 Extract constants and interfaces needed by both layers into a separate module that both depend on:
 
 ```
@@ -147,7 +240,7 @@ Extract constants and interfaces needed by both layers into a separate module th
 //              C
 ```
 
-### 6. Compile-time guard: BannedApiAnalyzers
+#### 6. Compile-time guard: BannedApiAnalyzers
 `Microsoft.CodeAnalysis.BannedApiAnalyzers` is a Roslyn analyzer from Microsoft. It reads `BannedSymbols.txt` and catches forbidden calls during `dotnet build` (error `RS0030`). The agent sees a red squiggle in the IDE **before commit**.
 
 **Why it's better than a regex test for specific APIs:**
@@ -167,13 +260,13 @@ Extract constants and interfaces needed by both layers into a separate module th
 ```
 
 ```txt
-# BannedSymbols.txt
+## BannedSymbols.txt
 P:System.DateTime.Now;Use DateTime.UtcNow or TimeProvider instead. AGENT-GUARD: timezone bug
 M:Microsoft.EntityFrameworkCore.DbSet`1.FindAsync(System.Object[]);Use read-optimized queries
 ```
 
 ```ini
-# .editorconfig — make it an error, not a warning
+## .editorconfig — make it an error, not a warning
 dotnet_diagnostic.RS0030.severity = error
 ```
 
@@ -181,15 +274,15 @@ dotnet_diagnostic.RS0030.severity = error
 
 **Limitation:** BannedApiAnalyzers catches only specific APIs (methods, types, properties). It **does not** catch architectural layers ("Domain must not depend on Infrastructure") or measure coupling. For layers — NetArchTest, for coupling metrics — semantic tests.
 
-### 7. Rule after cosmetic refactoring
+#### 7. Rule after cosmetic refactoring
 If a PR contains "moved header / extracted using / generalized import" and touches **>5 files** — a `grep` for new cross-layer dependencies is mandatory.
 
-## Pattern
+### Pattern
 
 - `tests/patterns/DependencyDriftTest.cs` — circular dependencies + layer drift
 - `tests/patterns/EntityLeakTest.cs` — Application interfaces returning Entity instead of DTO (ratchet)
 
-### Takeaways for the talk
+#### Takeaways for the talk
 
 1. **"The diff looks fine, but the architecture is broken" — that's about usings.** An AI agent does not see the dependency graph. It sees a local file. +1 using is +1 potential hole in layered architecture.
 2. **Measurement reveals drift.** An architecture test added late and immediately failing is not a bad test. It means the graph has been drifting for months unnoticed.

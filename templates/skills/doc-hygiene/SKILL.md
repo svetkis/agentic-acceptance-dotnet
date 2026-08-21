@@ -49,7 +49,7 @@ description: >
 |---------|-------------|
 | Root AGENTS.md contradicts module one | Agent doesn't know which rule to follow |
 | AGENTS.md requires X, but no guardrail for X in code | Rule is a dead letter |
-| docs/agents/KIMI.md describes non-existent pipeline | Onboarding of a new agent starts with a lie |
+| docs/agents/FRONTIER-AGENTS.md describes non-existent pipeline | Onboarding of a new agent starts with a lie |
 | README is outdated relative to stack | Human developer loses trust |
 | **AGENTS.md bloat** | Agent stops reading the file entirely due to size |
 | **Dead rules** | Rule exists, but no enforcement (test, compiler, CI) |
@@ -88,8 +88,8 @@ description: >
 - Recommend: either add guardrail or remove the rule
 
 ### Phase 3: Cross-Agent Docs
-1. Is `docs/agents/KIMI.md` current relative to `AGENTS.md`?
-2. No divergence in pipeline description between `docs/agents/CLAUDE-CODE.md` and `docs/agents/OPENCODE.md`?
+1. Is `docs/agents/FRONTIER-AGENTS.md` current relative to `AGENTS.md`?
+2. No divergence in pipeline description between `docs/agents/FRONTIER-AGENTS.md` and `docs/agents/STEP-BY-STEP-AGENTS.md`?
 3. Do all agents describe the same stack/versions?
 
 ### Phase 4: README, GLOSSARY, ONBOARDING & CHANGELOG
@@ -113,7 +113,7 @@ description: >
 ## Evidence Requirements
 
 Every finding MUST include:
-1. **Exact file and section/line:** `AGENTS.md §2.1` or `docs/agents/KIMI.md:42`
+1. **Exact file and section/line:** `AGENTS.md §2.1` or `docs/agents/FRONTIER-AGENTS.md:42`
 2. **Quoted fragment** of the contradicting / dead / outdated content
 3. **Counter-evidence:** the conflicting file:line, or the missing enforcement (no test/analyzer/CI found by an explicit search)
 4. **Recommended action:** update the derived doc, add a guardrail, or remove the rule

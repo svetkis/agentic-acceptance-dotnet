@@ -20,7 +20,7 @@ Three distinct properties — do not merge them (see `GLOSSARY.md`):
 
 This workstream strengthens **assertion reachability** and **fault
 sensitivity**; self-checking is the assumed baseline. **Non-validating tests**
-remains the name of the trap (see [`docs/traps/non-validating-tests.md`](traps/non-validating-tests.md)).
+remains the name of the trap (see [`docs/traps/testing.md#non-validating-tests`](traps/testing.md#non-validating-tests)).
 
 ## Why
 
@@ -59,10 +59,10 @@ a reproducible green/trap demonstration.
 
 ### SV-002 — Trap document ✅ done
 
-- `docs/traps/non-validating-tests.md`: catalog of non-validating test forms,
+- `docs/traps/testing.md#non-validating-tests`: catalog of non-validating test forms,
   why they stay green, how to catch them; terminology table.
 - **Done when:** document in the knowledge map, cross-link **from**
-  `false-safety.md`. ✅
+  `testing.md#false-safety`. ✅
 
 ### SV-003 — Audit checklists (Reality Checks) ✅ done
 
@@ -78,7 +78,7 @@ a reproducible green/trap demonstration.
 
 - `tests/patterns/` — fault-injection check template (a test that breaks
   production code locally and proves suite sensitivity).
-- Green: `examples/DemoProject/`; Red: `examples/DemoProject.Traps/`
+- Green: `examples/DemoProject/`; Red: `examples/DemoProject/TRAPS.md`
   (a non-validating test **caught by the SV-006 analyzers** — without them the
   trap test would stay green and the demonstration proves nothing).
 - **Done when:** CI green on DemoProject, Traps fails by design on the
@@ -155,8 +155,8 @@ source project is stabilized and its revision fixed.
 
 ## Related artifacts
 
-- [`docs/traps/false-safety.md`](traps/false-safety.md) — green CI ≠ working code
-- [`docs/traps/non-validating-tests.md`](traps/non-validating-tests.md) — the trap itself
+- [`docs/traps/testing.md#false-safety`](traps/testing.md#false-safety) — green CI ≠ working code
+- [`docs/traps/testing.md#non-validating-tests`](traps/testing.md#non-validating-tests) — the trap itself
 - [`templates/skills/test-audit/`](../templates/skills/test-audit/)
 - [`templates/skills/mutation-audit/`](../templates/skills/mutation-audit/)
 - [`templates/skills/analyzer-tests-audit/`](../templates/skills/analyzer-tests-audit/)

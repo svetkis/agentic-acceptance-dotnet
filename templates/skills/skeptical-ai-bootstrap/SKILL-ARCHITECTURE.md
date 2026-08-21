@@ -63,7 +63,7 @@ Mechanism depends on stack and feedback speed:
 | Roslyn Analyzer | Instant (in IDE) | Strict rules, frequent violations | `nullable`, `async void` |
 | MSBuild Target | Build | Artifact check, regex | `proto diff check`, `localization completeness` |
 | Unit Test | Build + tests | Logic, dependencies, contracts | `architecture rules`, `ratchet tests` |
-| Script (bash/ps) | CI | External tools, parsing | `verify-tests.sh`, `openapi diff` |
+| Script (bash/ps) | CI | External tools, parsing | `run-and-verify-tests.sh`, `openapi diff` |
 | AI Agent (skill) | PR / manual | Semantic analysis, context | `code review`, `security audit` |
 | E2E Test | CI / nightly | Integration, flow | `worker messaging flow`, `desktop UI flow` |
 

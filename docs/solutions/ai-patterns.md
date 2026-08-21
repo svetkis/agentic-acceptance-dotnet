@@ -155,7 +155,7 @@ _logger.LogInformation("User {UserId} logged in", user.Id);
 
 **Generalization:** `[SensitiveData]` + compile-time analyzer + inventory ratchet + runtime destructuring. Applicable to any sensitive data: credentials, tokens, health data.
 
-**Pattern:** `tests/patterns/PiiGuardTest.cs`, `docs/traps/log-leak.md`
+**Pattern:** `tests/patterns/PiiGuardTest.cs`, `docs/traps/runtime.md#log-leak`
 
 ---
 

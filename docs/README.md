@@ -45,12 +45,12 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **ArchitectureRules** | Universal layer dependency check (NetArchTest) | [tests/patterns/ArchitectureRules.cs](../tests/patterns/ArchitectureRules.cs) | `examples/DemoProject/tests/DemoProject.Tests/ArchitectureRules.cs` |
 | **EfCoreGuardRules** | EF Core-specific guardrails: `FindAsync`, `Include`, `AsNoTracking` | [tests/patterns/EfCoreGuardRules.cs](../tests/patterns/EfCoreGuardRules.cs) | `examples/DemoProject/tests/DemoProject.Tests/EfCoreGuardRules.cs` |
 | **DapperGuardRules** | Dapper / Raw SQL guardrails: parameterization, injections, timeouts | [tests/patterns/DapperGuardRules.cs](../tests/patterns/DapperGuardRules.cs) | — |
-| **ArchUnitNetSliceTest** | Cyclic dependencies between slices (ArchUnitNET) | [tests/patterns/ArchUnitNetSliceTest.cs](../tests/patterns/ArchUnitNetSliceTest.cs) | `examples/DemoProject.Traps/tests/DemoProject.Traps.Tests/ArchUnitNetSliceTest.cs` |
+| **ArchUnitNetSliceTest** | Cyclic dependencies between slices (ArchUnitNET) | [tests/patterns/ArchUnitNetSliceTest.cs](../tests/patterns/ArchUnitNetSliceTest.cs) | `examples/DemoProject/tests/DemoProject.Traps.Tests/ArchUnitNetSliceTest.cs` |
 | **RatchetTest** | Public types and tests did not decrease | [tests/patterns/RatchetTest.cs](../tests/patterns/RatchetTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/RatchetTests.cs` |
 | **SnapshotTest** | JSON serialization contract, OpenAPI | [tests/patterns/SnapshotTest.cs](../tests/patterns/SnapshotTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/SnapshotTests.cs` |
 | **LoadTest** | Silent breakdown under load: read optimizations that break write path | [tests/patterns/LoadTest.cs](../tests/patterns/LoadTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/LoadTests.cs` |
 | **ComplexityRatchetTest** | Methods with `S3776` / `S1541` violations do not grow (baseline + ratchet) | [tests/patterns/ComplexityRatchetTest.cs](../tests/patterns/ComplexityRatchetTest.cs) | — |
-| **AllocationBudgetTest** | `[HotPath]` method allocations do not exceed baseline + 10% | [tests/patterns/AllocationBudgetTest.cs](../tests/patterns/AllocationBudgetTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs` (green) / `examples/DemoProject.Traps/src/DemoProject.Traps/AllocationBudgetHotspot.cs` + `tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs` (red) |
+| **AllocationBudgetTest** | `[HotPath]` method allocations do not exceed baseline + 10% | [tests/patterns/AllocationBudgetTest.cs](../tests/patterns/AllocationBudgetTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs` (green) / `examples/DemoProject/traps-src/DemoProject.Traps/AllocationBudgetHotspot.cs` + `tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs` (red) |
 | **SpellcheckGuardTest** | No new typos appear in public symbols / docs | [tests/patterns/SpellcheckGuardTest.cs](../tests/patterns/SpellcheckGuardTest.cs) | — |
 | **ReleaseReadinessTest** | Critical artifacts and runtime guardrails exist before release | [tests/patterns/ReleaseReadinessTest.cs](../tests/patterns/ReleaseReadinessTest.cs) | — |
 | **MutationGuardTest** | Mutation score does not drop (Stryker.NET) | [tests/patterns/MutationGuardTest.cs](../tests/patterns/MutationGuardTest.cs) | — |
@@ -64,7 +64,7 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **BUG_TEMPLATE** | Regression test format | [tests/conventions/BUG_TEMPLATE.cs](../tests/conventions/BUG_TEMPLATE.cs) | — |
 | **TUnit_Guide** | Test conventions | [tests/conventions/TUnit_Guide.md](../tests/conventions/TUnit_Guide.md) | — |
 | **AnalyzerDiagnostics** | Catalog of custom Roslyn analyzer diagnostics (SAE001-SAE009) | [tests/conventions/AnalyzerDiagnostics.md](../tests/conventions/AnalyzerDiagnostics.md) | `examples/DemoProject/src/DemoProject.Analyzers/` |
-| **Traps Demo** | Intentionally broken code to demonstrate guardrails (9 failing tests) | — | `examples/DemoProject.Traps/` |
+| **Traps Demo** | Intentionally broken code to demonstrate guardrails (9 failing tests) | — | `examples/DemoProject/TRAPS.md` |
 | **MinimalApi Demo** | Single-project MVP without Clean Architecture — naming, banned APIs, ratchet | — | `examples/DemoProject.MinimalApi/` |
 
 ---
@@ -118,18 +118,18 @@ Read before implementation — each trap explains **why** a guardrail exists.
 
 | Trap | Essence | Pattern solution |
 |------|---------|------------------|
-| [silent-breakdown](traps/silent-breakdown.md) | `AsNoTracking` in write-path → silent breakdown | [LoadTest.cs](../tests/patterns/LoadTest.cs) |
-| [vibe-refactoring](traps/vibe-refactoring.md) | Agent removes "unnecessary" — breaks hot paths | [RatchetTest.cs](../tests/patterns/RatchetTest.cs) |
-| [context-blindness](traps/context-blindness.md) | Agent does not see business context | [AGENTS.md](../rules/AGENTS_TEMPLATE.md) |
-| [false-safety](traps/false-safety.md) | Green CI ≠ working code | [verify-tests.sh](../ci/scripts/verify-tests.sh) |
-| [p50-vs-max](traps/p50-vs-max.md) | Average latency is good, tail is terrible | [LoadTest.cs](../tests/patterns/LoadTest.cs) |
-| [agent-circles](traps/agent-circles.md) | Agents loop on one problem | [task-compliance](../templates/skills/task-compliance/SKILL.md) |
-| [stale-stack](traps/stale-stack.md) | Agent uses outdated stack due to training cutoff | [VersionAuditTest.cs](../tests/patterns/VersionAuditTest.cs) |
-| [log-leak](traps/log-leak.md) | PII leaks into logs | [PiiGuardTest.cs](../tests/patterns/PiiGuardTest.cs) |
-| [code-duplication](traps/code-duplication.md) | Agent duplicates business logic instead of reuse | [DuplicationGuardTest.cs](../tests/patterns/DuplicationGuardTest.cs) |
-| [dependency-drift](traps/dependency-drift.md) | +1 using/#include closes a cycle in the dependency graph | [DependencyDriftTest.cs](../tests/patterns/DependencyDriftTest.cs) |
-| [over-engineering](traps/over-engineering.md) | Agent builds an architectural cathedral instead of a simple solution | [simplicity-audit](../templates/skills/simplicity-audit/SKILL.md) |
-| [non-validating-tests](traps/non-validating-tests.md) | Test is green but cannot fail when behavior breaks | [test-audit](../templates/skills/test-audit/SKILL.md), [mutation-audit](../templates/skills/mutation-audit/SKILL.md) |
+| [silent-breakdown](traps/testing.md#silent-breakdown) | `AsNoTracking` in write-path → silent breakdown | [LoadTest.cs](../tests/patterns/LoadTest.cs) |
+| [vibe-refactoring](traps/agent-behavior.md#vibe-refactoring) | Agent removes "unnecessary" — breaks hot paths | [RatchetTest.cs](../tests/patterns/RatchetTest.cs) |
+| [context-blindness](traps/agent-behavior.md#context-blindness) | Agent does not see business context | [AGENTS.md](../rules/AGENTS_TEMPLATE.md) |
+| [false-safety](traps/testing.md#false-safety) | Green CI ≠ working code | [run-and-verify-tests.sh](../ci/scripts/run-and-verify-tests.sh) |
+| [p50-vs-max](traps/runtime.md#p50-vs-max) | Average latency is good, tail is terrible | [LoadTest.cs](../tests/patterns/LoadTest.cs) |
+| [agent-circles](traps/agent-behavior.md#agent-circles) | Agents loop on one problem | [task-compliance](../templates/skills/task-compliance/SKILL.md) |
+| [stale-stack](traps/agent-behavior.md#stale-stack) | Agent uses outdated stack due to training cutoff | [VersionAuditTest.cs](../tests/patterns/VersionAuditTest.cs) |
+| [log-leak](traps/runtime.md#log-leak) | PII leaks into logs | [PiiGuardTest.cs](../tests/patterns/PiiGuardTest.cs) |
+| [code-duplication](traps/code-quality.md#code-duplication) | Agent duplicates business logic instead of reuse | [DuplicationGuardTest.cs](../tests/patterns/DuplicationGuardTest.cs) |
+| [dependency-drift](traps/code-quality.md#dependency-drift) | +1 using/#include closes a cycle in the dependency graph | [DependencyDriftTest.cs](../tests/patterns/DependencyDriftTest.cs) |
+| [over-engineering](traps/agent-behavior.md#over-engineering) | Agent builds an architectural cathedral instead of a simple solution | [simplicity-audit](../templates/skills/simplicity-audit/SKILL.md) |
+| [non-validating-tests](traps/testing.md#non-validating-tests) | Test is green but cannot fail when behavior breaks | [test-audit](../templates/skills/test-audit/SKILL.md), [mutation-audit](../templates/skills/mutation-audit/SKILL.md) |
 
 ---
 
@@ -164,11 +164,8 @@ Active plans: [SELF-CHECKING-TESTS-WORKSTREAM.md](SELF-CHECKING-TESTS-WORKSTREAM
 
 | Agent | File | Configuration format |
 |-------|------|----------------------|
-| Kimi Code CLI | [KIMI.md](agents/KIMI.md) | `.kimi/skills/{name}/SKILL.md` |
-| Claude Code | [CLAUDE-CODE.md](agents/CLAUDE-CODE.md) | `.claude/CLAUDE.md` + commands |
-| Cursor | [CURSOR.md](agents/CURSOR.md) | `.cursorrules` + `.cursor/rules/` |
-| Codex (OpenAI) | [CODEX.md](agents/CODEX.md) | `AGENTS.md` + `~/.codex/config.toml` |
-| OpenCode | [OPENCODE.md](agents/OPENCODE.md) | `.opencode/instructions.md` |
+| Frontier agents (Kimi, Claude Code, Codex) | [FRONTIER-AGENTS.md](agents/FRONTIER-AGENTS.md) | skills + constitution, goal-driven |
+| Step-by-step agents (Cursor, OpenCode) | [STEP-BY-STEP-AGENTS.md](agents/STEP-BY-STEP-AGENTS.md) | explicit steps + paste-ready prompts |
 | Bootstrap Protocol | [BOOTSTRAP-PROTOCOL.md](agents/BOOTSTRAP-PROTOCOL.md) | Agent behavior rules during onboarding |
 | Comparison | [README.md](agents/README.md) | Comparison table of all agents |
 
@@ -178,9 +175,8 @@ Active plans: [SELF-CHECKING-TESTS-WORKSTREAM.md](SELF-CHECKING-TESTS-WORKSTREAM
 
 | Artifact | Purpose |
 |----------|---------|
-| [ci/github-actions/safe-ci.yml](../ci/github-actions/safe-ci.yml) | Workflow template: build + test + verify-tests |
-| [ci/scripts/run-tests.sh](../ci/scripts/run-tests.sh) | Automatically finds and runs all test projects via `dotnet run --project` |
-| [ci/scripts/verify-tests.sh](../ci/scripts/verify-tests.sh) | Checks that `dotnet run` actually executed tests (not 0 ran) |
+| [ci/github-actions/safe-ci.yml](../ci/github-actions/safe-ci.yml) | Workflow template: build + test + verification |
+| [ci/scripts/run-and-verify-tests.sh](../ci/scripts/run-and-verify-tests.sh) | Finds and runs all test projects via `dotnet run --project`, then verifies that tests actually ran (not 0 ran) |
 | [.github/workflows/demo-project-ci.yml](../.github/workflows/demo-project-ci.yml) | CI of this repository — builds DemoProject and DemoProject.MinimalApi |
 | `traps-guardrails` job in `demo-project-ci.yml` | Ensures intentionally broken tests in DemoProject.Traps actually fail (guardrails are working) |
 

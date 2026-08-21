@@ -58,7 +58,7 @@ Summary:
 If you are an AI agent reading this file in the context of a **different** repository:
 - This repository (`dotnet-ai-guardrails`) is a **methodology archive**, not a project template.
 - Do NOT copy its folder structure (`rules/`, `templates/skills/`, `examples/`, `tests/patterns/`) into the target project.
-- Do NOT create `DemoProject`, `examples/`, or `DemoProject.Traps/` in the target project.
+- Do NOT create `DemoProject`, `examples/`, `DemoProject.Traps/`, or `DemoProject.MinimalApi/` in the target project.
 - Extract only the **principles** and **markdown guidelines** applicable to the target stack.
 - Your output should be assessment reports and plans, not implementation code.
 
@@ -86,18 +86,15 @@ If you are an AI agent reading this file in the context of a **different** repos
 | Test pattern | `tests/patterns/` |
 | Working example | `examples/DemoProject/` |
 | Working example (Single-project MVP) | `examples/DemoProject.MinimalApi/` |
-| Failing demo (guardrails) | `examples/DemoProject.Traps/` |
+| Failing demo (guardrails) | `examples/DemoProject/TRAPS.md` + `traps-src/` |
 | CI security | `ci/github-actions/safe-ci.yml` |
 | Trap description | `docs/traps/` |
 | Architecture tests | `docs/solutions/architecture-tests.md` |
 | AI development patterns | `docs/solutions/ai-patterns.md` |
 | Intentional deviations (Decision Guards) | `templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md` |
 | Project onboarding | `templates/skills/skeptical-ai-bootstrap/` |
-| Kimi integration | `docs/agents/KIMI.md` |
-| Claude Code integration | `docs/agents/CLAUDE-CODE.md` |
-| Cursor integration | `docs/agents/CURSOR.md` |
-| Codex integration | `docs/agents/CODEX.md` |
-| OpenCode integration | `docs/agents/OPENCODE.md` |
+| Frontier agents (Kimi, Claude Code, Codex) | `docs/agents/FRONTIER-AGENTS.md` |
+| Step-by-step agents (Cursor, OpenCode, local models) | `docs/agents/STEP-BY-STEP-AGENTS.md` |
 | Bootstrap Protocol | `docs/agents/BOOTSTRAP-PROTOCOL.md` |
 | Agent comparison | `docs/agents/README.md` |
 | Contributing | `CONTRIBUTING.md` |

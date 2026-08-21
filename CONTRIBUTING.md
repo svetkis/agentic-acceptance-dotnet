@@ -31,7 +31,7 @@ Thank you for your interest! This repository contains defensive artifacts for .N
 1. **Fork** the repository
 2. **Create a branch** following Conventional Commits: `feat/skill-name`, `fix/trap-description`
 3. **Make changes** according to the checklist below
-4. **Verify** `dotnet build` in `examples/DemoProject/`, `examples/DemoProject.Traps/`, and `examples/DemoProject.MinimalApi/` (if you changed code)
+4. **Verify** `dotnet build` in `examples/DemoProject/`, `examples/DemoProject/TRAPS.md`, and `examples/DemoProject.MinimalApi/` (if you changed code)
 5. **Open a PR** with description: what, why, how tested
 
 ## Pre-PR Checklist

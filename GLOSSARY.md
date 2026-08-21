@@ -81,7 +81,7 @@
 |------|------------|---------|
 | **Audit** | Deep check of one narrow area (security, perf, DB). Runs once per sprint or on trigger, not on every PR. | `templates/skills/` |
 | **Cross-pollination** | Exchange of findings between audits. For example, a security audit finds a log leak, while a UX audit finds the same endpoint as a dead-end. | [PYRAMID.md §Outer loop](PYRAMID.md#outer-loop) |
-| **P50 / P95 / Max** | Latency percentiles: median, 95th percentile, maximum. Agents often optimize P50 while forgetting tail latency (Max). | [docs/traps/p50-vs-max.md](docs/traps/p50-vs-max.md) |
+| **P50 / P95 / Max** | Latency percentiles: median, 95th percentile, maximum. Agents often optimize P50 while forgetting tail latency (Max). | [docs/traps/runtime.md#p50-vs-max](docs/traps/runtime.md#p50-vs-max) |
 | **Scope creep** | Task expansion: an agent adds changes to a PR that go beyond the original request. | [templates/skills/task-compliance/SKILL.md](templates/skills/task-compliance/SKILL.md) |
 | **Silent misalignment** | Silent error: the agent did not ask clarifying questions even though instructions were unclear or contradictory. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
 
@@ -92,4 +92,4 @@
 | **TUnit** | Modern test framework for .NET. Used in this repository instead of xUnit/NUnit. Run via `dotnet run --project`. | [tests/conventions/TUnit_Guide.md](tests/conventions/TUnit_Guide.md) |
 | **NetArchTest** | Library for architecture tests based on reflection. Checks dependencies between layers, naming, interfaces. | [tests/patterns/ArchitectureRules.cs](tests/patterns/ArchitectureRules.cs) |
 | **NBomber** | Load testing framework. Catches silent breakdown and weak points under mixed read+write load, not just "degradation at high load". | [tests/patterns/LoadTest.cs](tests/patterns/LoadTest.cs) |
-| **Testcontainers** | Infrastructure for running real databases (PostgreSQL, Redis) in Docker containers during tests. Alternative to EF Core InMemory provider. | [docs/traps/silent-breakdown.md](docs/traps/silent-breakdown.md) |
+| **Testcontainers** | Infrastructure for running real databases (PostgreSQL, Redis) in Docker containers during tests. Alternative to EF Core InMemory provider. | [docs/traps/testing.md#silent-breakdown](docs/traps/testing.md#silent-breakdown) |

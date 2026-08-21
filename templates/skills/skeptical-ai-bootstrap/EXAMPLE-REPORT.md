@@ -20,7 +20,7 @@
 | Foundation | 🔴 | No AGENTS.md | **Implement**: `rules/AGENTS_TEMPLATE.md` |
 | 1. Change Checks | 🟡 | Nullable enable, but no TreatWarningsAsErrors | **Adapt**: Directory.Build.props |
 | 2. Behavior — architecture | 🔴 | No arch tests. Vertical Slice — standard NetArchTest rules (about layers) are not applicable | **Adapt**: NetArchTest with custom rules about feature boundaries |
-| 2. Behavior — tests | 🟡 | xUnit, 340 tests, no "0 ran" check | **Adapt**: verify-tests.sh for xUnit |
+| 2. Behavior — tests | 🟡 | xUnit, 340 tests, no "0 ran" check | **Adapt**: run-and-verify-tests.sh for xUnit |
 | 2. (gate) Code review | 🔴 | Dapper + MediatR — ready-made skill does not fit | **Create skill**: `code-review-dapper` |
 | 3. System Checks | 🔴 | Worker Service, no HTTP. OpenAPI snapshot impossible | **Create skill**: `e2e-worker` |
 | 4. Reality Checks | 🔴 | No audits. Dapper + SQL Server — ready-made DBA does not fit | **Create skill**: `dba-audit-dapper` |
@@ -104,7 +104,7 @@ In a Dapper project — need to check raw SQL, indexes, query plans.
   - Put in: `tests/ArchitectureTests/ArchitectureRules.VSlice.cs`
 
 ### Sprint 2 — Tests (2 days)
-- [ ] **Adapt** verify-tests.sh for xUnit (do not migrate to TUnit!)
+- [ ] **Adapt** run-and-verify-tests.sh for xUnit (do not migrate to TUnit!)
   - Parse output of `dotnet test --logger "console;verbosity=detailed"`
   - Verify that `Total tests: > 0`
 - [ ] **Adapt** `tests/patterns/RatchetTest.cs`:
@@ -261,7 +261,7 @@ covered by the project-specific `e2e-worker` below.
 ## Risks
 
 1. **4 new skills** — this is 2-3 days of work just to describe the rules. But without them, guardrails will be useless.
-2. **xUnit remains** — we do not migrate to TUnit because 340 tests + infrastructure. verify-tests.sh solves the "0 ran" problem.
+2. **xUnit remains** — we do not migrate to TUnit because 340 tests + infrastructure. run-and-verify-tests.sh solves the "0 ran" problem.
 3. **Vertical Slice + Dapper** — no ready-made patterns in `dotnet-ai-guardrails`. But the principles are the same: auto-check, ratchet, code review.
 
 ---

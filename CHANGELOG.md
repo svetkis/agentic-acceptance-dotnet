@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- `docs/agents/CURSOR.md` — Cursor IDE integration (`.cursorrules`, `.cursor/rules/`, Composer mode).
+- `docs/agents/STEP-BY-STEP-AGENTS.md` — Cursor IDE integration (`.cursorrules`, `.cursor/rules/`, Composer mode).
 - `docs/obstacles/context-rot.md` — "Context Rot" obstacle and compensation via stateless guardrails.
-- `docs/traps/stale-stack.md` — "Stale Stack" trap: the agent uses a preview SDK or outdated NuGet packages due to its training cutoff.
-- `docs/traps/log-leak.md` — "Log Leak" trap: the agent logs email, phone, password.
+- `docs/traps/agent-behavior.md#stale-stack` — "Stale Stack" trap: the agent uses a preview SDK or outdated NuGet packages due to its training cutoff.
+- `docs/traps/runtime.md#log-leak` — "Log Leak" trap: the agent logs email, phone, password.
 - `docs/relationships.mmd` — graph of guardrails, traps, and obstacles relationships (Mermaid).
 - `templates/skills/version-audit/` — new skill for auditing stack currency (SDK, NuGet, frontend, CI actions).
 - `tests/patterns/VersionAuditTest.cs` — test pattern: regex scanning of `global.json`, `*.csproj`, `package.json` for preview flags and version mismatches.
@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Methodology revision 2026-07-14 (METH-001…METH-024): Engineering Assurance Levels model, normative glossary, unified skill contract (`SKILL-CONTRACT.md` + schema-lint), heuristic audits de-absolutized, single safe onboarding path, evidence model for quantitative claims, repo-quality CI checks, case studies. Plan document removed after full execution; outcomes live in the artifacts and git history.
-- Self-checking tests guardrails (SV-001…SV-005 done; SV-006 in progress): constitution rule in `rules/AGENTS_TEMPLATE.md`, trap `docs/traps/non-validating-tests.md`, Test Validity section in test-audit, mutation-audit cross-link, custom Roslyn analyzers SAE006-SAE009 (`DemoProject.Analyzers`) with positive/negative unit tests, and frontend test validity checks in `frontend-code-review` (SV-005). Remaining SV-006 blockers tracked in `docs/SELF-CHECKING-TESTS-WORKSTREAM.md`.
+- Self-checking tests guardrails (SV-001…SV-005 done; SV-006 in progress): constitution rule in `rules/AGENTS_TEMPLATE.md`, trap `docs/traps/testing.md#non-validating-tests`, Test Validity section in test-audit, mutation-audit cross-link, custom Roslyn analyzers SAE006-SAE009 (`DemoProject.Analyzers`) with positive/negative unit tests, and frontend test validity checks in `frontend-code-review` (SV-005). Remaining SV-006 blockers tracked in `docs/SELF-CHECKING-TESTS-WORKSTREAM.md`.
 - `README.md` — restructured with language badges, DemoProject section, and links to CONTRIBUTING/LICENSE.
 - `AGENTS.md` — updated navigation table with `examples/DemoProject/`, `CONTRIBUTING.md`, and `LICENSE`.
 - `tests/conventions/TUnit_Guide.md` — added note about TUnit 1.x auto-generated entry point (no `Program.cs` required).

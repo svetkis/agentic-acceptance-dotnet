@@ -121,9 +121,8 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   └── conventions/               # Именование, TUnit гайд
 ├── ci/                            # CI/CD guardrails
 └── examples/
-    ├── DemoProject/               # Рабочий пример на .NET 10 (Clean Architecture)
-    ├── DemoProject.MinimalApi/    # Single-project MVP (Minimal API, no layers)
-    └── DemoProject.Traps/         # Intentionally broken code — демонстрация guardrails
+    ├── DemoProject/               # Рабочий пример на .NET 10 (Clean Architecture + Traps)
+    └── DemoProject.MinimalApi/    # Single-project MVP (Minimal API, no layers)
 ```
 
 ## DemoProject
@@ -145,10 +144,10 @@ dotnet run --project tests/DemoProject.Tests
 
 ## DemoProject.Traps
 
-`examples/DemoProject.Traps/` — специально сломанный код для демонстрации guardrails в действии. Каждый тест здесь падает, показывая, что ловит архитектурный тест, если агент нарушает правила.
+`examples/DemoProject/traps-src/DemoProject.Traps/` (см. [TRAPS.md](examples/DemoProject/TRAPS.md)) — специально сломанный код для демонстрации guardrails в действии. Каждый тест здесь падает, показывая, что ловит архитектурный тест, если агент нарушает правила.
 
 ```bash
-cd examples/DemoProject.Traps
+cd examples/DemoProject
 dotnet run --project tests/DemoProject.Traps.Tests
 ```
 
@@ -159,7 +158,7 @@ dotnet run --project tests/DemoProject.Traps.Tests
 - `Modules/` — циклические зависимости между модулями (ArchUnitNET)
 - `RawGuidEntity` — голый `Guid` вместо strongly typed ID
 
-См. также [`examples/DemoProject.Traps/README.md`](examples/DemoProject.Traps/README.md).
+См. также [`examples/DemoProject/TRAPS.md`](examples/DemoProject/TRAPS.md).
 
 ## DemoProject.MinimalApi
 
@@ -208,12 +207,9 @@ dotnet run --project tests/DemoProject.MinimalApi.Tests
 | Онбординг проекта | `templates/skills/skeptical-ai-bootstrap/` |
 | Рабочий пример (Clean Architecture) | `examples/DemoProject/` |
 | Рабочий пример (Single-project MVP) | `examples/DemoProject.MinimalApi/` |
-| Failing demo (guardrails) | `examples/DemoProject.Traps/` |
-| Интеграция с Kimi | `docs/agents/KIMI.md` |
-| Интеграция с Claude Code | `docs/agents/CLAUDE-CODE.md` |
-| Интеграция с Cursor | `docs/agents/CURSOR.md` |
-| Интеграция с Codex | `docs/agents/CODEX.md` |
-| Интеграция с OpenCode | `docs/agents/OPENCODE.md` |
+| Failing demo (guardrails) | `examples/DemoProject/TRAPS.md` |
+| Frontier-агенты (Kimi, Claude Code, Codex) | `docs/agents/FRONTIER-AGENTS.md` |
+| Пошаговые агенты (Cursor, OpenCode) | `docs/agents/STEP-BY-STEP-AGENTS.md` |
 | Bootstrap Protocol | `docs/agents/BOOTSTRAP-PROTOCOL.md` |
 | Сравнение агентов | `docs/agents/README.md` |
 

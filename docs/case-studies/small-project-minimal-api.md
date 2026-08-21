@@ -45,7 +45,7 @@ agent writing most of the code.
 
 - All 7 guardrail tests pass on the green example — see
   `examples/DemoProject.MinimalApi/tests/DemoProject.MinimalApi.Tests/`.
-- The trap counterpart (`examples/DemoProject.Traps/`) demonstrates what each
+- The trap counterpart (`examples/DemoProject/TRAPS.md`) demonstrates what each
   guard catches when the agent violates it (tests fail by design).
 
 ## False Positives Observed

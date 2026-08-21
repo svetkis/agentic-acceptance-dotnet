@@ -27,7 +27,7 @@ Else:
 ### TARGET MODE
 - You are inside a third-party .NET project.
 - Your task: **assess the codebase** and produce a guardrail implementation plan.
-- **FORBIDDEN:** create `examples/`, `DemoProject/`, `DemoProject.Traps/`, `DemoProject.MinimalApi/`, new `.sln`/`.csproj`.
+- **FORBIDDEN:** create `examples/`, `DemoProject/` (including `traps-src/`), `DemoProject.MinimalApi/`, new `.sln`/`.csproj`.
 - **FORBIDDEN:** write code "for demonstration" or "as an example".
 - **ALLOWED:** generate `.md` reports, checklists, `AGENTS.md`, `CONVENTIONS.md`.
 
@@ -61,7 +61,7 @@ Else:
 
 | Type | Example | Why forbidden |
 |------|---------|---------------|
-| Demo projects | `examples/DemoProject/`, `DemoProject.Traps/`, `DemoProject.MinimalApi/`, `DemoProject.sln` | These are methodology examples, not target code |
+| Demo projects | `examples/DemoProject/` (incl. `traps-src/`), `DemoProject.MinimalApi/`, `DemoProject.sln` | These are methodology examples, not target code |
 | New projects | `MyApp.Tests.csproj` (created from scratch) | Assessment agent does not write production code |
 | Methodology folders in root | `rules/`, `templates/skills/`, `tests/patterns/` in target repo root | Target project has its own structure. Exception: `.kimi/skills/` for markdown skills — normal |
 | Code "for example" | `// Here's how it should look:` + 20 lines of C# | Agent must not generate unimplemented code in a working codebase |

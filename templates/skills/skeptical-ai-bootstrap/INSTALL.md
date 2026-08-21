@@ -87,10 +87,8 @@ The skill automatically determines which AI agent is used in the project:
 - **Multiple** → universal `AGENTS.md` + specific configs
 
 See `docs/agents/` for details on each agent:
-- `docs/agents/KIMI.md`
-- `docs/agents/CLAUDE-CODE.md`
-- `docs/agents/CODEX.md`
-- `docs/agents/OPENCODE.md`
+- `docs/agents/FRONTIER-AGENTS.md` (Kimi, Claude Code, Codex)
+- `docs/agents/STEP-BY-STEP-AGENTS.md` (Cursor, OpenCode, local models)
 
 ## For Agents
 

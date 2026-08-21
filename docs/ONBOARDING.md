@@ -133,7 +133,7 @@
 5. **Modular Monolith / Vertical Slice:** use `Slice().ByNamespacePrefix(...).Should().NotHaveDependenciesBetweenSlices()` to check inter-module dependencies
 6. If a rule looks at C# sources — prefer a Roslyn analyzer (see [`roslyn-analyzers.md`](solutions/roslyn-analyzers.md)); leave regex for config/markdown/manifests or temporary spikes
 7. Run: `dotnet run --project tests/YourProject.Tests` — do tests pass?
-8. See a live failing demo: [`examples/DemoProject.Traps/`](../examples/DemoProject.Traps/) — 7 intentionally broken guardrails with `IType.Explanation` and ArchUnitNET
+8. See a live failing demo: [`examples/DemoProject/TRAPS.md`](../examples/DemoProject/TRAPS.md) — 7 intentionally broken guardrails with `IType.Explanation` and ArchUnitNET
 
 **Readiness criterion:** New `using Infrastructure` in Application = red CI.
 
@@ -143,7 +143,7 @@
 
 **Goal:** Every change is covered by tests, and tests actually run.
 
-1. **"0 tests ran" check:** copy [`ci/scripts/verify-tests.sh`](../ci/scripts/verify-tests.sh) into CI
+1. **"0 tests ran" check:** copy [`ci/scripts/run-and-verify-tests.sh`](../ci/scripts/run-and-verify-tests.sh) into CI
 2. **BUG-regression convention:** for every bug fix create `BUG###_DescriptiveName.cs` ([`BUG_TEMPLATE.cs`](../tests/conventions/BUG_TEMPLATE.cs))
 3. **Snapshot test:** if there is an API — add an OpenAPI snapshot test ([`SnapshotTest.cs`](../tests/patterns/SnapshotTest.cs))
 4. **Characterization tests:** capture behavior of critical algorithms (see [`ai-patterns.md`](solutions/ai-patterns.md))
@@ -242,11 +242,8 @@
 **Goal:** The agent knows how to work with your project.
 
 1. Choose your agent:
-   - **Kimi Code CLI** → [`docs/agents/KIMI.md`](agents/KIMI.md)
-   - **Claude Code** → [`docs/agents/CLAUDE-CODE.md`](agents/CLAUDE-CODE.md)
-   - **Cursor** → [`docs/agents/CURSOR.md`](agents/CURSOR.md)
-   - **Codex** → [`docs/agents/CODEX.md`](agents/CODEX.md)
-   - **OpenCode** → [`docs/agents/OPENCODE.md`](agents/OPENCODE.md)
+   - Frontier agents (Kimi / Claude Code / Codex) → [`docs/agents/FRONTIER-AGENTS.md`](agents/FRONTIER-AGENTS.md)
+   - Step-by-step agents (Cursor / OpenCode / local models) → [`docs/agents/STEP-BY-STEP-AGENTS.md`](agents/STEP-BY-STEP-AGENTS.md)
 2. Copy the configuration into your project
 3. Make sure the agent sees `AGENTS.md` and skills
 
@@ -276,7 +273,7 @@ Go through this list after implementation. If everything is checked — guardrai
 - [ ] `AGENTS.md` in the project root, team knows it exists
 - [ ] `dotnet build` fails on warnings
 - [ ] Architecture tests pass (NetArchTest or equivalent)
-- [ ] `verify-tests.sh` checks that tests actually ran
+- [ ] `run-and-verify-tests.sh` checks that tests actually ran
 
 ### Layer 1.3–1.5 + Layer 2.1 (Should have)
 - [ ] Regression tests cover all reproducible bug fixes (capability: no closed bug without a `BUG###_` test or a justified alternative)
@@ -293,7 +290,7 @@ Go through this list after implementation. If everything is checked — guardrai
 ### Ecosystem
 - [ ] Agent is configured and sees `AGENTS.md`
 - [ ] Skills live in `.kimi/skills/` (or equivalent folder for another agent)
-- [ ] CI runs architecture tests + verify-tests on every PR
+- [ ] CI runs architecture tests via `run-and-verify-tests.sh` on every PR
 
 ---
 

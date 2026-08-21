@@ -5,7 +5,7 @@
 ## Run
 
 ```bash
-cd examples/DemoProject.Traps
+cd examples/DemoProject
 dotnet run --project tests/DemoProject.Traps.Tests
 ```
 

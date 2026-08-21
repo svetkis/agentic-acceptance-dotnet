@@ -1,80 +1,48 @@
 # AI Agents Integration
 
-> This directory contains instructions for integrating guardrails
-> with various AI agents and development tools.
->
-> Each agent has its own ecosystem, configuration format, and nuances.
-> Choose the file matching your tool.
+> This directory explains how to wire guardrails into AI agents and development tools.
+> There are **two integration styles** — pick by how much the agent can be trusted to
+> plan its own steps.
 
 ## Bootstrap Protocol (read this first)
 
 Before configuring any agent — read [BOOTSTRAP-PROTOCOL.md](BOOTSTRAP-PROTOCOL.md).  
 It prevents situations where an agent tries to create a `DemoProject` in the target repo instead of assessing the existing codebase.
 
-## Available Agents
+## Two Integration Guides
 
-| Agent | File | Configuration Format | Features |
-|-------|------|---------------------|----------|
-| **Kimi Code CLI** | [KIMI.md](KIMI.md) | `.kimi/skills/{name}/SKILL.md` | Skill system, marketplace |
-| **Claude Code** | [CLAUDE-CODE.md](CLAUDE-CODE.md) | `.claude/CLAUDE.md` + commands | Tools (bash, edit, read) |
-| **Cursor** | [CURSOR.md](CURSOR.md) | `.cursorrules` + `.cursor/rules/` | IDE-integrated, context-aware rules |
-| **Codex (OpenAI)** | [CODEX.md](CODEX.md) | `AGENTS.md` + `~/.codex/config.toml` | AGENTS.md standard, skills, custom agents |
-| **OpenCode** | [OPENCODE.md](OPENCODE.md) | `.opencode/instructions.md` | Open-source, self-hosted |
+| Guide | For | Idea |
+|-------|-----|------|
+| [FRONTIER-AGENTS.md](FRONTIER-AGENTS.md) | Kimi Code CLI, Claude Code, Codex, and future strong agents | Define the **goal**, boundaries, and acceptance criteria — the agent plans the steps |
+| [STEP-BY-STEP-AGENTS.md](STEP-BY-STEP-AGENTS.md) | Cursor, OpenCode, smaller/local models (Ollama, LM Studio) | Write out **every step**, exact file layouts, and paste-ready prompts |
 
-## How to Read These Guides
+## Which Style for Which Tool
 
-Each guide focuses on one practical question: **what onboarding should create for review**.
-Run onboarding first, then read the "What Onboarding Creates for Review" section.
+| Tool | Style | Native format |
+|------|-------|---------------|
+| Kimi Code CLI | Frontier | `.kimi/skills/{name}/SKILL.md`, `kimi run {name}` |
+| Claude Code | Frontier | `.claude/CLAUDE.md` + `.claude/commands/*.md` |
+| Codex (OpenAI) | Frontier | layered `AGENTS.md` + `.agents/skills/` |
+| Cursor | Step-by-step | `.cursorrules` / `.cursor/rules/*.md` (glob-activated) |
+| OpenCode | Step-by-step | `.opencode/instructions.md` + `prompts/*.md` |
+
+The split is a heuristic, not a law: a strong model inside Cursor can work
+frontier-style; a weak CLI model needs explicit steps.
 
 ## Universal Approach
 
 If multiple agents are used in the project or the agent is unknown —
-use the universal `AGENTS.md` in the project root:
+use the universal `AGENTS.md` in the project root (adapted from
+[`rules/AGENTS_TEMPLATE.md`](../../rules/AGENTS_TEMPLATE.md)). Any agent reads it.
 
-```markdown
-# AGENTS.md — {ProjectName}
-
-> This file is read by ANY AI agent working in the project.
-
-## Rules (universal)
-1. Do not add dependencies without explicit request
-2. ...
-
-## Stack
-- .NET {version}
-- ...
-```
-
-## How to Choose the Format
-
-1. **Identify which agent is used** (or will be used)
-2. **Read the corresponding file** from the table above
-3. **Follow the instructions** for the configuration structure
-4. **Use `skeptical-ai-bootstrap`** for automatic scanning:
-   - It determines the agent type
-   - Generates configuration in the correct format
-   - Creates agent-specific artifacts
-
-## Agent Comparison
-
-| Characteristic | Kimi | Claude Code | Cursor | Codex | OpenCode |
-|----------------|------|-------------|--------|-------|----------|
-| **Rules format** | Multiple files (skills) | 1 file + commands | `.cursorrules` + rules/ | 1 file | Depends on implementation |
-| **Launch** | `kimi run {name}` | `/{command}` | Chat / Composer | Direct prompt | CLI / IDE |
-| **Tools** | Limited | Bash, edit, read | Inline edits | CLI-only | Depends on implementation |
-| **Context** | Model-dependent (check current docs) | Model-dependent | Model-dependent | Model-dependent | Model-dependent |
-| **Open Source** | No | No | No | No | Yes |
-| **Self-hosted** | No | No | No | No | Possible |
+Use the `skeptical-ai-bootstrap` skill for automatic scanning: it determines the
+agent type and generates configuration in the correct format.
 
 ## Recommendation
 
-If you are just starting — use **Kimi Code CLI**, **Claude Code**, or **Cursor**.
-They have the most mature ecosystems for guardrails.
-
-- **Kimi / Claude Code** — for CLI-first workflow, scripts, CI integration
-- **Cursor** — for IDE-first workflow, inline edits, context-dependent rules
-
-If privacy or self-hosting is important — look at **OpenCode** with local models.
+- **CLI-first workflow, CI integration** — Kimi / Claude Code / Codex (frontier style).
+- **IDE-first workflow, inline edits** — Cursor (step-by-step style).
+- **Privacy / self-hosting** — OpenCode with local models (step-by-step style).
 
 ## Guide Freshness (drift control)
 
