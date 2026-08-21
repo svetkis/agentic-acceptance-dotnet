@@ -19,7 +19,7 @@
 > | Outer loop (human) | Engineering Governance (process, not a level) |
 > | Artifact grooming | Control Maintenance (process, not a level) |
 
-> **Skeptical AI Engineering (SAE)** — methodology from the talk "AI is confident. I am not" (Dotnext 2026).
+> **Skeptical AI Engineering (SAE)** — methodology from the talk "AI is confident. I am not".
 > Feedback speed determines the cost of an error. The earlier you find it, the cheaper it is to fix.
 > AI makes it possible to add control layers that used to be too expensive: audits, load testing, a second review.
 > The compiler catches things in seconds. Smoke in minutes. Anything longer is the acceptance cycle. Human judgment is the outer loop.

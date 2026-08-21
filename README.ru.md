@@ -1,6 +1,6 @@
 # .NET Skeptical AI Engineering
 
-Методология ускорения инженерных практик через AI-агентов. Audit, review и guardrails, которые раньше требовали дорогой экспертизы, теперь масштабируются. Основана на докладе «ИИ уверен. Я нет» (Dotnext 2026).
+Методология ускорения инженерных практик через AI-агентов. Audit, review и guardrails, которые раньше требовали дорогой экспертизы, теперь масштабируются. Основана на докладе «ИИ уверен. Я нет».
 
 [🇬🇧 English version](README.md)
 
@@ -215,7 +215,7 @@ dotnet run --project tests/DemoProject.MinimalApi.Tests
 
 ## Автор
 
-**Светлана Мелешкина** — автор методологии Skeptical AI Engineering, докладчик Dotnext 2026.
+**Светлана Мелешкина** — автор методологии Skeptical AI Engineering, докладчик.
 
 - 💬 Telegram-канал: [@kot_review](https://t.me/kot_review)
 - ✉️ Telegram: [@svetkis](https://t.me/svetkis)

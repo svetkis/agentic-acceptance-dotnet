@@ -1,6 +1,6 @@
 # .NET Skeptical AI Engineering
 
-AI-accelerated quality control methodology for .NET teams. Audits, review, and guardrails that used to require expensive expertise now scale. Based on the talk "AI is confident. I am not" (Dotnext 2026).
+AI-accelerated quality control methodology for .NET teams. Audits, review, and guardrails that used to require expensive expertise now scale. Based on the conference talk "AI is confident. I am not".
 
 [🇷🇺 Русская версия](README.ru.md)
 
@@ -217,7 +217,7 @@ Lost? Start with [docs/README.md](docs/README.md).
 
 ## Author
 
-**Svetlana Meleshkina** — creator of the Skeptical AI Engineering methodology, speaker at Dotnext 2026.
+**Svetlana Meleshkina** — creator of the Skeptical AI Engineering methodology, speaker.
 
 - 💬 Telegram channel: [@kot_review](https://t.me/kot_review)
 - ✉️ Telegram: [@svetkis](https://t.me/svetkis)
