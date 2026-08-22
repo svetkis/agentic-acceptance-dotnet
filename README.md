@@ -1,6 +1,6 @@
 # .NET Skeptical AI Engineering
 
-AI-accelerated quality control methodology for .NET teams. Audits, review, and guardrails that used to require expensive expertise now scale. Based on the conference talk "AI is confident. I am not".
+AI-accelerated quality control methodology for .NET teams. Audits, review, and guardrails that used to require expensive expertise now scale.
 
 [🇷🇺 Русская версия](README.ru.md)
 

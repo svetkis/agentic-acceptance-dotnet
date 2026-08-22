@@ -1,7 +1,6 @@
 # AGENTS.md — Skeptical AI Engineering
 
 > **Skeptical AI Engineering (SAE)** — a methodology for scaling quality control through AI agents.  
-> Talk "AI is confident. I am not".  
 > This file controls AI agent behavior in this repository.
 
 ## Mission
