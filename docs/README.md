@@ -64,7 +64,7 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **BUG_TEMPLATE** | Regression test format | [tests/conventions/BUG_TEMPLATE.cs](../tests/conventions/BUG_TEMPLATE.cs) | — |
 | **TUnit_Guide** | Test conventions | [tests/conventions/TUnit_Guide.md](../tests/conventions/TUnit_Guide.md) | — |
 | **AnalyzerDiagnostics** | Catalog of custom Roslyn analyzer diagnostics (SAE001-SAE009) | [tests/conventions/AnalyzerDiagnostics.md](../tests/conventions/AnalyzerDiagnostics.md) | `examples/DemoProject/src/DemoProject.Analyzers/` |
-| **Traps Demo** | Intentionally broken code to demonstrate guardrails (9 failing tests) | — | `examples/DemoProject/TRAPS.md` |
+| **Traps Demo** | Intentionally broken code to demonstrate guardrails (see [`TRAPS.md`](../examples/DemoProject/TRAPS.md) for the current failing-test count) | — | `examples/DemoProject/TRAPS.md` |
 | **MinimalApi Demo** | Single-project MVP without Clean Architecture — naming, banned APIs, ratchet | — | `examples/DemoProject.MinimalApi/` |
 
 ---

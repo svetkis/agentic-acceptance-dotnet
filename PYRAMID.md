@@ -86,7 +86,7 @@ Everything that runs in seconds and minutes — while the developer (or agent) i
 
 ### Failing demo
 
-See the live example of broken guardrails: [`examples/DemoProject/TRAPS.md`](examples/DemoProject/TRAPS.md) — 7 intentionally broken tests with `IType.Explanation` and ArchUnitNET. Run `dotnet run --project tests/DemoProject.Traps.Tests` to see what a failure looks like for each violated rule.
+See the live example of broken guardrails: [`examples/DemoProject/TRAPS.md`](examples/DemoProject/TRAPS.md) — intentionally broken tests with `IType.Explanation` and ArchUnitNET (the failing-test count lives in TRAPS.md, the canonical source). Run `dotnet run --project tests/DemoProject.Traps.Tests` to see what a failure looks like for each violated rule.
 
 ### Roslyn-first, regex-last
 

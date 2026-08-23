@@ -133,7 +133,7 @@
 5. **Modular Monolith / Vertical Slice:** use `Slice().ByNamespacePrefix(...).Should().NotHaveDependenciesBetweenSlices()` to check inter-module dependencies
 6. If a rule looks at C# sources — prefer a Roslyn analyzer (see [`roslyn-analyzers.md`](solutions/roslyn-analyzers.md)); leave regex for config/markdown/manifests or temporary spikes
 7. Run: `dotnet run --project tests/YourProject.Tests` — do tests pass?
-8. See a live failing demo: [`examples/DemoProject/TRAPS.md`](../examples/DemoProject/TRAPS.md) — 7 intentionally broken guardrails with `IType.Explanation` and ArchUnitNET
+8. See a live failing demo: [`examples/DemoProject/TRAPS.md`](../examples/DemoProject/TRAPS.md) — intentionally broken guardrails with `IType.Explanation` and ArchUnitNET (see TRAPS.md for the exact failing-test count)
 
 **Readiness criterion:** New `using Infrastructure` in Application = red CI.
 
