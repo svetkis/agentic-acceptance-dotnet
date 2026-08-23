@@ -99,6 +99,10 @@ Exception: `templates/skills/skeptical-ai-bootstrap/` contains supporting templa
 | [release-readiness-audit](../templates/skills/release-readiness-audit/SKILL.md) | Before release / beta launch |
 | [mutation-audit](../templates/skills/mutation-audit/SKILL.md) | Before release / once per sprint |
 | [analyzer-tests-audit](../templates/skills/analyzer-tests-audit/SKILL.md) | When creating / updating Roslyn analyzers |
+| [external-contract-verification](../templates/skills/external-contract-verification/SKILL.md) | Before implementing integrations / on PR with webhooks, provider DTOs, signature checks |
+| [load-test-ops](../templates/skills/load-test-ops/SKILL.md) | Before release / after infrastructure changes (load runs and trend comparison) |
+| [perf-test-authoring](../templates/skills/perf-test-authoring/SKILL.md) | When adding / changing hot paths and their budget tests |
+| [guardrails-review](../templates/skills/guardrails-review/SKILL.md) | On any change to guardrail/verifier/gate code (fail-closed adversarial audit) |
 | [skeptical-ai-bootstrap](../.agents/skills/skeptical-ai-bootstrap/SKILL.md) | Once at project start |
 | [adaptation-guide](../templates/skills/ADAPTATION.md) | Before first skill run |
 
