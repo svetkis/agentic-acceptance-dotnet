@@ -27,7 +27,7 @@
 | **1** | 1.1 Compiler | Fast feedback from types | [PYRAMID.md §1.1](../PYRAMID.md#layer-1-compiler) | `.editorconfig`, `Directory.Build.props`, `DemoProject.Analyzers` (custom Roslyn analyzer) |
 | **1** | 1.2 Architecture | Auto-check of layers and anti-patterns | [PYRAMID.md §1.2](../PYRAMID.md#layer-1-architecture) | [tests/patterns/ArchitectureRules.cs](../tests/patterns/ArchitectureRules.cs), [RatchetTest.cs](../tests/patterns/RatchetTest.cs), [ArchUnitNetSliceTest.cs](../tests/patterns/ArchUnitNetSliceTest.cs) |
 | **1** | 1.3 Tests | Regressions, snapshot, vibe-refactoring, API contracts | [PYRAMID.md §1.3](../PYRAMID.md#layer-1-tests) | [tests/patterns/](#test-patterns) |
-| **1** | 1.4 Code Review | Agent checks agent (pre-commit / PR) | [PYRAMID.md §1.4](../PYRAMID.md#layer-1-code-review) | [templates/skills/code-review/SKILL.md](../templates/skills/code-review/SKILL.md), [templates/skills/frontend-code-review/SKILL.md](../templates/skills/frontend-code-review/SKILL.md) |
+| **1** | 1.4 Code Review | Agent checks agent (pre-commit / PR) | [PYRAMID.md §1.4](../PYRAMID.md#layer-1-code-review) | [templates/skills/code-review/SKILL.md](../templates/skills/code-review/SKILL.md) |
 | **1** | 1.5 Smoke | Fast run of critical scenarios | [PYRAMID.md §1.5](../PYRAMID.md#layer-1-smoke) | — |
 | **2** | 2.1 E2E / MCP | Full scenarios through external systems | [PYRAMID.md §2.1](../PYRAMID.md#layer-2-e2e) | [tests/patterns/SnapshotTest.cs](../tests/patterns/SnapshotTest.cs) |
 | **2** | 2.2 Audits | Deep checks on schedule | [PYRAMID.md §2.2](../PYRAMID.md#layer-2-audits) | [templates/skills/](#skills-audits) |
@@ -77,7 +77,6 @@ Exception: `templates/skills/skeptical-ai-bootstrap/` contains supporting templa
 | Skill | When to run |
 |-------|-------------|
 | [code-review](../templates/skills/code-review/SKILL.md) | On every commit (pre-commit) / PR |
-| [frontend-code-review](../templates/skills/frontend-code-review/SKILL.md) | On every commit (pre-commit) / PR with React/TS |
 | [task-compliance](../templates/skills/task-compliance/SKILL.md) | On every PR |
 | [security-audit](../templates/skills/security-audit/SKILL.md) | Once per sprint / on PR with Api/Infra |
 | [dba-audit](../templates/skills/dba-audit/SKILL.md) | Once per sprint / on migrations (EF Core) |

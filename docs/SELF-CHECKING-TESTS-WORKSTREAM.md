@@ -85,9 +85,9 @@ a reproducible green/trap demonstration.
   analyzer diagnostic (not only because other trap tests fail).
 - **Open:** red demo must assert the exact SAE006–SAE009 diagnostic set.
 
-### SV-005 — Frontend ✅ done
+### SV-005 — Frontend ✅ done (skill later removed from the repository as out of the .NET stack)
 
-- `templates/skills/frontend-code-review/`: items on `expect(true)`,
+- `templates/skills/frontend-code-review/` (skill since removed from the repository as out of the .NET stack): items on `expect(true)`,
   body-only checks, `waitForTimeout` as a replacement for condition waits.
 - **Done when:** items present, schema-lint passes. ✅
 

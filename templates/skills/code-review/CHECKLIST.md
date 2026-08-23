@@ -7,7 +7,7 @@
 
 ## Pre-commit / Trigger
 - [ ] Staged changes include backend source files
-- [ ] Frontend-only changes are skipped (use separate frontend-code-review skill)
+- [ ] Frontend-only changes are skipped (out of scope; stack-specific skill per ADAPTATION.md)
 - [ ] When staged diff is empty, agent reports nothing and does not block commit
 - [ ] Agent does NOT run `git commit` itself
 

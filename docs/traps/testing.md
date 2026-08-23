@@ -47,7 +47,7 @@ See `tests/conventions/TUnit_Guide.md` and `ci/github-actions/safe-ci.yml`
 
 
 ## Non-Validating Tests
-> **Status:** in force — wired into `rules/AGENTS_TEMPLATE.md` (Tests), Test Audit, Mutation Audit and `frontend-code-review` skills. Part of the [Self-Checking Tests workstream](../SELF-CHECKING-TESTS-WORKSTREAM.md) (SV-006 analyzer blockers still open).
+> **Status:** in force — wired into `rules/AGENTS_TEMPLATE.md` (Tests), Test Audit and Mutation Audit skills. Part of the [Self-Checking Tests workstream](../SELF-CHECKING-TESTS-WORKSTREAM.md) (SV-006 analyzer blockers still open).
 
 A test can be discovered, executed, and green while proving nothing about the
 behavior named by the test.

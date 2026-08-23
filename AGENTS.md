@@ -80,7 +80,6 @@ If you are an AI agent reading this file in the context of a **different** repos
 | Localization audit | `templates/skills/i18n-audit/` |
 | Business risk / cross-layer drift audit | `templates/skills/business-risk-audit/` |
 | Pre-commit code review agent | `templates/skills/code-review/` |
-| Frontend pre-commit code review agent | `templates/skills/frontend-code-review/` |
 | Scope compliance check | `templates/skills/task-compliance/` |
 | Test pattern | `tests/patterns/` |
 | Working example | `examples/DemoProject/` |

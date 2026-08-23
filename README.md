@@ -47,7 +47,7 @@ Separate processes, not levels:
 |-----------------|----------------------|
 | Control Foundation | `rules/AGENTS_TEMPLATE.md` (+ efcore/dapper add-ons), `rules/CONVENTIONS.md`, Decision Guards (`PERF-###`/`DB-###`) |
 | 1. Change Checks | Banned APIs, Roslyn analyzers (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml` |
-| 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests), `tests/conventions/`, `templates/skills/code-review/`, `templates/skills/frontend-code-review/`, `templates/skills/task-compliance/` |
+| 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests), `tests/conventions/`, `templates/skills/code-review/`, `templates/skills/task-compliance/` |
 | 3. System Checks | E2E/smoke patterns, NBomber (`tests/patterns/LoadTest.cs`) |
 | 4. Reality Checks | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, simplicity, complexity, version, test, mutation, spellcheck, business-risk) |
 | Control Maintenance | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
@@ -79,8 +79,6 @@ dotnet run --project tests/DemoProject.Tests
 cp rules/AGENTS_TEMPLATE.md /your/project/AGENTS.md   # then edit for your stack
 # One control per sprint, e.g. pre-commit review:
 cp -r templates/skills/code-review /your/project/.kimi/skills/
-# For React/TypeScript frontend:
-# cp -r templates/skills/frontend-code-review /your/project/.kimi/skills/
 # Test patterns — take one at a time, when it covers a real risk
 # (tests/patterns/*.cs are templates to read, not a bulk-copy package):
 # cp tests/patterns/ArchitectureRules.cs /your/project/tests/
@@ -195,7 +193,6 @@ Lost? Start with [docs/README.md](docs/README.md).
 | Bot audit | `templates/skills/bot-audit/` |
 | i18n audit | `templates/skills/i18n-audit/` |
 | Pre-commit code review agent | `templates/skills/code-review/` |
-| Frontend pre-commit code review agent | `templates/skills/frontend-code-review/` |
 | Scope check | `templates/skills/task-compliance/` |
 | Test pattern | `tests/patterns/` |
 | CI security | `ci/github-actions/safe-ci.yml` |

@@ -47,7 +47,7 @@ AI-агенты (Cursor, Claude, Copilot) ускоряют написание к
 |-------------------|-----------------------|
 | Control Foundation | `rules/AGENTS_TEMPLATE.md` (+ efcore/dapper add-ons), `rules/CONVENTIONS.md`, Decision Guards (`PERF-###`/`DB-###`) |
 | 1. Change Checks | Banned APIs, Roslyn-анализаторы (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml` |
-| 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests), `tests/conventions/`, `templates/skills/code-review/`, `templates/skills/frontend-code-review/`, `templates/skills/task-compliance/` |
+| 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests), `tests/conventions/`, `templates/skills/code-review/`, `templates/skills/task-compliance/` |
 | 3. System Checks | E2E/smoke паттерны, NBomber (`tests/patterns/LoadTest.cs`) |
 | 4. Reality Checks | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, simplicity, complexity, version, test, mutation, spellcheck, business-risk) |
 | Control Maintenance | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
@@ -80,7 +80,6 @@ cp rules/AGENTS_TEMPLATE.md /your/project/AGENTS.md   # затем отреда�
 # По одному контролю на спринт, например pre-commit review:
 cp -r templates/skills/code-review /your/project/.kimi/skills/
 # Для React/TypeScript фронтенда:
-# cp -r templates/skills/frontend-code-review /your/project/.kimi/skills/
 # Тестовые паттерны — бери по одному, когда он покрывает реальный риск
 # (tests/patterns/*.cs — шаблоны для чтения, а не пакет для массового копирования):
 # cp tests/patterns/ArchitectureRules.cs /your/project/tests/
@@ -193,7 +192,6 @@ dotnet run --project tests/DemoProject.MinimalApi.Tests
 | Аудит производительности | `templates/skills/performance-audit/` |
 | Аудит локализации | `templates/skills/i18n-audit/` |
 | Pre-commit code review агент | `templates/skills/code-review/` |
-| Frontend pre-commit code review агент | `templates/skills/frontend-code-review/` |
 | Проверка scope | `templates/skills/task-compliance/` |
 | Паттерн теста | `tests/patterns/` |
 | CI безопасность | `ci/github-actions/safe-ci.yml` |

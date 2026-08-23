@@ -45,7 +45,7 @@ version: 1.0.0
 - **Dapper / raw SQL (no ORM tracking)** → skip ORM-specific checks (change tracking, eager loading, async find helpers). Use the raw SQL section.
 
 **Not applicable when:**
-- Changes are only in frontend / mobile / desktop UI — React + TypeScript is covered by `frontend-code-review`; Razor / Blazor / Vue / Svelte need a separate skill or N/A marking.
+- Changes are only in frontend / mobile / desktop UI — out of scope for this .NET skill; mark N/A or use a stack-specific skill created per `templates/skills/ADAPTATION.md`.
 - There are no staged changes.
 - The user asks for a full-file review without a diff.
 
