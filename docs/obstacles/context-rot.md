@@ -31,7 +31,7 @@ Context fades unevenly, in zones:
 
 It is impossible to "train" an agent to never forget. It is impossible to "remind" often enough. Context degradation is a physical property of how LLM distributes attention across tokens. The only strategy is **compensation**: make rules independent of the agent's memory.
 
-## Compensation in our pyramid
+## Compensation in our control levels
 
 Our guardrails are designed as **stateless compensators** of context degradation:
 

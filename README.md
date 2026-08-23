@@ -37,9 +37,8 @@ Separate processes, not levels:
 - **Engineering Governance** — residual risk acceptance, release decision, business and product decisions.
 - **Control Maintenance** — keeping instructions, agent memory, backlog, baselines, suppressions, and guardrails themselves up to date (skills `memory-hygiene`, `doc-hygiene`, `backlog-hygiene`).
 
-> **Legacy:** `PYRAMID.md` (layers 0–2 + outer loop) is the talk's visual metaphor.
-> The canonical classifier is the table above; the layer-to-level mapping is given at
-> the top of [`PYRAMID.md`](PYRAMID.md).
+> **Evidence:** effectiveness metrics and ROI of the levels —
+> [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 
 ### Artifact map by level
 
@@ -89,7 +88,6 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 ```
 .
 ├── AGENTS.md                     # Instructions for AI agents
-├── PYRAMID.md                    # Detailed breakdown of layers
 ├── rules/
 │   ├── AGENTS_TEMPLATE.md        # Base constitution for agents (universal)
 │   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-specific rules
@@ -178,39 +176,19 @@ See also [`examples/DemoProject.MinimalApi/README.md`](examples/DemoProject.Mini
 
 ## Navigation
 
-Lost? Start with [docs/README.md](docs/README.md).
+Lost? The full knowledge map — every artifact indexed by role — lives in
+[docs/README.md](docs/README.md). The most common entries:
 
 | What you need | Where to go |
 |---------------|-------------|
-| Agent rules (base) | `rules/AGENTS_TEMPLATE.md` |
-| EF Core add-on | `rules/AGENTS_TEMPLATE.efcore.md` |
-| Dapper add-on | `rules/AGENTS_TEMPLATE.dapper.md` |
-| Security audit | `templates/skills/security-audit/` |
-| DBA audit | `templates/skills/dba-audit/` |
-| DBA audit (Dapper) | `templates/skills/dba-audit-dapper/` |
-| Performance audit | `templates/skills/performance-audit/` |
-| API design audit | `templates/skills/api-design-audit/` |
-| Bot audit | `templates/skills/bot-audit/` |
-| i18n audit | `templates/skills/i18n-audit/` |
-| Pre-commit code review agent | `templates/skills/code-review/` |
-| Scope check | `templates/skills/task-compliance/` |
-| Test pattern | `tests/patterns/` |
-| CI security | `ci/github-actions/safe-ci.yml` |
+| Agent rules (base) | `rules/AGENTS_TEMPLATE.md` (+ [EF Core](rules/AGENTS_TEMPLATE.efcore.md) / [Dapper](rules/AGENTS_TEMPLATE.dapper.md) add-ons) |
+| Test patterns | `tests/patterns/` |
 | Agent traps | `docs/traps/` |
-| Auto Memory grooming | `templates/skills/memory-hygiene/` |
-| Doc grooming | `templates/skills/doc-hygiene/` |
-| Backlog grooming | `templates/skills/backlog-hygiene/` |
-| Architecture tests | `docs/solutions/architecture-tests.md` |
-| Roslyn analyzers | `docs/solutions/roslyn-analyzers.md` |
-| AI patterns | `docs/solutions/ai-patterns.md` |
-| Project onboarding | `templates/skills/skeptical-ai-bootstrap/` |
+| Project onboarding | [docs/ONBOARDING.md](docs/ONBOARDING.md) |
 | Working example (Clean Architecture) | `examples/DemoProject/` |
 | Working example (Single-project MVP) | `examples/DemoProject.MinimalApi/` |
 | Failing demo (guardrails) | `examples/DemoProject/TRAPS.md` |
-| Frontier agents (Kimi, Claude Code, Codex) | `docs/agents/FRONTIER-AGENTS.md` |
-| Step-by-step agents (Cursor, OpenCode) | `docs/agents/STEP-BY-STEP-AGENTS.md` |
-| Bootstrap Protocol | `docs/agents/BOOTSTRAP-PROTOCOL.md` |
-| Agent comparison | `docs/agents/README.md` |
+| AI agent setup (Kimi, Claude, Cursor, Codex) | `docs/agents/` |
 
 ## Author
 

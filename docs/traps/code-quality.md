@@ -208,7 +208,7 @@ Assert.That(cycles).IsEmpty();
 ```
 
 #### 2. Architectural test: Layer Boundaries
-NetArchTest catches real assembly dependencies between layers, while a Roslyn analyzer fits C# source-level rules such as forbidden `using` statements, API calls and attributes. See `tests/patterns/ArchitectureRules.cs` and `docs/solutions/roslyn-analyzers.md`.
+NetArchTest catches real assembly dependencies between layers, while a Roslyn analyzer fits C# source-level rules such as forbidden `using` statements, API calls and attributes. See `tests/patterns/ArchitectureRules.cs` and [architecture-tests.md §Roslyn](../solutions/architecture-tests.md#11-roslyn-analyzers-as-the-default-for-c).
 
 **Rule:** add architecture tests **in the very first commit** with layered architecture. A test added after 3 months and immediately failing does not mean the test is bad. It means the graph has been drifting unnoticed.
 
@@ -282,7 +282,7 @@ If a PR contains "moved header / extracted using / generalized import" and touch
 - `tests/patterns/DependencyDriftTest.cs` — circular dependencies + layer drift
 - `tests/patterns/EntityLeakTest.cs` — Application interfaces returning Entity instead of DTO (ratchet)
 
-#### Takeaways for the talk
+#### Takeaways
 
 1. **"The diff looks fine, but the architecture is broken" — that's about usings.** An AI agent does not see the dependency graph. It sees a local file. +1 using is +1 potential hole in layered architecture.
 2. **Measurement reveals drift.** An architecture test added late and immediately failing is not a bad test. It means the graph has been drifting for months unnoticed.

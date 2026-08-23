@@ -29,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `templates/skills/release-readiness-audit/` — release readiness audit skill.
 - `templates/skills/mutation-audit/` — mutation testing audit skill.
 - `templates/skills/analyzer-tests-audit/` — skill for auditing tests of custom analyzers.
-- `templates/skills/frontend-code-review/` — SV-005: checks for non-validating frontend tests (`expect(true)`, body-only checks, `waitForTimeout`).
 - `examples/DemoProject/src/DemoProject.Analyzers/HotPathAnalyzer.cs` — Roslyn analyzer SAE003/004/005 for `[HotPath]` methods.
 - `docs/solutions/ai-patterns.md` — pattern #9: Attribute-driven PII redaction (compile-time + runtime).
 - `rules/AGENTS_TEMPLATE.md` — translated to English, added Semantic Anchors, Permission to Push Back, Context Markers.
@@ -46,16 +45,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - NBomber load tests (read + write mix)
   - TUnit 1.x with `dotnet run --project`
 - `README.en.md` (now the English `README.md`) — full English translation of the README.
-- `.github/workflows/demo-project-ci.yml` — CI that builds DemoProject and runs all 15 tests.
+- `.github/workflows/demo-project-ci.yml` — CI that builds DemoProject and runs all tests (the current count is tracked in `examples/DemoProject/TRAPS.md`).
 - `SECURITY.md` — security policy and responsible disclosure process.
 - `CODE_OF_CONDUCT.md` — Contributor Covenant Code of Conduct.
 - `.github/ISSUE_TEMPLATE/` — issue templates for bug reports, feature requests, and proposals.
 - `.github/pull_request_template.md` — pull request template with pre-PR checklist.
 
 ### Changed
-- Removed `templates/skills/frontend-code-review/` (SV-005 artifact): a React/TypeScript skill is out of scope for a .NET methodology repository. `code-review` now marks frontend-only changes as N/A; a stack-specific skill can be created per `templates/skills/ADAPTATION.md`.
+- `PYRAMID.md` retired: the legacy pyramid document is removed, completing the migration to the Engineering Assurance Levels model. Unique quantitative material (what each level caught in the observed case, ROI tables, invisible-layer/invisible-decay paradoxes, evolution timeline, risk-justification principle) moved to `docs/EVIDENCE.md`; the "4 rules for Monday" moved to `docs/ONBOARDING.md` §Operating Rhythm; all references repointed (README, GLOSSARY, AGENTS.md, knowledge map, CONTRIBUTING, PR template, doc-hygiene scope).
+- Consistency pass over the repo (review findings): AGENTS.md onboarding order now canonical per `docs/ONBOARDING.md` (agent setup last); the canonical control model is the Engineering Assurance Levels table in `README.md` (CONTRIBUTING and the knowledge map updated accordingly, `PYRAMID.md` marked as an archived reference and removed from the newcomer path); the legacy pyramid taxonomy replaced by level names throughout `docs/ONBOARDING.md`, the knowledge map's control table, `architecture-tests.md`, `AnalyzerDiagnostics.md`, and the bootstrap example report; removed talk remnants, the empty RU-README frontend note, the duplicate Bootstrap Protocol row, and stale `verify-tests.sh` / hardcoded test-count references; RU README resynced with EN (task-compliance level, navigation rows).
+- `docs/solutions/roslyn-analyzers.md` merged into `architecture-tests.md` §11 (analyzer process, csproj hookup, repository rule preserved); references repointed.
+- README (EN/RU) Navigation tables trimmed to core entries with a pointer to the full knowledge map in `docs/README.md` (single source for the map).
+- `[ADAPT]` markers added for DemoProject-specific rules in `rules/AGENTS_TEMPLATE.md` (`[HotPath]`/allocation budget) and for ORM add-on template paths; a "Path profile" adaptation note added to 11 skills with hardcoded `src/*/Api`-style paths, documented in `templates/skills/ADAPTATION.md`.
+- `tests/patterns/README.md` added declaring templates canonical and demo test files independent adaptations; provenance comments added where missing.
 - Methodology revision 2026-07-14 (METH-001…METH-024): Engineering Assurance Levels model, normative glossary, unified skill contract (`SKILL-CONTRACT.md` + schema-lint), heuristic audits de-absolutized, single safe onboarding path, evidence model for quantitative claims, repo-quality CI checks, case studies. Plan document removed after full execution; outcomes live in the artifacts and git history.
-- Self-checking tests guardrails (SV-001…SV-005 done; SV-006 in progress): constitution rule in `rules/AGENTS_TEMPLATE.md`, trap `docs/traps/testing.md#non-validating-tests`, Test Validity section in test-audit, mutation-audit cross-link, custom Roslyn analyzers SAE006-SAE009 (`DemoProject.Analyzers`) with positive/negative unit tests, and frontend test validity checks in `frontend-code-review` (SV-005). Remaining SV-006 blockers tracked in `docs/SELF-CHECKING-TESTS-WORKSTREAM.md`.
+- Self-checking tests guardrails (SV-001…SV-005 done; SV-006 in progress): constitution rule in `rules/AGENTS_TEMPLATE.md`, trap `docs/traps/testing.md#non-validating-tests`, Test Validity section in test-audit, mutation-audit cross-link, custom Roslyn analyzers SAE006-SAE009 (`DemoProject.Analyzers`) with positive/negative unit tests, (SV-005 was covered by `frontend-code-review`, since removed as out of the .NET stack scope). Remaining SV-006 blockers tracked in `docs/SELF-CHECKING-TESTS-WORKSTREAM.md`.
 - `README.md` — restructured with language badges, DemoProject section, and links to CONTRIBUTING/LICENSE.
 - `AGENTS.md` — updated navigation table with `examples/DemoProject/`, `CONTRIBUTING.md`, and `LICENSE`.
 - `tests/conventions/TUnit_Guide.md` — added note about TUnit 1.x auto-generated entry point (no `Program.cs` required).
@@ -75,4 +79,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/solutions/` — architecture-tests.md, ai-patterns.md.
 - `docs/agents/` — integration guides for Kimi, Claude Code, Codex, OpenCode.
 - `ci/github-actions/safe-ci.yml` — template CI workflow for consumer projects.
-- `ci/scripts/verify-tests.sh` — verifies that `dotnet run` actually executed tests.
+- `ci/scripts/run-and-verify-tests.sh` (originally `verify-tests.sh`) — verifies that `dotnet run` actually executed tests.

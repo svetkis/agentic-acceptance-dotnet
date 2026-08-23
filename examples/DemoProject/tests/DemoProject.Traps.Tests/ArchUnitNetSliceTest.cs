@@ -1,5 +1,6 @@
 // GUARDRAIL: ArchUnitNET catches circular dependencies between slices.
 // TRAP: An agent created the cycle Orders -> Payments -> Shipping -> Orders.
+// This file is a working adaptation of the template from tests/patterns/ArchUnitNetSliceTest.cs
 using ArchUnitNET.Domain;
 using ArchUnitNET.Fluent;
 using ArchUnitNET.Fluent.Slices;

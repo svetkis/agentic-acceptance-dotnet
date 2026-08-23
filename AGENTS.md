@@ -17,7 +17,7 @@ Do not write domain code here — only guardrails, skills, patterns, and example
 - ❌ Do not use `dotnet test` in examples — only `dotnet run --project`
 
 ### Always
-- ✅ Update the Engineering Assurance Levels model in README when adding a new control level (`PYRAMID.md` is a legacy/visual metaphor, mapping in its header)
+- ✅ Update the Engineering Assurance Levels model in README when adding a new control level (effectiveness metrics and ROI live in `docs/EVIDENCE.md`)
 - ✅ Update `docs/agents/` when adding support for a new AI agent
 - ✅ Update `docs/README.md` (knowledge map) when adding a new artifact
 - ✅ Every new skill in `templates/skills/` must contain `SKILL.md` + `CHECKLIST.md` and pass `ci/scripts/check-skills.sh` (contract: `templates/skills/SKILL-CONTRACT.md`)
@@ -34,7 +34,7 @@ Do not write domain code here — only guardrails, skills, patterns, and example
 
 This repository is a **collection of defensive artifacts**, not a NuGet package. To apply it to your own .NET project:
 
-**Full guide:** [`docs/ONBOARDING.md`](docs/ONBOARDING.md) — step-by-step implementation plan with checkpoints and anti-patterns.
+**Full guide:** [`docs/ONBOARDING.md`](docs/ONBOARDING.md) — step-by-step implementation plan with checkpoints and anti-patterns. The order of steps there (agent setup comes **after** the controls work) is canonical.
 
 Summary:
 
@@ -44,9 +44,9 @@ Summary:
 | 1. Assess maturity | Run the onboarding skill or a manual assessment | [`.agents/skills/skeptical-ai-bootstrap/SKILL.md`](.agents/skills/skeptical-ai-bootstrap/SKILL.md) |
 | 2. Adapt | Cross out inapplicable checks for your stack | [`templates/skills/ADAPTATION.md`](templates/skills/ADAPTATION.md) |
 | 3. Constitution | Copy `rules/AGENTS_TEMPLATE.md` to your project root and adapt to your stack | [`rules/AGENTS_TEMPLATE.md`](rules/AGENTS_TEMPLATE.md) |
-| 4. Pyramid | Implement layers 1→2 from the onboarding backlog | [`PYRAMID.md`](PYRAMID.md) |
-| 5. Agent | Configure your AI agent (Kimi / Claude / Cursor / Codex) | [`docs/agents/`](docs/agents/) |
-| 6. Acceptance | Implement audits + load (manual or AI) | [`docs/solutions/human-audit-bridge.md`](docs/solutions/human-audit-bridge.md) |
+| 4. Controls | Implement Assurance Levels 1→2 (tests, architecture tests, behavior checks) from the onboarding backlog | [`docs/ONBOARDING.md`](docs/ONBOARDING.md) |
+| 5. Acceptance | Implement audits + load (manual or AI) | [`docs/solutions/human-audit-bridge.md`](docs/solutions/human-audit-bridge.md) |
+| 6. Agent | Configure your AI agent (Kimi / Claude / Cursor / Codex) — last, when the controls already work | [`docs/agents/`](docs/agents/) |
 
 > **Principle:** don't copy everything blindly — adapt or create new. See anti-patterns in [`docs/ONBOARDING.md`](docs/ONBOARDING.md) §"Implementation Anti-Patterns".
 
@@ -71,7 +71,6 @@ If you are an AI agent reading this file in the context of a **different** repos
 | Rules for the agent (base) | `rules/AGENTS_TEMPLATE.md` |
 | EF Core add-on | `rules/AGENTS_TEMPLATE.efcore.md` |
 | Dapper add-on | `rules/AGENTS_TEMPLATE.dapper.md` |
-| Bootstrap protocol (don't create DemoProject) | `docs/agents/BOOTSTRAP-PROTOCOL.md` |
 | Security audit | `templates/skills/security-audit/` |
 | DBA audit | `templates/skills/dba-audit/` |
 | Performance audit | `templates/skills/performance-audit/` |

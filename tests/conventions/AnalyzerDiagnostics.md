@@ -1,7 +1,7 @@
 # Analyzer diagnostics (DemoProject.Analyzers)
 
 Custom Roslyn analyzers live in `examples/DemoProject/src/DemoProject.Analyzers/`.
-They are compile-time guardrails (Layer 1.1 — Compiler).
+They are compile-time guardrails (Change Checks level).
 
 | ID | Severity | Meaning | Example |
 |----|----------|---------|---------|

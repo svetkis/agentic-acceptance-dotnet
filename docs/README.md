@@ -10,7 +10,7 @@
 
 | I am a ... | Where to start |
 |------------|----------------|
-| **Newcomer** to agentic development | [GLOSSARY.md](../GLOSSARY.md) → [PYRAMID.md](../PYRAMID.md) → `examples/DemoProject/` |
+| **Newcomer** to agentic development | [GLOSSARY.md](../GLOSSARY.md) → [README.md "How it works"](../README.md#how-it-works) (Engineering Assurance Levels) → `examples/DemoProject/` |
 | **Tech Lead** implementing guardrails | [ONBOARDING.md](ONBOARDING.md) → [.agents/skills/skeptical-ai-bootstrap/SKILL.md](../.agents/skills/skeptical-ai-bootstrap/SKILL.md) → [ADAPTATION.md](../templates/skills/ADAPTATION.md) → "Outer Loop" section below |
 | **Developer** looking for a test pattern | [tests/patterns/](#test-patterns) → copy into your project |
 | **Implementing SAE from scratch** | [ONBOARDING.md](ONBOARDING.md) → step-by-step guide with checkpoints |
@@ -19,20 +19,22 @@
 
 ---
 
-## Pyramid: 3 Layers (0–2) + Outer Loop
+## Control Levels (Engineering Assurance Levels)
 
-| Layer | Sub-layer | What it is | Main document | Artifacts |
-|-------|-----------|------------|---------------|-----------|
-| **0** | — | Instructions for the agent before code | [PYRAMID.md §Layer 0](../PYRAMID.md#layer-0) | `rules/AGENTS_TEMPLATE.md` + Decision Guards (ADR) |
-| **1** | 1.1 Compiler | Fast feedback from types | [PYRAMID.md §1.1](../PYRAMID.md#layer-1-compiler) | `.editorconfig`, `Directory.Build.props`, `DemoProject.Analyzers` (custom Roslyn analyzer) |
-| **1** | 1.2 Architecture | Auto-check of layers and anti-patterns | [PYRAMID.md §1.2](../PYRAMID.md#layer-1-architecture) | [tests/patterns/ArchitectureRules.cs](../tests/patterns/ArchitectureRules.cs), [RatchetTest.cs](../tests/patterns/RatchetTest.cs), [ArchUnitNetSliceTest.cs](../tests/patterns/ArchUnitNetSliceTest.cs) |
-| **1** | 1.3 Tests | Regressions, snapshot, vibe-refactoring, API contracts | [PYRAMID.md §1.3](../PYRAMID.md#layer-1-tests) | [tests/patterns/](#test-patterns) |
-| **1** | 1.4 Code Review | Agent checks agent (pre-commit / PR) | [PYRAMID.md §1.4](../PYRAMID.md#layer-1-code-review) | [templates/skills/code-review/SKILL.md](../templates/skills/code-review/SKILL.md) |
-| **1** | 1.5 Smoke | Fast run of critical scenarios | [PYRAMID.md §1.5](../PYRAMID.md#layer-1-smoke) | — |
-| **2** | 2.1 E2E / MCP | Full scenarios through external systems | [PYRAMID.md §2.1](../PYRAMID.md#layer-2-e2e) | [tests/patterns/SnapshotTest.cs](../tests/patterns/SnapshotTest.cs) |
-| **2** | 2.2 Audits | Deep checks on schedule | [PYRAMID.md §2.2](../PYRAMID.md#layer-2-audits) | [templates/skills/](#skills-audits) |
-| **2** | 2.3 Load | Silent breakdown under load (NBomber) | [PYRAMID.md §2.3](../PYRAMID.md#layer-2-load) | [tests/patterns/LoadTest.cs](../tests/patterns/LoadTest.cs) |
-| **Outer Loop** | — | Final human validation, business and product decisions | [PYRAMID.md §Outer Loop](../PYRAMID.md#outer-loop) | — |
+The canonical classifier is the **Engineering Assurance Levels** model in
+[README.md](../README.md#how-it-works). Evidence behind it — what each level caught
+in the observed case, ROI, and the risk-justification principle — lives in
+[EVIDENCE.md](EVIDENCE.md).
+
+| Level / process | What it is | Key artifacts | Extended reading |
+|-----------------|------------|---------------|------------------|
+| **Control Foundation** | Instructions for the agent before code: constitution + Decision Guards (ADR) | [AGENTS_TEMPLATE.md](../rules/AGENTS_TEMPLATE.md) (+ [efcore](../rules/AGENTS_TEMPLATE.efcore.md) / [dapper](../rules/AGENTS_TEMPLATE.dapper.md) add-ons), [DECISION-GUARDS.md](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) | [ONBOARDING.md Step 3](ONBOARDING.md#step-3-write-the-constitution-control-foundation) |
+| **1. Change Checks** | Fast feedback from compiler, types, analyzers | `.editorconfig`, `Directory.Build.props`, banned APIs, `DemoProject.Analyzers` (custom Roslyn analyzers) | [architecture-tests.md §Roslyn](solutions/architecture-tests.md#11-roslyn-analyzers-as-the-default-for-c) |
+| **2. Behavior Checks** | Tests, architecture rules, ratchets, pre-commit review, scope gates | [tests/patterns/](#test-patterns), [code-review](../templates/skills/code-review/SKILL.md), [task-compliance](../templates/skills/task-compliance/SKILL.md) | [ONBOARDING.md Steps 5–7](ONBOARDING.md#step-5-implement-behavior-checks-architecture-rules) |
+| **3. System Checks** | Smoke, E2E, load — the system works as a whole | [LoadTest.cs](../tests/patterns/LoadTest.cs), [SnapshotTest.cs](../tests/patterns/SnapshotTest.cs) | [ONBOARDING.md Steps 8–9, 11](ONBOARDING.md#step-8-implement-system-checks-smoke-tests) |
+| **4. Reality Checks** | Deep audits on schedule: security, DB, performance, business risk | [templates/skills/](#skills-audits) | [ONBOARDING.md Step 10](ONBOARDING.md#step-10-implement-reality-checks-audits) |
+| **Engineering Governance** *(process)* | Final human validation, residual risk acceptance, release decision | [human-audit-bridge.md](solutions/human-audit-bridge.md) | [EVIDENCE.md](EVIDENCE.md) |
+| **Control Maintenance** *(process)* | Keeping instructions, memory, baselines, and guardrails themselves up to date | [memory-hygiene](../templates/skills/memory-hygiene/SKILL.md), [doc-hygiene](../templates/skills/doc-hygiene/SKILL.md), [backlog-hygiene](../templates/skills/backlog-hygiene/SKILL.md) | [EVIDENCE.md §Grooming ROI](EVIDENCE.md#the-invisible-decay-paradox) |
 
 ---
 
@@ -141,9 +143,10 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | Document | What's inside |
 |----------|---------------|
 | [architecture-tests.md](solutions/architecture-tests.md) | Detailed guide to NetArchTest.eNhancedEdition, ArchUnitNET and architecture boundaries |
-| [roslyn-analyzers.md](solutions/roslyn-analyzers.md) | Roslyn-first guardrails for C#: IDE / `dotnet build` diagnostics instead of regex over `.cs` |
+| [architecture-tests.md §Roslyn](solutions/architecture-tests.md#11-roslyn-analyzers-as-the-default-for-c) | Roslyn-first guardrails for C#: IDE / `dotnet build` diagnostics instead of regex over `.cs` |
 | [ai-patterns.md](solutions/ai-patterns.md) | 10 proven AI-driven development patterns |
 | [human-audit-bridge.md](solutions/human-audit-bridge.md) | How to use AI checklists for manual human audit |
+| [EVIDENCE.md](EVIDENCE.md) | Effectiveness metrics and ROI of the control levels (observed case), risk-justification principle for guardrails |
 | [ARCHITECTURE-INVENTORY.md](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md) | Template for recording current architecture before implementing guardrails |
 | [DECISION-GUARDS.md](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) | Template for intentional deviation registry (`PERF-###`, `DB-###`, `AUD-###`) |
 
@@ -202,4 +205,4 @@ Active plans: [SELF-CHECKING-TESTS-WORKSTREAM.md](SELF-CHECKING-TESTS-WORKSTREAM
 When adding a new artifact:
 1. Add a row to the corresponding table
 2. Provide a link to the pattern/solution
-3. If it's a new pyramid layer — update [PYRAMID.md](../PYRAMID.md)
+3. If it's a new control level — update the Engineering Assurance Levels model in the root [README.md](../README.md) (the canonical classifier) and, if you have effectiveness data, [EVIDENCE.md](EVIDENCE.md)

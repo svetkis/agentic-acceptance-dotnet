@@ -86,7 +86,7 @@ In a Dapper project — need to check raw SQL, indexes, query plans.
 
 ## Implementation Backlog
 
-### Sprint 0 — Layer 0 + Compiler (1 day)
+### Sprint 0 — Control Foundation + Change Checks (1 day)
 - [ ] **Implement** `rules/AGENTS_TEMPLATE.md` → adapt for Worker + Dapper
 - [ ] **Implement** `rules/CONVENTIONS.md`
 - [ ] **Adapt** `Directory.Build.props`:

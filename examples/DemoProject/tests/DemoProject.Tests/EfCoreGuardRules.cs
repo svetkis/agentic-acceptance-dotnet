@@ -1,6 +1,7 @@
 // TRAP: An agent uses EF Core antipatterns that reflection cannot see
 // or violates read/write path conventions.
 // GUARDRAIL: Regex source scanning catches violations of EF-specific rules.
+// This file is a working adaptation of the template from tests/patterns/EfCoreGuardRules.cs
 // NOTE: This file is for EF Core projects only. For Dapper see DapperGuardRules.cs.
 
 using System.Reflection;

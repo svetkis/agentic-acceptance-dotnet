@@ -30,7 +30,7 @@
 
 **Generalization:** Roslyn analyzer for C# semantic rules. Regex remains for markdown/config/manifests and temporary spike checks.
 
-**Pattern:** `examples/DemoProject/src/DemoProject.Analyzers/`, `docs/solutions/roslyn-analyzers.md`
+**Pattern:** `examples/DemoProject/src/DemoProject.Analyzers/`, [architecture-tests.md §Roslyn](architecture-tests.md#11-roslyn-analyzers-as-the-default-for-c)
 
 ---
 

@@ -7,6 +7,9 @@ description: >
 
 # Mutation Audit — Skill
 
+> **[ADAPT] Path profile:** paths like `src/*/Api/`, `src/*/Infrastructure/` used below are the DemoProject layered-layout example. Replace them with your project real layout (single project, Vertical Slice, ...) before the first run. See `ADAPTATION.md` §Path profile.
+
+
 Optional interaction convention (agent-specific): when this skill is active,
 add `🧬` to your STARTER_CHARACTER stack (example: `🍀 🧬`). Prepend `↻` when
 re-reading the skill. The skill is fully usable without emoji markers.

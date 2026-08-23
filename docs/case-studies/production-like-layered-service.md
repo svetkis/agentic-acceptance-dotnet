@@ -3,7 +3,7 @@
 > **Evidence class:** *illustrative composite* — the control set and green/trap
 > behavior are reproducible in this repository (`examples/DemoProject/`,
 > `examples/DemoProject/TRAPS.md`, 33 tests); the incident narrative is a composite
-> of the trap catalog (`docs/traps/`) and talk material, not a single measured
+> of the trap catalog (`docs/traps/`), not a single measured
 > project. Costs are *estimates*, marked `~`.
 
 ## Context

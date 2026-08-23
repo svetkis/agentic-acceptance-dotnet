@@ -8,6 +8,9 @@ description: >
 
 # Test Audit — Skill
 
+> **[ADAPT] Path profile:** paths like `src/*/Api/`, `src/*/Infrastructure/` used below are the DemoProject layered-layout example. Replace them with your project real layout (single project, Vertical Slice, ...) before the first run. See `ADAPTATION.md` §Path profile.
+
+
 > Optional interaction convention (agent-specific): when this skill is active,
 > some agents add 🧪 to their STARTER_CHARACTER stack (e.g. `🍀 🧪` = base
 > rules + Test Audit role active; prepend `♻️` when re-reading). The skill is

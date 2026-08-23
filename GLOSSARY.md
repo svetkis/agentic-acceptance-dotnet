@@ -1,6 +1,6 @@
 # Glossary
 
-> Key terms of the repository. If you encounter an unfamiliar word in `AGENTS.md` or `PYRAMID.md` — it is most likely here.
+> Key terms of the repository. If you encounter an unfamiliar word in `AGENTS.md` or the docs — it is most likely here.
 >
 
 ---
@@ -44,7 +44,7 @@
 | **Engineering Governance** | Process (not a level): residual risk acceptance, release decision, business and product decisions. | [docs/solutions/human-audit-bridge.md](docs/solutions/human-audit-bridge.md) |
 | **Control Maintenance** | Process (not a level): keeping instructions, agent memory, backlog, baselines, suppressions, and guardrails up to date. | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
 | **AGENTS.md** | File with rules for AI agents. Read by the agent before every task. Can be hierarchical (root + per-module). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
-| **Layers 0–2 / Inner-Outer loop** | *Legacy:* names from the talk's visual metaphor (PYRAMID.md). Mapping to levels — at the top of [PYRAMID.md](PYRAMID.md). | [PYRAMID.md](PYRAMID.md) |
+| **Layers 0–2 / Inner-Outer loop** | *Legacy:* historical names of the visual metaphor that preceded the levels model. Wherever they appear, read them as the corresponding Engineering Assurance Levels. | [README.md](README.md#how-it-works) |
 
 ## Test Patterns
 
@@ -53,8 +53,8 @@
 | **Ratchet** | Test inventory: a metric (e.g., number of public types or tests) must **not decrease**. If an agent deletes types or tests — the test fails. | [tests/patterns/RatchetTest.cs](tests/patterns/RatchetTest.cs) |
 | **BUG###** | Regression test naming convention: one bug = one file `BUG###_DescriptiveName.cs`. Covers all code paths where the bug could manifest. | [tests/conventions/BUG_TEMPLATE.cs](tests/conventions/BUG_TEMPLATE.cs) |
 | **Snapshot test** | A test that captures and compares output (JSON, OpenAPI) with a reference file. If the DTO changes — the snapshot breaks. | [tests/patterns/SnapshotTest.cs](tests/patterns/SnapshotTest.cs) |
-| **Characterization test** | A test that captures current system behavior without judging correctness. Needed so refactoring does not change behavior. | [PYRAMID.md §Layer 1.3](PYRAMID.md#layer-1-tests) |
-| **"0 tests ran"** | Problem when the test runner found no tests, but exit code = 0. CI looks green though nothing was checked. | [PYRAMID.md §Layer 1.3](PYRAMID.md#layer-1-tests) |
+| **Characterization test** | A test that captures current system behavior without judging correctness. Needed so refactoring does not change behavior. | [docs/solutions/ai-patterns.md](docs/solutions/ai-patterns.md) |
+| **"0 tests ran"** | Problem when the test runner found no tests, but exit code = 0. CI looks green though nothing was checked. | [ci/scripts/run-and-verify-tests.sh](ci/scripts/run-and-verify-tests.sh) |
 
 ## Code Patterns
 
@@ -69,7 +69,7 @@
 
 | Term | Definition | Used in |
 |------|------------|---------|
-| **MCP (Model Context Protocol)** | Protocol for connecting external tools to an AI agent. Allows the agent to "touch" Telegram, browser, API. | [PYRAMID.md §Layer 2.1](PYRAMID.md#layer-2-e2e) |
+| **MCP (Model Context Protocol)** | Protocol for connecting external tools to an AI agent. Allows the agent to "touch" Telegram, browser, API. | [docs/EVIDENCE.md](docs/EVIDENCE.md) |
 | **Code Review Agent** | A separate AI agent instance that reviews the diff **before** commit. Not the one that wrote the code. | [templates/skills/code-review/SKILL.md](templates/skills/code-review/SKILL.md) |
 | **Skill** | Agent role: instruction + checklist for a specific task (audit, review, onboarding). Installed in `.kimi/skills/` or equivalent. | `templates/skills/` |
 | **Context Marker** | Emoji marker at the beginning of an agent's reply showing active context: 🍀 (ground rules), 🔍 (review), ✅ (commit). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
@@ -80,7 +80,7 @@
 | Term | Definition | Used in |
 |------|------------|---------|
 | **Audit** | Deep check of one narrow area (security, perf, DB). Runs once per sprint or on trigger, not on every PR. | `templates/skills/` |
-| **Cross-pollination** | Exchange of findings between audits. For example, a security audit finds a log leak, while a UX audit finds the same endpoint as a dead-end. | [PYRAMID.md §Outer loop](PYRAMID.md#outer-loop) |
+| **Cross-pollination** | Exchange of findings between audits. For example, a security audit finds a log leak, while a UX audit finds the same endpoint as a dead-end. | [templates/skills/](templates/skills/) |
 | **P50 / P95 / Max** | Latency percentiles: median, 95th percentile, maximum. Agents often optimize P50 while forgetting tail latency (Max). | [docs/traps/runtime.md#p50-vs-max](docs/traps/runtime.md#p50-vs-max) |
 | **Scope creep** | Task expansion: an agent adds changes to a PR that go beyond the original request. | [templates/skills/task-compliance/SKILL.md](templates/skills/task-compliance/SKILL.md) |
 | **Silent misalignment** | Silent error: the agent did not ask clarifying questions even though instructions were unclear or contradictory. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |

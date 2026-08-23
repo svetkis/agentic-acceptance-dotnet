@@ -2,7 +2,9 @@
 
 > Add-on to `AGENTS_TEMPLATE.md` for projects using **Dapper, ADO.NET, or raw SQL**.
 > Copy the contents of this file to the end of your `AGENTS.md`.
-> Architecture guardrails: [`tests/patterns/DapperGuardRules.cs`](../tests/patterns/DapperGuardRules.cs)
+> Architecture guardrails: copy the template [`DapperGuardRules.cs`](../tests/patterns/DapperGuardRules.cs)
+> from this repository into your test project and adapt it (the link is relative to
+> this repo's root and will not resolve in your project).
 
 ## Semantic Anchors (Dapper)
 

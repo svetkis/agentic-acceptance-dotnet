@@ -172,7 +172,7 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 - After an agent's perf commit — **manual audit of write-paths**
 - Agent optimizes read, human verifies write is not broken
 - Load test scenario must pass before deploy (if applicable)
-- Every `[HotPath]` method must have `{MethodName}_AllocationBudget` test; regressions > 10% are forbidden
+- `[ADAPT]` (DemoProject convention): every `[HotPath]` method must have `{MethodName}_AllocationBudget` test; regressions > 10% are forbidden. `[HotPath]` is a project-local marker attribute — define your own hot-path convention (or drop this rule if you don't track allocations)
 
 ## Complexity
 
@@ -226,6 +226,6 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 - ❌ Hardcoded UI strings without i18n (if project uses i18n)
 - ❌ Raw SQL without explanatory comment
 - ❌ Method with cognitive complexity above project threshold without `COMPLEXITY-###` decision guard
-- ❌ `[HotPath]` method without `{MethodName}_AllocationBudget` test
+- ❌ `[ADAPT]` `[HotPath]` method without `{MethodName}_AllocationBudget` test (applies only if you adopted a hot-path marker; see Performance section)
 - ❌ Public API name with misspelling
 - ❌ Custom Roslyn analyzer without positive/negative tests

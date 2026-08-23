@@ -18,6 +18,14 @@
 - Folder, project, attribute, and guardrail-test names in the project.
 - Thresholds for complexity, coverage, size, and budgets adopted by the team.
 
+### Path profile
+
+Skills reference paths like `src/*/Api/`, `src/*/Infrastructure/`, `src/Domain/` —
+these are the **DemoProject layered layout**, not a requirement. Before the first
+run, replace them with your project's real layout (single project, Vertical Slice,
+modular monolith, ...). Skills that carry a `[ADAPT] Path profile` note at the top
+have such hardcoded paths.
+
 ## Not applicable when
 
 - The project does not match any of the technological prerequisites of the skill (e.g., no HTTP — `api-design-audit` is not applicable).

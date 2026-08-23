@@ -31,7 +31,7 @@ Thank you for your interest! This repository contains defensive artifacts for .N
 1. **Fork** the repository
 2. **Create a branch** following Conventional Commits: `feat/skill-name`, `fix/trap-description`
 3. **Make changes** according to the checklist below
-4. **Verify** `dotnet build` in `examples/DemoProject/`, `examples/DemoProject/TRAPS.md`, and `examples/DemoProject.MinimalApi/` (if you changed code)
+4. **Verify** `dotnet build` in `examples/DemoProject/` and `examples/DemoProject.MinimalApi/` (if you changed code); update `examples/DemoProject/TRAPS.md` if you changed the trap tests
 5. **Open a PR** with description: what, why, how tested
 
 ## Pre-PR Checklist
@@ -39,7 +39,7 @@ Thank you for your interest! This repository contains defensive artifacts for .N
 - [ ] I have read `AGENTS.md` and `rules/AGENTS_TEMPLATE.md`
 - [ ] If adding a skill — `SKILL.md` + `CHECKLIST.md` are present
 - [ ] If adding a pattern — comments `// TRAP:` and `// GUARDRAIL:` are present
-- [ ] If changing the pyramid — `PYRAMID.md` is updated
+- [ ] If adding a new control level — the Engineering Assurance Levels model in root `README.md` is updated (and `docs/EVIDENCE.md` if you have effectiveness/ROI data)
 - [ ] If adding an agent — `docs/agents/` is updated
 - [ ] If adding an artifact (skill, pattern, trap) — `docs/README.md` (knowledge map), root `README.md`, and `docs/ONBOARDING.md` and `GLOSSARY.md` are updated when terms or steps change
 - [ ] `dotnet build` passes without warnings (if applicable)
@@ -54,13 +54,9 @@ docs: update agent comparison table
 fix: correct path in SnapshotTest.cs
 ```
 
-## Updating PYRAMID.md
+## Updating the control model
 
-Every new layer or significant change to the feedback architecture requires updating `PYRAMID.md`:
-- Add the layer to the table
-- Update the synthesis diagram
-- Add ROI assessment
-- Update effectiveness metrics (if you have data)
+Every new control level requires updating the **Engineering Assurance Levels model in root `README.md`** — it is the canonical classifier. If you have effectiveness or ROI data for the new control, record it in [`docs/EVIDENCE.md`](docs/EVIDENCE.md) with an explicit evidence class.
 
 ## Questions?
 

@@ -33,7 +33,6 @@ description: >
 
 - `AGENTS.md` (root and subfolders)
 - `README.md` (plus `README.ru.md` as the only localized mirror)
-- `PYRAMID.md`
 - `GLOSSARY.md`
 - `docs/README.md`
 - `docs/ONBOARDING.md`

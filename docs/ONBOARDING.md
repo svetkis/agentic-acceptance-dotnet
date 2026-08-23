@@ -5,11 +5,8 @@
 > **Format:** do it yourself or delegate to an agent using this document.
 >
 > **Control model:** Engineering Assurance Levels — see [README.md](../README.md#how-it-works).
-> The steps below use legacy layer names (0, 1.1–2.3) from `PYRAMID.md` as
-> references to concrete steps; mapping: Layer 0 → Control Foundation,
-> 1.1 → Change Checks, 1.2/1.3/1.4 → Behavior Checks, 1.5/2.1/2.3 → System Checks,
-> 2.2 → Reality Checks, outer loop → Engineering Governance,
-> artifact grooming → Control Maintenance.
+> The steps below are named by level. Evidence behind the model (effectiveness
+> metrics, ROI) — [EVIDENCE.md](EVIDENCE.md).
 
 ---
 
@@ -17,8 +14,8 @@
 
 | Mode | Time | What we implement | When to choose |
 |------|------|-------------------|----------------|
-| **Fast** | 1–2 days | Layer 0 (AGENTS.md) + Layer 1.1 (compiler) + Layer 1.2 (basic arch tests) | Pilot. Want to quickly check if the methodology works. |
-| **Standard** | 2–4 weeks, incrementally | Layer 0 → Change Checks → Behavior Checks; then one sub-layer/audit per sprint | Main scenario. Most projects start here. |
+| **Fast** | 1–2 days | Control Foundation (AGENTS.md) + Change Checks (compiler) + basic architecture tests (Behavior Checks) | Pilot. Want to quickly check if the methodology works. |
+| **Standard** | 2–4 weeks, incrementally | Control Foundation → Change Checks → Behavior Checks; then one control/audit per sprint | Main scenario. Most projects start here. |
 | **High-assurance** | 1–2 months, incrementally | All levels + Engineering Governance + Control Maintenance | High-risk project (fintech, health, high-load). |
 
 > **Do not try to implement everything in one day.** Guardrails work only if the team understands and supports them. Timelines above are calendar estimates; adoption is always incremental: one control at a time, verified working before the next.
@@ -63,8 +60,8 @@
 3. Get the report `.backlog/onboarding-{date}.md`
 
 **Option B — manual assessment:**
-1. Open [`PYRAMID.md`](../PYRAMID.md)
-2. For each sub-layer (1.1→2.3) answer:
+1. Open [README.md "How it works"](../README.md#how-it-works)
+2. For each level (Change Checks → Reality Checks) answer:
    - Is the principle followed? (Yes / Partially / No)
    - What is implemented now?
    - What needs to be added?
@@ -89,7 +86,7 @@
 
 ---
 
-### Step 3. Write the Constitution (Layer 0)
+### Step 3. Write the Constitution (Control Foundation)
 
 **Goal:** The agent reads the rules BEFORE code.
 
@@ -105,7 +102,7 @@
 
 ---
 
-### Step 4. Implement Layer 1.1. Compiler
+### Step 4. Implement Change Checks: Compiler
 
 **Goal:** The fastest feedback loop — the build fails.
 
@@ -122,7 +119,7 @@
 
 ---
 
-### Step 5. Implement Layer 1.2. Architecture
+### Step 5. Implement Behavior Checks: Architecture Rules
 
 **Goal:** Automatic verification of layers and anti-patterns.
 
@@ -131,7 +128,7 @@
 3. Adapt namespaces and assembly names to your project (use the table from Step 0)
 4. Add `RatchetTest.cs` — baseline of public types and tests
 5. **Modular Monolith / Vertical Slice:** use `Slice().ByNamespacePrefix(...).Should().NotHaveDependenciesBetweenSlices()` to check inter-module dependencies
-6. If a rule looks at C# sources — prefer a Roslyn analyzer (see [`roslyn-analyzers.md`](solutions/roslyn-analyzers.md)); leave regex for config/markdown/manifests or temporary spikes
+6. If a rule looks at C# sources — prefer a Roslyn analyzer (see [`architecture-tests.md` §Roslyn](solutions/architecture-tests.md#11-roslyn-analyzers-as-the-default-for-c)); leave regex for config/markdown/manifests or temporary spikes
 7. Run: `dotnet run --project tests/YourProject.Tests` — do tests pass?
 8. See a live failing demo: [`examples/DemoProject/TRAPS.md`](../examples/DemoProject/TRAPS.md) — intentionally broken guardrails with `IType.Explanation` and ArchUnitNET (see TRAPS.md for the exact failing-test count)
 
@@ -139,7 +136,7 @@
 
 ---
 
-### Step 6. Implement Layer 1.3. Tests
+### Step 6. Implement Behavior Checks: Tests
 
 **Goal:** Every change is covered by tests, and tests actually run.
 
@@ -156,7 +153,7 @@
 
 ---
 
-### Step 7. Implement Layer 1.4. Code Review by Agent
+### Step 7. Implement Behavior Checks: Code Review by Agent
 
 **Goal:** A second agent checks the first agent's code.
 
@@ -171,7 +168,7 @@
 
 ---
 
-### Step 8. Implement Layer 1.5. Smoke Tests
+### Step 8. Implement System Checks: Smoke Tests
 
 **Goal:** Fast check that critical paths are not broken.
 
@@ -183,7 +180,7 @@
 
 ---
 
-### Step 9. Implement Layer 2.1. E2E / MCP
+### Step 9. Implement System Checks: E2E / MCP
 
 **Goal:** The agent "touches" the application with real hands.
 
@@ -196,13 +193,13 @@
 
 ---
 
-### Step 10. Implement Layer 2.2. Audits
+### Step 10. Implement Reality Checks: Audits
 
 **Goal:** Deep checks on schedule.
 
 | Audit | Frequency | When to start |
 |-------|-----------|---------------|
-| Security audit | Once per sprint | After implementing Layer 1.3 |
+| Security audit | Once per sprint | After tests are in place (Behavior Checks) |
 | DBA audit | Once per sprint / on migrations | If using EF Core / Dapper |
 | Performance audit | Before release | After architecture stabilizes |
 | Complexity audit | Once per sprint | When methods start growing |
@@ -224,7 +221,7 @@
 
 ---
 
-### Step 11. Implement Layer 2.3. Load (NBomber)
+### Step 11. Implement System Checks: Load (NBomber)
 
 **Goal:** Do not let the agent break production with load.
 
@@ -255,7 +252,7 @@
 
 | Anti-pattern | Why harmful | What to do instead |
 |--------------|-------------|--------------------|
-| **Big Bang** — implement all layers in one sprint | The team does not absorb, guardrails break and get disabled | One sub-layer per sprint, starting with 1.1 |
+| **Big Bang** — implement all levels in one sprint | The team does not absorb, guardrails break and get disabled | One control per sprint, starting with Change Checks |
 | **Copy-paste without adaptation** — copy all skills 1-to-1 | False positives overwhelm the team, checklists are ignored | Strike N/A before first run |
 | **Agent only, no human review** | Agents hallucinate, miss context | Human audit once per sprint ([`human-audit-bridge.md`](solutions/human-audit-bridge.md)) |
 | **AGENTS.md from another project** | Rules about another stack mislead the team | Write your own using [`rules/AGENTS_TEMPLATE.md`](../rules/AGENTS_TEMPLATE.md) as a template |
@@ -269,13 +266,13 @@
 
 Go through this list after implementation. If everything is checked — guardrails work.
 
-### Layer 0 + Layer 1.1–1.2 (Must have)
+### Control Foundation + Change Checks + architecture tests (Must have)
 - [ ] `AGENTS.md` in the project root, team knows it exists
 - [ ] `dotnet build` fails on warnings
 - [ ] Architecture tests pass (NetArchTest or equivalent)
 - [ ] `run-and-verify-tests.sh` checks that tests actually ran
 
-### Layer 1.3–1.5 + Layer 2.1 (Should have)
+### Behavior Checks (tests, review) + System Checks (Should have)
 - [ ] Regression tests cover all reproducible bug fixes (capability: no closed bug without a `BUG###_` test or a justified alternative)
 - [ ] OpenAPI snapshot test (if there is an API) or equivalent contract test
 - [ ] Agent code review is part of the PR process (built into every PR's workflow, not a one-off exercise)
@@ -309,7 +306,16 @@ A: Start with Fast mode (1–2 days). Show how `AGENTS.md` prevents the agent fr
 A: Yes, but a significant part of the value (estimate) is protection FROM agents. Without an agent it is just good engineering practices.
 
 **Q: How much does maintenance cost?**  
-A: Layers 0 + 1.1–1.2 are "set and forget" (minimal maintenance). Audits — 1–2 hours per sprint. E2E — setup 1 day, then self-running.
+A: Control Foundation + Change Checks + basic architecture tests are "set and forget" (minimal maintenance). Audits — 1–2 hours per sprint. E2E — setup 1 day, then self-running.
+
+---
+
+## Operating Rhythm (4 rules for Monday)
+
+1. **Every reproducible bug-fix = `BUG###_` test.** For configuration, documentation, operational, and process defects, another regression control is allowed (a check, a runbook, an ADR) — with an explicit explanation of why an automated test does not apply.
+2. **Every PR = `dotnet run --project` tests + code review by agent + smoke.**
+3. **Every sprint = acceptance cycle (E2E + audits + load) before release.** An agent does not see systemic holes — a scoped audit role does.
+4. **Every sprint = groom artifacts.** Memory-hygiene, doc-hygiene, backlog-hygiene — agent artifacts rot too.
 
 ---
 
@@ -320,7 +326,7 @@ A: Layers 0 + 1.1–1.2 are "set and forget" (minimal maintenance). Audits — 1
 | I don't understand our architecture | [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md) |
 | I don't know which skills to choose | [`ADAPTATION.md`](../templates/skills/ADAPTATION.md) |
 | I don't know how to configure the agent | [`docs/agents/`](agents/) → choose yours |
-| I don't understand how a layer works | [`PYRAMID.md`](../PYRAMID.md) |
+| I don't understand how a control works | [README.md "How it works"](../README.md#how-it-works) + [EVIDENCE.md](EVIDENCE.md) (what each level caught) |
 | I want to perform an audit manually | [`human-audit-bridge.md`](solutions/human-audit-bridge.md) |
 | The agent does not find skills | [`INSTALL.md`](../templates/skills/skeptical-ai-bootstrap/INSTALL.md) |
 | Ready-made artifacts do not fit | [`NEW-SKILL-TEMPLATE.md`](../templates/skills/skeptical-ai-bootstrap/NEW-SKILL-TEMPLATE.md) + [`SKILL-ARCHITECTURE.md`](../templates/skills/skeptical-ai-bootstrap/SKILL-ARCHITECTURE.md) |

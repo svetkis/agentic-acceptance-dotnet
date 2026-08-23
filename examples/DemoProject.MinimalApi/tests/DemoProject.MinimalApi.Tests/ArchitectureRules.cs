@@ -1,6 +1,7 @@
 // TRAP: In a single-project app, an agent breaks naming conventions, uses banned APIs,
 // or forgets CancellationToken in public async methods.
 // GUARDRAIL: NetArchTest + regex scanning catch convention violations
+// This file is a working adaptation of the template from tests/patterns/ArchitectureRules.cs
 // even when there are no Clean Architecture layers.
 //
 // Framework adaptation:

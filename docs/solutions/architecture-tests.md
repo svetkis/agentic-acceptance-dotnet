@@ -101,9 +101,9 @@ For C# code, the preferred path is a Roslyn analyzer. It checks the syntax tree 
 
 **Why:** By habit the agent uses `Guid` for all identifiers. This opens the door to substituting `ClientId` into a method expecting `AgentId`. The architecture test forces creating a separate type for each entity — the compiler does the rest.
 
-**Talk use-case:**
-- **Layer 1 (Compiler):** show the "magic" — the IDE underlines `GetAgent(clientId)` in red because type `ClientId` does not convert to `AgentId`.
-- **Layer 2 (Architecture tests):** show the "policy" — a failed pipeline with `DomainEntities_ShouldNotUseRawPrimitivesForIds` forces the developer (and agent) to create `BookingId` instead of `Guid`.
+**Demo use-case:**
+- **Compiler (Change Checks):** the IDE underlines `GetAgent(clientId)` in red because type `ClientId` does not convert to `AgentId`.
+- **Architecture tests (Behavior Checks):** a failed pipeline with `DomainEntities_ShouldNotUseRawPrimitivesForIds` forces the developer (and agent) to create `BookingId` instead of `Guid`.
 
 **Template:** [tests/patterns/StronglyTypedIds.cs](../../tests/patterns/StronglyTypedIds.cs)  
 **Working example:** `examples/DemoProject/tests/DemoProject.Tests/StronglyTypedIds.cs`
@@ -240,8 +240,8 @@ For source-level C# guardrails, the default choice is a Roslyn analyzer. Regex s
 
 | Approach | Feedback time | Trigger |
 |----------|--------------|---------|
-| Regex scanning over `.cs` | ~10 seconds | `dotnet run --project` (Layer 1.2), temporary fallback only |
-| Roslyn analyzer | ~0.5 seconds | Typing in IDE / `dotnet build` (Layer 1) |
+| Regex scanning over `.cs` | ~10 seconds | `dotnet run --project` (Behavior Checks), temporary fallback only |
+| Roslyn analyzer | ~0.5 seconds | Typing in IDE / `dotnet build` (Change Checks) |
 
 **Example:** `SAE001` catches `public Guid Id { get; init; }` in Domain entities before compilation — the IDE shows a red squiggle. `SAE002` catches `void DoSomething(Guid orderId)` — a raw Guid in a parameter.
 
@@ -254,6 +254,27 @@ For source-level C# guardrails, the default choice is a Roslyn analyzer. Regex s
 **Example 2 — Performance:** `SAE003` catches `new` in `[HotPath]` methods, `SAE004` catches `async` state machines, `SAE005` catches boxing (explicit cast struct → interface/reference). The `[HotPath]` attribute is applied consciously by the developer; the analyzer prevents forgetting about allocations.
 
 **Working example:** `examples/DemoProject/src/DemoProject.Analyzers/HotPathAnalyzer.cs`
+
+Project hookup:
+
+```xml
+<ProjectReference Include="..\DemoProject.Analyzers\DemoProject.Analyzers.csproj"
+                  OutputItemType="Analyzer"
+                  ReferenceOutputAssembly="false" />
+```
+
+**Minimal agent process for a new analyzer:**
+
+1. State the bug class: which specific agent bug this catches.
+2. Write 2-3 tiny code examples: should trigger / should not trigger.
+3. Create a `DiagnosticDescriptor` with an `SAE###` ID.
+4. Register a syntax or operation action.
+5. Use `SemanticModel` when the rule depends on types or symbols.
+6. Hook the analyzer with `OutputItemType="Analyzer"`.
+7. Set severity: error for safety/correctness, warning for performance guidance.
+
+> **Repository rule:** regex over `.cs` is only a temporary spike or fallback. If a C#
+> rule has stabilized and should protect the team permanently, promote it to a Roslyn analyzer.
 
 
 ---

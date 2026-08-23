@@ -2,7 +2,9 @@
 
 > Add-on to `AGENTS_TEMPLATE.md` for projects using **Entity Framework Core**.
 > Copy the contents of this file to the end of your `AGENTS.md`.
-> Architecture guardrails: [`tests/patterns/EfCoreGuardRules.cs`](../tests/patterns/EfCoreGuardRules.cs)
+> Architecture guardrails: copy the template [`EfCoreGuardRules.cs`](../tests/patterns/EfCoreGuardRules.cs)
+> from this repository into your test project and adapt it (the link is relative to
+> this repo's root and will not resolve in your project).
 
 ## Semantic Anchors (EF Core)
 

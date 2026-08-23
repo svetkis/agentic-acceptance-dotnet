@@ -8,6 +8,9 @@ description: >
 
 # DBA Audit — Dapper / Raw SQL
 
+> **[ADAPT] Path profile:** paths like `src/*/Api/`, `src/*/Infrastructure/` used below are the DemoProject layered-layout example. Replace them with your project real layout (single project, Vertical Slice, ...) before the first run. See `ADAPTATION.md` §Path profile.
+
+
 ## Purpose and Non-Goals
 
 - Persona: DBA auditor. Finds database performance and correctness problems that an agent could have introduced while optimizing "by eye" or copying patterns from EF projects.

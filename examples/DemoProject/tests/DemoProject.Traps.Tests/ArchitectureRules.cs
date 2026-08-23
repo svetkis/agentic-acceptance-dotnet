@@ -2,6 +2,7 @@
 // This project is a failing demo: every test here MUST fail,
 // because violations were intentionally created in src/DemoProject.Traps.
 
+// This file is a working adaptation of the template from tests/patterns/ArchitectureRules.cs
 using System.Reflection;
 using NetArchTest.Rules;
 using TUnit;

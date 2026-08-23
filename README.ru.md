@@ -37,9 +37,8 @@ AI-агенты (Cursor, Claude, Copilot) ускоряют написание к
 - **Engineering Governance** — принятие остаточного риска, release decision, бизнес- и продуктовые решения.
 - **Control Maintenance** — актуализация инструкций, agent memory, backlog, baselines, suppressions и самих guardrails (скиллы `memory-hygiene`, `doc-hygiene`, `backlog-hygiene`).
 
-> **Legacy:** `PYRAMID.md` (слои 0–2 + внешний цикл) — визуальная метафора доклада.
-> Канонический классификатор — таблица выше; маппинг слоёв на уровни дан в
-> начале [`PYRAMID.md`](PYRAMID.md).
+> **Доказательная база:** метрики эффективности и ROI уровней —
+> [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 
 ### Карта артефактов по уровням
 
@@ -79,7 +78,6 @@ dotnet run --project tests/DemoProject.Tests
 cp rules/AGENTS_TEMPLATE.md /your/project/AGENTS.md   # затем отредактируй под стек
 # По одному контролю на спринт, например pre-commit review:
 cp -r templates/skills/code-review /your/project/.kimi/skills/
-# Для React/TypeScript фронтенда:
 # Тестовые паттерны — бери по одному, когда он покрывает реальный риск
 # (tests/patterns/*.cs — шаблоны для чтения, а не пакет для массового копирования):
 # cp tests/patterns/ArchitectureRules.cs /your/project/tests/
@@ -90,7 +88,6 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 ```
 .
 ├── AGENTS.md                     # Инструкции для AI-агентов
-├── PYRAMID.md                    # Подробный разбор слоёв
 ├── rules/
 │   ├── AGENTS_TEMPLATE.md        # Базовая конституция для агентов (универсальная)
 │   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-специфичные правила
@@ -102,7 +99,7 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   ├── backlog-hygiene/           # Control Maintenance: бэклог
 │   ├── skeptical-ai-bootstrap/    # Оценка зрелости + бэклог guardrails
 │   ├── code-review/               # Behavior Checks: ревью агента — гейт перед PR
-│   ├── task-compliance/           # Change Checks: проверка scope
+│   ├── task-compliance/           # Behavior Checks: гейт перед PR (проверка scope)
 │   ├── security-audit/            # Reality Checks: по триггеру
 │   ├── dba-audit/                 # Reality Checks: по триггеру (EF Core)
 │   ├── dba-audit-dapper/          # Reality Checks: по триггеру (Dapper / Raw SQL)
@@ -179,37 +176,19 @@ dotnet run --project tests/DemoProject.MinimalApi.Tests
 
 ## Навигация
 
-Потерялись? Начните с [docs/README.md](docs/README.md).
+Потерялись? Полная карта знаний — все артефакты по ролям — живёт в
+[docs/README.md](docs/README.md). Самые частые запросы:
 
 | Что нужно | Куда идти |
 |-----------|-----------|
-| Правила для агента (базовые) | `rules/AGENTS_TEMPLATE.md` |
-| EF Core add-on | `rules/AGENTS_TEMPLATE.efcore.md` |
-| Dapper add-on | `rules/AGENTS_TEMPLATE.dapper.md` |
-| Аудит безопасности | `templates/skills/security-audit/` |
-| Аудит БД (EF Core) | `templates/skills/dba-audit/` |
-| Аудит БД (Dapper) | `templates/skills/dba-audit-dapper/` |
-| Аудит производительности | `templates/skills/performance-audit/` |
-| Аудит локализации | `templates/skills/i18n-audit/` |
-| Pre-commit code review агент | `templates/skills/code-review/` |
-| Проверка scope | `templates/skills/task-compliance/` |
-| Паттерн теста | `tests/patterns/` |
-| CI безопасность | `ci/github-actions/safe-ci.yml` |
+| Правила для агента (базовые) | `rules/AGENTS_TEMPLATE.md` (+ аддоны [EF Core](rules/AGENTS_TEMPLATE.efcore.md) / [Dapper](rules/AGENTS_TEMPLATE.dapper.md)) |
+| Паттерны тестов | `tests/patterns/` |
 | Ловушки агента | `docs/traps/` |
-| Груминг Auto Memory | `templates/skills/memory-hygiene/` |
-| Груминг доков | `templates/skills/doc-hygiene/` |
-| Груминг бэклога | `templates/skills/backlog-hygiene/` |
-| Архитектурные тесты | `docs/solutions/architecture-tests.md` |
-| Roslyn-анализаторы | `docs/solutions/roslyn-analyzers.md` |
-| Паттерны AI-разработки | `docs/solutions/ai-patterns.md` |
-| Онбординг проекта | `templates/skills/skeptical-ai-bootstrap/` |
+| Онбординг проекта | [docs/ONBOARDING.md](docs/ONBOARDING.md) |
 | Рабочий пример (Clean Architecture) | `examples/DemoProject/` |
 | Рабочий пример (Single-project MVP) | `examples/DemoProject.MinimalApi/` |
 | Failing demo (guardrails) | `examples/DemoProject/TRAPS.md` |
-| Frontier-агенты (Kimi, Claude Code, Codex) | `docs/agents/FRONTIER-AGENTS.md` |
-| Пошаговые агенты (Cursor, OpenCode) | `docs/agents/STEP-BY-STEP-AGENTS.md` |
-| Bootstrap Protocol | `docs/agents/BOOTSTRAP-PROTOCOL.md` |
-| Сравнение агентов | `docs/agents/README.md` |
+| Настройка AI-агентов (Kimi, Claude, Cursor, Codex) | `docs/agents/` |
 
 ## Автор
 

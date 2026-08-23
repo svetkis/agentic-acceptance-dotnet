@@ -54,7 +54,7 @@ The agent will generate a `.backlog/onboarding-{date}.md` file in your project +
 If you don't want to install the skill, simply open your project in Kimi Code CLI and ask:
 
 ```
-Scan this .NET project using the 5-layer pyramid methodology from dotnet-ai-guardrails.
+Scan this .NET project using the Engineering Assurance Levels methodology from dotnet-ai-guardrails.
 Produce a guardrail implementation backlog.
 ```
 
@@ -102,5 +102,5 @@ See `docs/agents/` for details on each agent:
 ## Modes
 
 - `fast` — only critical (1-2 days)
-- `standard` — all pyramid layers (1-2 weeks)
+- `standard` — all control levels (1-2 weeks)
 - `high-assurance` — everything + Reality Checks (1 month)

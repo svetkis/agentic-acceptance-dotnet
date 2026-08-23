@@ -1,6 +1,7 @@
 // TRAP: An agent copied critical business logic into a new service instead of reusing it.
 // GUARDRAIL: Regex scanning catches duplication of critical business fragments across files.
 //
+// This file is a working adaptation of the template from tests/patterns/DuplicationGuardTest.cs
 // Framework adaptation:
 // - TUnit:  [Test] + Assert.That(violations).IsEmpty()
 // - xUnit:  [Fact] + Assert.Empty(violations)

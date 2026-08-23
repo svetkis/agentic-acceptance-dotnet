@@ -31,7 +31,7 @@ For two weeks the team thinks everything is checked. In reality:
 ### Solution
 
 1. **`dotnet run --project`** instead of `dotnet test`
-2. **Verify script** — `ci/scripts/verify-tests.sh` parses output and checks that count > 0
+2. **Verify script** — `ci/scripts/run-and-verify-tests.sh` parses output and checks that count > 0
 3. **CI guardrail** — a separate step that fails if "0 tests ran"
 
 ### Related Traps
