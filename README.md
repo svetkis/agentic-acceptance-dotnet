@@ -10,7 +10,11 @@ AI-accelerated quality control methodology for .NET teams. Audits, review, and g
 
 > Although examples and tests are implemented in .NET, the methodology itself — Decision Guards, Engineering Assurance Levels, and prompt hygiene — applies to any stack.
 
-This repository contains ready-made artifacts for .NET projects: rules, skills, test patterns, and CI workflows.
+This repository contains ready-made artifacts for .NET projects: rules, **skills** (an agent-role instruction + checklist, e.g. security-audit), test patterns, and CI workflows.
+
+> **New to the methodology?** The canonical path: [GLOSSARY.md](GLOSSARY.md) (terms) →
+> [How it works](#how-it-works) (the levels model) → [docs/README.md](docs/README.md)
+> (knowledge map) → [docs/ONBOARDING.md](docs/ONBOARDING.md) (apply it to your project).
 
 ## Problem
 
@@ -93,20 +97,7 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-specific rules
 │   ├── AGENTS_TEMPLATE.dapper.md # Add-on: Dapper / Raw SQL-specific rules
 │   └── CONVENTIONS.md            # Commits, workflow, tests
-├── templates/skills/                        # Agent roles
-│   ├── memory-hygiene/            # Control Maintenance: Auto Memory
-│   ├── doc-hygiene/               # Control Maintenance: documentation
-│   ├── backlog-hygiene/           # Control Maintenance: backlog
-│   ├── skeptical-ai-bootstrap/    # Maturity assessment + guardrails backlog
-│   ├── code-review/               # Behavior Checks: agent review — gate before PR
-│   ├── task-compliance/           # Behavior Checks: gate before PR
-│   ├── security-audit/            # Reality Checks: trigger-based
-│   ├── dba-audit/                 # Reality Checks: trigger-based (EF Core)
-│   ├── dba-audit-dapper/          # Reality Checks: trigger-based (Dapper / Raw SQL)
-│   ├── api-design-audit/          # Reality Checks: trigger-based
-│   ├── bot-audit/                 # Reality Checks: trigger-based
-│   ├── performance-audit/         # Reality Checks: trigger-based
-│   └── i18n-audit/                # Reality Checks: trigger-based
+├── templates/skills/                        # 28 agent-role skills (full catalog: docs/README.md)
 ├── docs/
 │   ├── traps/                     # Agent traps
 │   └── solutions/
@@ -181,6 +172,7 @@ Lost? The full knowledge map — every artifact indexed by role — lives in
 
 | What you need | Where to go |
 |---------------|-------------|
+| Unfamiliar term | [GLOSSARY.md](GLOSSARY.md) |
 | Agent rules (base) | `rules/AGENTS_TEMPLATE.md` (+ [EF Core](rules/AGENTS_TEMPLATE.efcore.md) / [Dapper](rules/AGENTS_TEMPLATE.dapper.md) add-ons) |
 | Test patterns | `tests/patterns/` |
 | Agent traps | `docs/traps/` |

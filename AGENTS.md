@@ -45,7 +45,7 @@ Summary:
 | 2. Adapt | Cross out inapplicable checks for your stack | [`templates/skills/ADAPTATION.md`](templates/skills/ADAPTATION.md) |
 | 3. Constitution | Copy `rules/AGENTS_TEMPLATE.md` to your project root and adapt to your stack | [`rules/AGENTS_TEMPLATE.md`](rules/AGENTS_TEMPLATE.md) |
 | 4. Controls | Implement Assurance Levels 1→2 (tests, architecture tests, behavior checks) from the onboarding backlog | [`docs/ONBOARDING.md`](docs/ONBOARDING.md) |
-| 5. Acceptance | Implement audits + load (manual or AI) | [`docs/solutions/human-audit-bridge.md`](docs/solutions/human-audit-bridge.md) |
+| 5. Audits & load | Implement Reality Checks + load tests (manual or AI) | [`docs/solutions/human-audit-bridge.md`](docs/solutions/human-audit-bridge.md) |
 | 6. Agent | Configure your AI agent (Kimi / Claude / Cursor / Codex) — last, when the controls already work | [`docs/agents/`](docs/agents/) |
 
 > **Principle:** don't copy everything blindly — adapt or create new. See anti-patterns in [`docs/ONBOARDING.md`](docs/ONBOARDING.md) §"Implementation Anti-Patterns".

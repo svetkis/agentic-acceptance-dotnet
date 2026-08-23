@@ -10,7 +10,11 @@
 
 > Хотя примеры и тесты реализованы на .NET, сама методология Decision Guards, уровней контроля (Engineering Assurance Levels) и гигиены промптов применима к любому стеку.
 
-Репозиторий содержит готовые артефакты для .NET-проектов: правила, скиллы, тестовые паттерны и CI-воркфлоу.
+Репозиторий содержит готовые артефакты для .NET-проектов: правила, **скиллы** (инструкция роли агента + чек-лист, напр. security-audit), тестовые паттерны и CI-воркфлоу.
+
+> **Впервые видишь методологию?** Канонический путь: [GLOSSARY.md](GLOSSARY.md) (термины) →
+> [Как это работает](#как-это-работает) (модель уровней) → [docs/README.md](docs/README.md)
+> (карта знаний) → [docs/ONBOARDING.md](docs/ONBOARDING.md) (применить к своему проекту).
 
 ## Проблема
 
@@ -93,20 +97,7 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-специфичные правила
 │   ├── AGENTS_TEMPLATE.dapper.md # Add-on: Dapper / Raw SQL-специфичные правила
 │   └── CONVENTIONS.md            # Коммиты, воркфлоу, тесты
-├── templates/skills/                        # Роли агента
-│   ├── memory-hygiene/            # Control Maintenance: Auto Memory
-│   ├── doc-hygiene/               # Control Maintenance: документация
-│   ├── backlog-hygiene/           # Control Maintenance: бэклог
-│   ├── skeptical-ai-bootstrap/    # Оценка зрелости + бэклог guardrails
-│   ├── code-review/               # Behavior Checks: ревью агента — гейт перед PR
-│   ├── task-compliance/           # Behavior Checks: гейт перед PR (проверка scope)
-│   ├── security-audit/            # Reality Checks: по триггеру
-│   ├── dba-audit/                 # Reality Checks: по триггеру (EF Core)
-│   ├── dba-audit-dapper/          # Reality Checks: по триггеру (Dapper / Raw SQL)
-│   ├── api-design-audit/          # Reality Checks: по триггеру
-│   ├── bot-audit/                 # Reality Checks: по триггеру
-│   ├── performance-audit/         # Reality Checks: по триггеру
-│   └── i18n-audit/                # Reality Checks: по триггеру
+├── templates/skills/                        # 28 скиллов-ролей (полный каталог: docs/README.md)
 ├── docs/
 │   ├── traps/                     # Ловушки агента
 │   └── solutions/
@@ -181,6 +172,7 @@ dotnet run --project tests/DemoProject.MinimalApi.Tests
 
 | Что нужно | Куда идти |
 |-----------|-----------|
+| Незнакомый термин | [GLOSSARY.md](GLOSSARY.md) |
 | Правила для агента (базовые) | `rules/AGENTS_TEMPLATE.md` (+ аддоны [EF Core](rules/AGENTS_TEMPLATE.efcore.md) / [Dapper](rules/AGENTS_TEMPLATE.dapper.md)) |
 | Паттерны тестов | `tests/patterns/` |
 | Ловушки агента | `docs/traps/` |

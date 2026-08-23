@@ -10,8 +10,8 @@
 
 | I am a ... | Where to start |
 |------------|----------------|
-| **Newcomer** to agentic development | [GLOSSARY.md](../GLOSSARY.md) → [README.md "How it works"](../README.md#how-it-works) (Engineering Assurance Levels) → `examples/DemoProject/` |
-| **Tech Lead** implementing guardrails | [ONBOARDING.md](ONBOARDING.md) → [.agents/skills/skeptical-ai-bootstrap/SKILL.md](../.agents/skills/skeptical-ai-bootstrap/SKILL.md) → [ADAPTATION.md](../templates/skills/ADAPTATION.md) → "Outer Loop" section below |
+| **Newcomer** to agentic development | [GLOSSARY.md](../GLOSSARY.md) (terms) → [README.md "How it works"](../README.md#how-it-works) (levels model) → this map → `examples/DemoProject/` → [ONBOARDING.md](ONBOARDING.md) (apply to your project) |
+| **Tech Lead** implementing guardrails | [ONBOARDING.md](ONBOARDING.md) → [.agents/skills/skeptical-ai-bootstrap/SKILL.md](../.agents/skills/skeptical-ai-bootstrap/SKILL.md) → [ADAPTATION.md](../templates/skills/ADAPTATION.md) → [EVIDENCE.md](EVIDENCE.md) (what each level caught) |
 | **Developer** looking for a test pattern | [tests/patterns/](#test-patterns) → copy into your project |
 | **Implementing SAE from scratch** | [ONBOARDING.md](ONBOARDING.md) → step-by-step guide with checkpoints |
 | **Auditor** preparing for an audit | [templates/skills/](#skills-audits) → take CHECKLIST.md → [human-audit-bridge.md](solutions/human-audit-bridge.md) for manual walkthrough |
@@ -28,7 +28,7 @@ in the observed case, ROI, and the risk-justification principle — lives in
 
 | Level / process | What it is | Key artifacts | Extended reading |
 |-----------------|------------|---------------|------------------|
-| **Control Foundation** | Instructions for the agent before code: constitution + Decision Guards (ADR) | [AGENTS_TEMPLATE.md](../rules/AGENTS_TEMPLATE.md) (+ [efcore](../rules/AGENTS_TEMPLATE.efcore.md) / [dapper](../rules/AGENTS_TEMPLATE.dapper.md) add-ons), [DECISION-GUARDS.md](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) | [ONBOARDING.md Step 3](ONBOARDING.md#step-3-write-the-constitution-control-foundation) |
+| **Control Foundation** | Instructions for the agent before code: constitution + Decision Guards | [AGENTS_TEMPLATE.md](../rules/AGENTS_TEMPLATE.md) (+ [efcore](../rules/AGENTS_TEMPLATE.efcore.md) / [dapper](../rules/AGENTS_TEMPLATE.dapper.md) add-ons), [DECISION-GUARDS.md](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) | [ONBOARDING.md Step 3](ONBOARDING.md#step-3-write-the-constitution-control-foundation) |
 | **1. Change Checks** | Fast feedback from compiler, types, analyzers | `.editorconfig`, `Directory.Build.props`, banned APIs, `DemoProject.Analyzers` (custom Roslyn analyzers) | [architecture-tests.md §Roslyn](solutions/architecture-tests.md#11-roslyn-analyzers-as-the-default-for-c) |
 | **2. Behavior Checks** | Tests, architecture rules, ratchets, pre-commit review, scope gates | [tests/patterns/](#test-patterns), [code-review](../templates/skills/code-review/SKILL.md), [task-compliance](../templates/skills/task-compliance/SKILL.md) | [ONBOARDING.md Steps 5–7](ONBOARDING.md#step-5-implement-behavior-checks-architecture-rules) |
 | **3. System Checks** | Smoke, E2E, load — the system works as a whole | [LoadTest.cs](../tests/patterns/LoadTest.cs), [SnapshotTest.cs](../tests/patterns/SnapshotTest.cs) | [ONBOARDING.md Steps 8–9, 11](ONBOARDING.md#step-8-implement-system-checks-smoke-tests) |

@@ -268,7 +268,7 @@ covered by the project-specific `e2e-worker` below.
 
 ## Recommendation
 
-Start with **Sprint 0** (layer 0) + adapting `ArchitectureRules.cs` for VSlice.
+Start with **Sprint 0** (Control Foundation + Change Checks) + adapting `ArchitectureRules.cs` for VSlice.
 This gives 60% effect: agents will stop breaking slice boundaries and nullable.
 
 Other skills can be created as needed — what matters is that

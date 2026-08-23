@@ -44,7 +44,7 @@
 | **Engineering Governance** | Process (not a level): residual risk acceptance, release decision, business and product decisions. | [docs/solutions/human-audit-bridge.md](docs/solutions/human-audit-bridge.md) |
 | **Control Maintenance** | Process (not a level): keeping instructions, agent memory, backlog, baselines, suppressions, and guardrails up to date. | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
 | **AGENTS.md** | File with rules for AI agents. Read by the agent before every task. Can be hierarchical (root + per-module). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
-| **Layers 0–2 / Inner-Outer loop** | *Legacy:* historical names of the visual metaphor that preceded the levels model. Wherever they appear, read them as the corresponding Engineering Assurance Levels. | [README.md](README.md#how-it-works) |
+| **Layers 0–2 / Inner-Outer loop** | *Legacy:* historical names of the visual metaphor that preceded the levels model. Wherever they appear, read them as the corresponding Engineering Assurance Levels. | [CHANGELOG.md](CHANGELOG.md) (history) |
 
 ## Test Patterns
 

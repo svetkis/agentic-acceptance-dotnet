@@ -24,7 +24,7 @@ Or manually:
 - Copy `.agents/skills/skeptical-ai-bootstrap/SKILL.md`
 - Copy the needed supporting templates from `templates/skills/skeptical-ai-bootstrap/`
 
-**Language:** all operational skill templates in `templates/skills/` are English-only. Copy `SKILL.md` and `CHECKLIST.md` as-is, then translate examples and thresholds into the target project's working language if needed.
+**Language:** all operational skill templates in `templates/skills/` are English-only. Copy the executable `SKILL.md` from `.agents/skills/skeptical-ai-bootstrap/` and the supporting templates from `templates/skills/skeptical-ai-bootstrap/` as-is, then translate examples and thresholds into the target project's working language if needed.
 
 ### 2. Make sure Kimi Code CLI sees the skill
 
@@ -102,5 +102,5 @@ See `docs/agents/` for details on each agent:
 ## Modes
 
 - `fast` — only critical (1-2 days)
-- `standard` — all control levels (1-2 weeks)
-- `high-assurance` — everything + Reality Checks (1 month)
+- `standard` — all control levels (2-4 weeks; see [ONBOARDING.md](../../../docs/ONBOARDING.md) "How Long It Takes" for the canonical estimates)
+- `high-assurance` — everything + Reality Checks (1-2 months)

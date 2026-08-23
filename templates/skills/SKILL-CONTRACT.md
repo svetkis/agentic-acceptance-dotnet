@@ -12,6 +12,8 @@
 `templates/skills/skeptical-ai-bootstrap/` is a **support-template bundle, not an
 installable skill**: it ships templates (inventory, decision guards, report formats).
 Its installable counterpart lives in `.agents/skills/skeptical-ai-bootstrap/`.
+When either half changes, check the other in the same PR: the installable skill links
+into the bundle via relative paths, and nothing else keeps them coherent.
 
 ## Required Sections of SKILL.md
 

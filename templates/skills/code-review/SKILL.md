@@ -1,24 +1,11 @@
 ---
 name: code-review
-description: |
+description: >
   Pre-commit code review for backend projects with agent-generated code.
-  Trigger this skill right before `git commit`, when the user asks to review staged changes,
-  or when the staged diff contains backend source files.
-  Reviews staged changes against architectural rules, ORM constraints, test conventions,
-  and security hygiene.
-whenToUse:
-  - Before committing backend changes (pre-commit).
-  - User says "pre-commit review", "review my staged changes", "check the diff", "code review".
-  - Staged diff includes source files of the project's backend language.
-triggers:
-  - pre-commit
-  - review staged diff
-  - code review
-  - check diff before commit
-invocation:
-  manual: true
-  auto: true
-version: 1.0.0
+  Trigger this skill right before `git commit`, when the user asks to review staged
+  changes ("pre-commit review", "check the diff", "code review"), or when the staged
+  diff contains backend source files. Reviews staged changes against architectural
+  rules, ORM constraints, test conventions, and security hygiene.
 ---
 
 # Pre-commit Code Review Agent
