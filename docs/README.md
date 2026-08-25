@@ -192,9 +192,10 @@ Active plans: [SELF-CHECKING-TESTS-WORKSTREAM.md](SELF-CHECKING-TESTS-WORKSTREAM
 
 | File | What's inside |
 |------|---------------|
-| [rules/AGENTS_TEMPLATE.md](../rules/AGENTS_TEMPLATE.md) | Base constitution for AI agents: tests, dates, cache, commits (universal) |
+| [rules/AGENTS_TEMPLATE.md](../rules/AGENTS_TEMPLATE.md) | Base constitution for AI agents: only what every commit touches — tests, dates, style, decision guards (universal) |
 | [rules/AGENTS_TEMPLATE.efcore.md](../rules/AGENTS_TEMPLATE.efcore.md) | Add-on: EF Core-specific rules (read/write path, `AsNoTracking`) |
 | [rules/AGENTS_TEMPLATE.dapper.md](../rules/AGENTS_TEMPLATE.dapper.md) | Add-on: Dapper / Raw SQL-specific rules (parameterization, timeouts) |
+| [rules/AGENTS_TEMPLATE.addons.md](../rules/AGENTS_TEMPLATE.addons.md) | Add-on: optional sections (caching, hot path, complexity, spellcheck, mutation, analyzer tests) — copy only what matches the stack |
 | [rules/CONVENTIONS.md](../rules/CONVENTIONS.md) | Test naming, workflow, CI guardrails |
 | [BannedSymbols.txt](../examples/DemoProject/BannedSymbols.txt) | Compile-time guard: banned APIs (BannedApiAnalyzers RS0030) |
 

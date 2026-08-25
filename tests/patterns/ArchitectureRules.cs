@@ -10,6 +10,12 @@
 // - xUnit:  [Fact] + Assert.True(result.IsSuccessful)
 // - NUnit:  [Test] + Assert.That(result.IsSuccessful, Is.True)
 // - MSTest: [TestMethod] + Assert.IsTrue(result.IsSuccessful)
+//
+// NetArchTest 1.3.x gotchas (verified on a real project):
+// - FailingTypes is NULL when the rule passes — always null-guard it in the assertion message.
+// - An assembly with zero types (empty placeholder project) passes any rule trivially:
+//   anchor it by name via Assembly.Load and revisit when real types appear.
+// - Top-level-statement Program has no accessible anchor type — load the assembly by name.
 
 using NetArchTest.Rules;
 using System.Text.RegularExpressions;
@@ -21,6 +27,8 @@ public class ArchitectureRules
 {
     // TRAP: The agent referenced Infrastructure from Api directly.
     // GUARDRAIL: Api → Application → Domain. Infrastructure only via DI.
+    // NOTE: Always include failing type names in the assertion message — without it,
+    // a red test tells you nothing about WHERE the boundary broke.
     [Test]
     public void Api_ShouldNotReferenceInfrastructureDirectly()
     {
@@ -29,7 +37,24 @@ public class ArchitectureRules
             .Should().NotHaveDependencyOnAny(".*Infrastructure.*")
             .GetResult();
 
-        Assert.That(result.IsSuccessful).IsTrue();
+        Assert.That(result.IsSuccessful).IsTrue(
+            "Boundary violated by: " + string.Join(", ", result.FailingTypes?.Select(t => t.FullName) ?? []));
+    }
+
+    // TRAP: The project has an empty placeholder assembly (e.g. Data layer not started yet).
+    // GUARDRAIL: Anchor it by name — there is no type to anchor on yet.
+    // NOTE: A rule over an empty assembly passes trivially; add real rules when types appear.
+    [Test]
+    public void DataAssembly_CanBeAnchoredWithoutTypes()
+    {
+        var dataAssembly = System.Reflection.Assembly.Load("MyApp.Data");
+        var result = Types.InAssembly(dataAssembly)
+            .ShouldNot()
+            .HaveDependencyOnAny("MyApp.Api", "MyApp.Worker")
+            .GetResult();
+
+        Assert.That(result.IsSuccessful).IsTrue(
+            "Boundary violated by: " + string.Join(", ", result.FailingTypes?.Select(t => t.FullName) ?? []));
     }
 
     // TRAP: The agent created a service without an interface in Application.

@@ -71,6 +71,7 @@ If you are an AI agent reading this file in the context of a **different** repos
 | Rules for the agent (base) | `rules/AGENTS_TEMPLATE.md` |
 | EF Core add-on | `rules/AGENTS_TEMPLATE.efcore.md` |
 | Dapper add-on | `rules/AGENTS_TEMPLATE.dapper.md` |
+| Optional add-ons (caching, hot path, complexity, spellcheck, mutation, analyzers) | `rules/AGENTS_TEMPLATE.addons.md` |
 | Security audit | `templates/skills/security-audit/` |
 | DBA audit | `templates/skills/dba-audit/` |
 | Performance audit | `templates/skills/performance-audit/` |

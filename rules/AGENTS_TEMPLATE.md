@@ -10,6 +10,11 @@
 >    - EF Core → supplement with `AGENTS_TEMPLATE.efcore.md`
 >    - Dapper / Raw SQL → supplement with `AGENTS_TEMPLATE.dapper.md`
 >    - Other ORM / No ORM → use this file as-is and add your own rules
+> 3. Add optional sections (caching, hot path, complexity, spellcheck, mutation,
+>    analyzer tests) from `AGENTS_TEMPLATE.addons.md` — **only those matching your stack**.
+>
+> **Principle:** the constitution carries only what every commit touches.
+> Specialized rules live in add-ons, not here.
 
 ## Semantic Anchors
 
@@ -156,60 +161,6 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 - Example: `// PERF-022: QueryFilter removed — JOIN added 3ms to every query`
 - Full registry template: [`DECISION-GUARDS.md`](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md)
 
-## Caching
-
-> `[ADAPT]` — Skip if project does not use caching.
-
-- ❌ `cache.Set()` without size limit / expiration — **FORBIDDEN** (risk of OOM)
-- ✅ Explicit size or expiration — **MANDATORY**
-- Keys centralized — no string literals in services
-- Every write-path that changes data must invalidate related caches
-
-## Performance
-
-> `[ADAPT]` — Define your perf validation rules.
-
-- After an agent's perf commit — **manual audit of write-paths**
-- Agent optimizes read, human verifies write is not broken
-- Load test scenario must pass before deploy (if applicable)
-- `[ADAPT]` (DemoProject convention): every `[HotPath]` method must have `{MethodName}_AllocationBudget` test; regressions > 10% are forbidden. `[HotPath]` is a project-local marker attribute — define your own hot-path convention (or drop this rule if you don't track allocations)
-
-## Complexity
-
-> `[ADAPT]` — Define your complexity thresholds.
-
-- Cognitive complexity (`S3776`) threshold: `[ADAPT]` (default 15; API layer 10)
-- Cyclomatic complexity (`S1541`) threshold: `[ADAPT]` (default 10; API layer 7)
-- For new projects: `error` severity in `.editorconfig`
-- For legacy: baseline + ratchet; number of violations must not increase
-- Intentional deviations use `COMPLEXITY-###` ID and are recorded in `DECISION-GUARDS.md`
-
-## Spellcheck
-
-> `[ADAPT]` — Skip if project does not have public API / docs.
-
-- `cspell` runs on markdown, comments, public type/property names, OpenAPI contracts
-- Project dictionary lives in `cspell.json`
-- New misspellings in public API names are **FORBIDDEN**
-- Intentional domain terms use `SPELL-###` ID if they cannot be added to dictionary
-
-## Mutation Testing
-
-> `[ADAPT]` — Skip if Stryker does not support your test framework.
-
-- Run Stryker on critical assemblies (e.g., Domain) before release
-- Mutation score must not decrease from baseline
-- Survived mutants in critical code must be analyzed and covered or documented
-- Intentional exceptions use `MUTATION-###` ID
-
-## Analyzer Tests
-
-> `[ADAPT]` — Skip if project has no custom Roslyn analyzers.
-
-- Every custom diagnostic ID must have positive + negative tests
-- Tests must verify exact diagnostic span/location
-- Run analyzer tests in CI when `Microsoft.CodeAnalysis.*` packages update
-
 ## Guardrails: Justified by Risk
 
 > Any guardrail (test, regex scan, arch-test, linter rule) must answer: **"What specific risk does this cover?"**
@@ -223,9 +174,8 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 
 - ❌ Commit without `dotnet build` + tests
 - ❌ New env var without updating deployment docs
-- ❌ Hardcoded UI strings without i18n (if project uses i18n)
 - ❌ Raw SQL without explanatory comment
-- ❌ Method with cognitive complexity above project threshold without `COMPLEXITY-###` decision guard
-- ❌ `[ADAPT]` `[HotPath]` method without `{MethodName}_AllocationBudget` test (applies only if you adopted a hot-path marker; see Performance section)
-- ❌ Public API name with misspelling
-- ❌ Custom Roslyn analyzer without positive/negative tests
+- ❌ Guardrail without a risk justification (see section above)
+
+> Optional prohibitions (hot path, complexity, spellcheck, analyzers) live in
+> `AGENTS_TEMPLATE.addons.md` — copy them only with the matching section.

@@ -68,6 +68,7 @@ have such hardcoded paths.
 | No custom analyzers / Roslyn diagnostics | `analyzer-tests-audit` | Nothing to test |
 | No mutation testing in CI | `mutation-audit` → CI gate | Run as periodic audit |
 | Legacy with hundreds of complexity violations | `complexity-audit` → error severity | Use baseline + ratchet, not error |
+| Non-Latin test method names (e.g., Russian `Читаемое_предложение`) + `AnalysisLevel=latest-recommended` | Level 1 setup → CA1707 as error | Naming convention of the team; disable CA1707 for `tests/**.cs` in `.editorconfig`, keep it for production code. Do NOT rename tests to satisfy the analyzer |
 
 ---
 
