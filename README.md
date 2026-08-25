@@ -8,7 +8,7 @@ AI-accelerated quality control methodology for .NET teams. Audits, review, and g
 ![License MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![CI](https://github.com/svetkis/dotnet-ai-guardrails/workflows/Examples%20CI/badge.svg)
 
-> Although examples and tests are implemented in .NET, the methodology itself — Decision Guards, Engineering Assurance Levels, and prompt hygiene — applies to any stack.
+> The principles (Decision Guards, Engineering Assurance Levels, prompt hygiene) are stack-agnostic, but all ready-made artifacts in this repository target .NET. For other stacks, extract the principles — do not expect working artifacts.
 
 This repository contains ready-made artifacts for .NET projects: rules, **skills** (an agent-role instruction + checklist, e.g. security-audit), test patterns, and CI workflows.
 

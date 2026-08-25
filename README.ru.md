@@ -8,7 +8,7 @@
 ![License MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![CI](https://github.com/svetkis/dotnet-ai-guardrails/workflows/Examples%20CI/badge.svg)
 
-> Хотя примеры и тесты реализованы на .NET, сама методология Decision Guards, уровней контроля (Engineering Assurance Levels) и гигиены промптов применима к любому стеку.
+> Принципы (Decision Guards, Engineering Assurance Levels, гигиена промптов) не привязаны к стеку, но все готовые артефакты в этом репозитории — только для .NET. Для других стеков извлекайте принципы; рабочих артефактов для них здесь нет.
 
 Репозиторий содержит готовые артефакты для .NET-проектов: правила, **скиллы** (инструкция роли агента + чек-лист, напр. security-audit), тестовые паттерны и CI-воркфлоу.
 

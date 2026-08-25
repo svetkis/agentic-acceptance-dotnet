@@ -60,6 +60,14 @@ Produce a guardrail implementation backlog.
 
 The agent will find `.csproj`, assess layers, and propose a plan.
 
+## One-Shot Tool
+
+`skeptical-ai-bootstrap` is **not a permanent skill**. Run it once, take the
+`.backlog/onboarding-{date}.md` report, then remove the skill from your project
+(`.kimi/skills/skeptical-ai-bootstrap/` or the equivalent folder). Keep it only
+if you plan periodic maturity re-assessment — in that case, reference it from
+your fork rather than an ad-hoc copy.
+
 ## After Onboarding
 
 The report contains links to artifacts from `dotnet-ai-guardrails`. These links are **guidelines and examples** for your project, not a mandatory set of files to copy:

@@ -31,6 +31,15 @@ into the bundle via relative paths, and nothing else keeps them coherent.
 
 Sections may reuse existing content and be concise, but all eleven must be present.
 
+## Checklist Item Marking
+
+`CHECKLIST.md` items use a fixed marking; agents must not invent their own:
+
+- `[ ]` — to be checked (the default before adaptation)
+- `[-]` — not applicable: struck out during adaptation (see `ADAPTATION.md`),
+  ideally with a short reason on the same line
+- `[x]` — checked
+
 ## Finding Schema
 
 ```text

@@ -159,9 +159,16 @@
 
 1. Copy [`templates/skills/code-review/`](../templates/skills/code-review/) to `.kimi/skills/code-review/` (or your agent's format)
 2. Adapt `SKILL.md` to your stack (see Step 2)
-3. Set up execution on every PR / before commit:
-   - Kimi: `kimi run code-review --git-diff HEAD~1`
-   - Claude: `/{command}` in chat
+3. Set up execution on every PR / before commit — use the exact row for your agent:
+
+   | Agent | Command | Where skills live |
+   |-------|---------|-------------------|
+   | Kimi Code CLI | `kimi run code-review --git-diff HEAD~1` | `.kimi/skills/` |
+   | Claude Code | `/{command}` in chat | `.claude/CLAUDE.md` + commands |
+   | Codex | `AGENTS.md` + `.agents/skills/` | referenced from `~/.codex/config.toml` |
+   | Cursor / OpenCode | paste-ready steps per [`STEP-BY-STEP-AGENTS.md`](agents/STEP-BY-STEP-AGENTS.md) | `.opencode/` (OpenCode) |
+
+   If your agent is not listed — see [`docs/agents/README.md`](agents/README.md) before inventing a variant.
 4. Check on 3–5 recent PRs — does the agent find real issues?
 
 **Readiness criterion:** Code review agent catches at least 1 issue out of 5 PRs.
