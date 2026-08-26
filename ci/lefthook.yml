@@ -1,0 +1,34 @@
+# lefthook.yml — template for local pre-commit enforcement
+#
+# WHY: the constitution says "format + build + tests before commit", but prose
+# relies on the agent remembering. A git hook cannot be forgotten — it intercepts
+# the commit itself. This sits between the constitution (Foundation) and the
+# compiler (Level 1): a zero-cost gate that runs in seconds on staged files only.
+#
+# HOW TO USE:
+# 1. Install: `dotnet tool install -g lefthook` (or npm/pip/go — pick one channel)
+# 2. Copy this file to your project root as `lefthook.yml`
+# 3. Initialize: `lefthook install`
+# 4. Strike out commands your stack does not use
+#
+# Keep hooks FAST (seconds, not minutes): format and static checks here.
+# Build and full tests stay in the agent workflow / CI — a 2-minute hook
+# gets bypassed with --no-hooks, and then you have nothing.
+
+pre-commit:
+  parallel: true
+  commands:
+    dotnet-format:
+      glob: "*.cs"
+      # Replace <YOUR-SOLUTION> with your solution file (.sln / .slnx).
+      # lefthook has no {solution_file} placeholder — only {staged_files},
+      # {all_files}, {push_files}, {files}.
+      run: dotnet format <YOUR-SOLUTION>.slnx --include {staged_files}
+    # webapp-lint:
+    #   root: webapp/
+    #   glob: "*.{ts,tsx}"
+    #   run: npx eslint {staged_files} --fix
+    # webapp-types:
+    #   root: webapp/
+    #   glob: "*.{ts,tsx}"
+    #   run: npx tsc --noEmit

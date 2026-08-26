@@ -86,6 +86,7 @@ If you are an AI agent reading this file in the context of a **different** repos
 | Working example (Single-project MVP) | `examples/DemoProject.MinimalApi/` |
 | Failing demo (guardrails) | `examples/DemoProject/TRAPS.md` + `traps-src/` |
 | CI security | `ci/github-actions/safe-ci.yml` |
+| Local pre-commit hooks | `ci/lefthook.yml` |
 | Trap description | `docs/traps/` |
 | Architecture tests | `docs/solutions/architecture-tests.md` |
 | AI development patterns | `docs/solutions/ai-patterns.md` |

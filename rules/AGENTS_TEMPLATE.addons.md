@@ -14,6 +14,40 @@
 3. Add sections from this file one by one — only those that match your stack.
 4. A section copied "just in case" is an unjustified guardrail (see base: Guardrails Justified by Risk).
 
+## Symbolic Navigation (Context Economy)
+
+> Copy if the agent has symbolic tools available (Serena MCP, language server).
+> This is not a guardrail — it is a context budget rule: the agent's window is
+> a limited resource, and whole-file reads burn it.
+
+- Prefer symbol tools over file reads: `get_symbols_overview` for a new file,
+  `find_symbol` / `find_referencing_symbols` for navigation
+- ❌ Reading entire files when a symbol tool answers the question — **FORBIDDEN**
+- ❌ Rewriting a whole file to change one symbol — use symbol-level edit tools
+- Text search (`search_for_pattern`) is for strings and regex — never for
+  finding classes/methods; `find_symbol` is precise
+
+## API Type Sync Pipeline (Backend ↔ Frontend)
+
+> Copy if the project has a typed frontend consuming the backend API.
+> A prohibition alone ("no DTO change without client types") does not generate
+> the types — a pipeline does. Prohibition + tool beats prohibition.
+
+- Client types are **generated** from OpenAPI, not written by hand
+  (e.g., `openapi-typescript` → `api.generated.ts`, marked "do not edit")
+- ❌ Editing generated files — **FORBIDDEN**
+- ❌ DTO change without regenerating client types — **FORBIDDEN**
+- Regeneration is one command, documented in the project README
+
+## Tooling Pinning
+
+> Copy if the project uses local dotnet tools (Stryker, format validators, etc.).
+
+- Local tools are pinned with exact versions in `dotnet-tools.json` — an agent
+  running `dotnet tool run` gets the same tool version as CI and as every other
+  developer. Pin the SDK separately via `global.json` (`rollForward: false`)
+- ❌ Running an unpinned/global tool version for a gated check — **FORBIDDEN**
+
 ## Caching
 
 > Copy if the project uses a cache (MemoryCache, IDistributedCache, Redis).

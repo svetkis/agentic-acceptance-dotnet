@@ -51,6 +51,7 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **RatchetTest** | Public types and tests did not decrease | [tests/patterns/RatchetTest.cs](../tests/patterns/RatchetTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/RatchetTests.cs` |
 | **SnapshotTest** | JSON serialization contract, OpenAPI | [tests/patterns/SnapshotTest.cs](../tests/patterns/SnapshotTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/SnapshotTests.cs` |
 | **LoadTest** | Silent breakdown under load: read optimizations that break write path | [tests/patterns/LoadTest.cs](../tests/patterns/LoadTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/LoadTests.cs` |
+| **ProductionConfigurationTest** | Silent production config breakage: Dockerfile env vars, GC limits, deploy manifests (`BUG_CONFIG###`) | [tests/patterns/ProductionConfigurationTest.cs](../tests/patterns/ProductionConfigurationTest.cs) | — |
 | **ComplexityRatchetTest** | Methods with `S3776` / `S1541` violations do not grow (baseline + ratchet) | [tests/patterns/ComplexityRatchetTest.cs](../tests/patterns/ComplexityRatchetTest.cs) | — |
 | **AllocationBudgetTest** | `[HotPath]` method allocations do not exceed baseline + 10% | [tests/patterns/AllocationBudgetTest.cs](../tests/patterns/AllocationBudgetTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/AllocationBudgetTests.cs` (green) / `examples/DemoProject/traps-src/DemoProject.Traps/AllocationBudgetHotspot.cs` + `tests/DemoProject.Traps.Tests/AllocationBudgetTests.cs` (red) |
 | **SpellcheckGuardTest** | No new typos appear in public symbols / docs | [tests/patterns/SpellcheckGuardTest.cs](../tests/patterns/SpellcheckGuardTest.cs) | — |
@@ -182,6 +183,7 @@ Active plans: [SELF-CHECKING-TESTS-WORKSTREAM.md](SELF-CHECKING-TESTS-WORKSTREAM
 | Artifact | Purpose |
 |----------|---------|
 | [ci/github-actions/safe-ci.yml](../ci/github-actions/safe-ci.yml) | Workflow template: build + test + verification |
+| [ci/lefthook.yml](../ci/lefthook.yml) | Template for local pre-commit hooks (lefthook): format + static checks on staged files — enforcement the agent cannot forget |
 | [ci/scripts/run-and-verify-tests.sh](../ci/scripts/run-and-verify-tests.sh) | Finds and runs all test projects via `dotnet run --project`, then verifies that tests actually ran (not 0 ran) |
 | [.github/workflows/demo-project-ci.yml](../.github/workflows/demo-project-ci.yml) | CI of this repository — builds DemoProject and DemoProject.MinimalApi |
 | `traps-guardrails` job in `demo-project-ci.yml` | Ensures intentionally broken tests in DemoProject.Traps actually fail (guardrails are working) |

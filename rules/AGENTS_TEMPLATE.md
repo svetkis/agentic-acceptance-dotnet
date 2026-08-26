@@ -111,6 +111,7 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 - **Framework** — `[ADAPT]`: TUnit / xUnit / NUnit / MSTest
 - Run command — `[ADAPT]`: for TUnit use `dotnet run --project tests/...`; for another framework, define the exact command explicitly.
 - Every reproducible, automatable bug fix must include a test: `BUG###_DescriptiveName` (for configuration/documentation/operational/process defects, another regression control is allowed with an explicit rationale)
+- **Trivial fix exception:** a genuinely trivial fix (typo, formatting, comment fix) may skip the regression test **only if** explicitly marked `trivial fix` in the commit message — an unmarked fix without a test blocks the commit. A hidden mark is not an escape hatch; if in doubt, write the test
 - Failing test first → then fix → test passes
 - **Self-checking, fault-sensitive tests only** — every test must determine pass/fail automatically (no manual interpretation), and its assertions must be reachable on every successful path. A test must fail when the behavior its name promises is broken. Forbidden: tests without assertions, `IsNotNull()`-only assertions, assertions that can be bypassed on the successful path (an assert inside an `if` that may not execute), tautological assertions (`x == x`, `expect(true)`), `waitForTimeout` in UI tests, negative-only assertions without a positive control — unless the weaker check *is* the contract and the reason is documented. For critical behavior, verify fault sensitivity explicitly (mutation testing or deliberate fault injection: break the code, confirm the test fails). See the [Non-Validating Tests trap](https://github.com/svetkis/dotnet-ai-guardrails/blob/main/docs/traps/testing.md#non-validating-tests).
 
@@ -128,6 +129,8 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 
 - ❌ Changing DTO without updating client types — **FORBIDDEN**
 - ❌ Changing Response DTO without regenerating contract snapshot — **FORBIDDEN**
+- If a typed frontend consumes the API: prefer a generation pipeline over manual
+  sync — see `AGENTS_TEMPLATE.addons.md` → API Type Sync Pipeline
 
 ## Dates
 
