@@ -50,6 +50,7 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **ArchUnitNetSliceTest** | Cyclic dependencies between slices (ArchUnitNET) | [tests/patterns/ArchUnitNetSliceTest.cs](../tests/patterns/ArchUnitNetSliceTest.cs) | `examples/DemoProject/tests/DemoProject.Traps.Tests/ArchUnitNetSliceTest.cs` |
 | **RatchetTest** | Public types and tests did not decrease | [tests/patterns/RatchetTest.cs](../tests/patterns/RatchetTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/RatchetTests.cs` |
 | **SnapshotTest** | JSON serialization contract, OpenAPI | [tests/patterns/SnapshotTest.cs](../tests/patterns/SnapshotTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/SnapshotTests.cs` |
+| **PropertyBasedTest** | Invariants over generated inputs (FsCheck) instead of hand-picked examples | [tests/patterns/PropertyBasedTest.cs](../tests/patterns/PropertyBasedTest.cs) | — |
 | **LoadTest** | Silent breakdown under load: read optimizations that break write path | [tests/patterns/LoadTest.cs](../tests/patterns/LoadTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/LoadTests.cs` |
 | **ProductionConfigurationTest** | Silent production config breakage: Dockerfile env vars, GC limits, deploy manifests (`BUG_CONFIG###`) | [tests/patterns/ProductionConfigurationTest.cs](../tests/patterns/ProductionConfigurationTest.cs) | — |
 | **ComplexityRatchetTest** | Methods with `S3776` / `S1541` violations do not grow (baseline + ratchet) | [tests/patterns/ComplexityRatchetTest.cs](../tests/patterns/ComplexityRatchetTest.cs) | — |

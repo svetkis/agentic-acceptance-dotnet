@@ -173,3 +173,49 @@ The EF Core InMemory provider **does not emulate change tracking**. `SaveChanges
 ### Pattern
 
 See `tests/patterns/LoadTest.cs`
+
+## Examples-Only Tests
+
+### Scenario
+
+The agent implements phone (or any user-input) parsing and writes example-based tests:
+
+```csharp
+[Test]
+public void Normalize_Works()
+{
+    Assert.That(Normalize("+7 905 123-45-67")).IsEqualTo("+79051234567");
+}
+```
+
+Green. Merged. Then a user enters `8 (905) 123-45-67`, a bot sends ` 9051234567`,
+and account linking silently breaks — the suite stays green the whole time.
+
+### Why This Is Dangerous
+
+- Example tests only check inputs someone thought of; humans and agents pick happy paths
+- The agent generating tests from the implementation copies the cases the code already handles
+- Boundary and cross-layer cases (double normalization, leading 8, junk separators) go unprobed
+
+### Root Causes
+
+- Tests written after the implementation (by the same agent) mirror it instead of constraining it
+- No invariant was ever stated: "output is +digits for ALL inputs", "normalization is idempotent"
+
+### Solution
+
+Replace (or supplement) examples with **property-based tests** (`tests/patterns/PropertyBasedTest.cs`):
+
+1. A generator produces hundreds of realistic inputs (digits mixed with separators)
+2. The assertion checks an invariant that must hold for every input:
+   structural (format), idempotence, round-trip, or bounds
+3. Failure output contains the exact generated input — the repro is free
+
+### Pattern
+
+See `tests/patterns/PropertyBasedTest.cs`
+
+### Related Traps
+
+- [non-validating-tests](testing.md#non-validating-tests) — examples-only is the cousin:
+  the test executes but constrains almost nothing
