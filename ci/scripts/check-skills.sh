@@ -25,8 +25,8 @@ shopt -s nullglob
 for skill_dir in "$SKILLS_DIR"/*/; do
   name="$(basename "$skill_dir")"
 
-  # skeptical-ai-bootstrap is a support-template bundle, not an installable skill.
-  if [ "$name" = "skeptical-ai-bootstrap" ]; then
+  # acceptance-bootstrap is a support-template bundle, not an installable skill.
+  if [ "$name" = "acceptance-bootstrap" ]; then
     continue
   fi
 

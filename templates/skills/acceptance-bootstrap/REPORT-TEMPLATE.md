@@ -9,7 +9,7 @@
 
 **Date:** {YYYY-MM-DD}  
 **Mode:** fast / standard / high-assurance  
-**Agent:** skeptical-ai-bootstrap  
+**Agent:** acceptance-bootstrap  
 **Scanned:** {path to .sln}
 
 ---

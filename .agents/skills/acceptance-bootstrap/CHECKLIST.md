@@ -1,4 +1,4 @@
-# Skeptical AI Bootstrap Checklist
+# Acceptance Bootstrap Checklist
 
 ## Pre-flight
 - [ ] Path to the .NET solution root obtained

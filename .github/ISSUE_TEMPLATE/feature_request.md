@@ -15,4 +15,4 @@ labels: enhancement
 
 ## Checklist
 - [ ] I have read `AGENTS.md` and `rules/AGENTS_TEMPLATE.md`
-- [ ] This aligns with the Skeptical AI Engineering methodology
+- [ ] This aligns with the Agentic Acceptance methodology

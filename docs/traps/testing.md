@@ -59,7 +59,7 @@ Three distinct properties (do not merge them):
 | Term | Origin | Meaning |
 |------|--------|---------|
 | **Self-Checking Test** | industry-standard (xUnit Test Patterns, Meszaros) | The test determines pass/fail automatically, without manual interpretation of results |
-| **Assertion Reachability** | SAE-specific | No successful execution path bypasses the assertions |
+| **Assertion Reachability** | methodology-specific | No successful execution path bypasses the assertions |
 | **Fault Sensitivity** | borrowed (mutation testing) | The test fails when a relevant defect is present (mutation, or the original bug) |
 
 Self-checking is the baseline this trap assumes. The trap itself lives in the

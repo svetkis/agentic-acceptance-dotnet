@@ -76,7 +76,7 @@ All project skills live in `.kimi/skills/`:
 ```
 .kimi/
 └── skills/
-    ├── skeptical-ai-bootstrap/          # This skill (installed once)
+    ├── acceptance-bootstrap/          # This skill (installed once)
     │   └── SKILL.md
     │
     ├── code-review/                 # 2. Behavior Checks: gate before PR

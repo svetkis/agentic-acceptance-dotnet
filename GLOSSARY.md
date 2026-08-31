@@ -8,7 +8,7 @@
 ## Normative Terminology
 
 > Term origin: `industry-standard` (widely accepted), `borrowed` (taken from another
-> domain, used by analogy), `SAE-specific` (introduced by this methodology),
+> domain, used by analogy), `methodology-specific` (introduced by this methodology),
 > `informal` (colloquial, not for normative documents).
 
 | Term | Origin | Definition |
@@ -16,7 +16,7 @@
 | **check** | industry-standard | Automated deterministic check: same input → same result, no engineering judgment. |
 | **test** | industry-standard | A check that verifies code behavior through execution (unit, integration, E2E). |
 | **Self-Checking Test** | industry-standard | A test that determines pass/fail automatically, without manual interpretation of results (xUnit Test Patterns, Meszaros). Baseline property; does not guarantee defect detection. |
-| **Assertion Reachability** | SAE-specific | Test property: no successful execution path bypasses the assertions. Violation — an assert inside an `if` that may not execute. |
+| **Assertion Reachability** | methodology-specific | Test property: no successful execution path bypasses the assertions. Violation — an assert inside an `if` that may not execute. |
 | **Fault Sensitivity** | borrowed | Test/suite property: fails when a relevant defect is present (a mutation or the original bug). From mutation testing; verified by fault injection or mutation score. |
 | **gate** | industry-standard | Mandatory passage point: a change does not proceed until the gate passes (`commit gate`, `PR gate`, `release gate`). |
 | **audit** | industry-standard | Investigative review of a narrow area, requiring evidence and engineering judgment. Output is findings, not pass/fail. |
@@ -26,10 +26,10 @@
 | **maintenance** | industry-standard | Keeping control artifacts up to date (see Control Maintenance). |
 | **ratchet** | borrowed | A check on metric monotonicity: the value must not degrade (public type count, test count, complexity). From the mechanical ratchet. |
 | **baseline** | industry-standard | The recorded current value of a metric from which a ratchet forbids degradation. |
-| **guardrail** | SAE-specific | Any control artifact (check, gate, audit, instruction) that constrains the action space of an agent or developer. |
-| **Decision Guard** | SAE-specific | See "Code Patterns". |
-| **Zero Trust (analogy)** | borrowed | The "never trust, always verify" security model; in SAE — an analogy: no agent artifact is considered correct without a check. Not a claim of implementing Zero Trust Architecture. |
-| **skill** | SAE-specific | Instruction + checklist for an agent role (audit, review, onboarding). |
+| **guardrail** | methodology-specific | Any control artifact (check, gate, audit, instruction) that constrains the action space of an agent or developer. |
+| **Decision Guard** | methodology-specific | See "Code Patterns". |
+| **Zero Trust (analogy)** | borrowed | The "never trust, always verify" security model; in Agentic Acceptance — an analogy: no agent artifact is considered correct without a check. Not a claim of implementing Zero Trust Architecture. |
+| **skill** | methodology-specific | Instruction + checklist for an agent role (audit, review, onboarding). |
 | **persona** | informal | A named agent role inside a skill ("DBA Auditor"). Not a normative term. |
 
 ## Engineering Assurance Levels (control model)
@@ -62,7 +62,7 @@
 |------|------------|---------|
 | **Read-path** | Data read path: read-only queries. `.Select()` + `.AsNoTracking()` are **mandatory**. `.Include()`, `.FindAsync()` are forbidden. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
 | **Write-path** | Data write path: commands that change state. Change tracking is required, `.AsNoTracking()` is forbidden. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
-| **Decision Guard** | SAE-specific: intentional deviation from standard, documented by an ID in a comment (`PERF-###`, `DB-###`, `AUD-###`) plus a short registry entry. **Not a synonym for ADR** — a lightweight reference to a decision; when full ADRs exist, the entry links to them. Checked by an architecture test for uniqueness. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md), [templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md](templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) |
+| **Decision Guard** | methodology-specific: intentional deviation from standard, documented by an ID in a comment (`PERF-###`, `DB-###`, `AUD-###`) plus a short registry entry. **Not a synonym for ADR** — a lightweight reference to a decision; when full ADRs exist, the entry links to them. Checked by an architecture test for uniqueness. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md), [templates/skills/acceptance-bootstrap/DECISION-GUARDS.md](templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) |
 | **Semantic Anchors** | Established terms instead of descriptions. Each term activates a specific methodology (e.g., "read-path" = `.Select()` + `.AsNoTracking()`). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
 
 ## Agents and Tools

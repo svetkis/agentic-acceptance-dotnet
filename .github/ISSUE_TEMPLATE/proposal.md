@@ -1,6 +1,6 @@
 ---
 name: Proposal
-about: Suggest a change to the SAE methodology, control levels, or conventions
+about: Suggest a change to the Agentic Acceptance methodology, control levels, or conventions
 labels: proposal
 ---
 

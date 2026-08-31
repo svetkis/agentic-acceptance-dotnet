@@ -1,4 +1,4 @@
-# Skeptical AI Engineering Onboarding
+# Agentic Acceptance Onboarding
 
 > Step-by-step guide for implementing guardrails in an existing .NET project.  
 > **Audience:** Tech Lead, CTO, Lead Developer.  
@@ -28,7 +28,7 @@
 - [ ] Understanding of current architecture (Clean / VSlice / Modular / Big Ball of Mud)
 - [ ] Permission to change CI/CD and add files to the repository root
 - [ ] Decision on which AI agent is used (Kimi / Claude / Cursor / Codex / multiple)
-- [ ] 30 minutes to fill out [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md)
+- [ ] 30 minutes to fill out [`ARCHITECTURE-INVENTORY.md`](../templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md)
 
 ---
 
@@ -38,13 +38,13 @@
 
 **Goal:** The agent (and you) must understand what they are working with, not guess.
 
-1. Fill out [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md):
+1. Fill out [`ARCHITECTURE-INVENTORY.md`](../templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md):
    - Draw a C4 Container diagram (4–6 blocks)
    - Fill in the Assembly Boundaries table
    - Identify 3–5 Critical Paths
    - Fill in the Technology Inventory
 2. Save the file to `docs/ARCHITECTURE-INVENTORY.md` in your project.
-3. If there are intentional deviations from standards — record them as `PERF-###` / `DB-###` / `ARCH-###` using the [`DECISION-GUARDS.md`](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) template.
+3. If there are intentional deviations from standards — record them as `PERF-###` / `DB-###` / `ARCH-###` using the [`DECISION-GUARDS.md`](../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) template.
 
 **Output:** ground truth for all subsequent guardrails.
 
@@ -55,8 +55,8 @@
 **Goal:** Understand what already exists and what needs to be built from scratch.
 
 **Option A — via agent (recommended):**
-1. Install the `skeptical-ai-bootstrap` skill into your project ([`INSTALL.md`](../templates/skills/skeptical-ai-bootstrap/INSTALL.md))
-2. Run: `kimi run skeptical-ai-bootstrap` (or equivalent for your agent)
+1. Install the `acceptance-bootstrap` skill into your project ([`INSTALL.md`](../templates/skills/acceptance-bootstrap/INSTALL.md))
+2. Run: `kimi run acceptance-bootstrap` (or equivalent for your agent)
 3. Get the report `.backlog/onboarding-{date}.md`
 
 **Option B — manual assessment:**
@@ -80,7 +80,7 @@
 3. For each skill you plan to use:
    - Open `CHECKLIST.md`
    - Mark items `[-]` (N/A) or `[ ]` (we will check)
-4. If >50% of a skill does not apply — do not adapt it, create a new one ([`NEW-SKILL-TEMPLATE.md`](../templates/skills/skeptical-ai-bootstrap/NEW-SKILL-TEMPLATE.md))
+4. If >50% of a skill does not apply — do not adapt it, create a new one ([`NEW-SKILL-TEMPLATE.md`](../templates/skills/acceptance-bootstrap/NEW-SKILL-TEMPLATE.md))
 
 **Output:** adapted checklists that do not generate false positives.
 
@@ -300,7 +300,7 @@ Go through this list after implementation. If everything is checked — guardrai
 
 ## FAQ
 
-**Q: We use .NET Framework 4.8. Is SAE applicable?**  
+**Q: We use .NET Framework 4.8. Is Agentic Acceptance applicable?**  
 A: Yes, but adapt. Enable nullable per file (`#nullable enable`), replace NetArchTest with Roslyn analyzers, E2E — with integration tests via `HttpClient`.
 
 **Q: We have a single-project MVP, no Clean Architecture. What should architecture tests check?**  
@@ -330,14 +330,14 @@ A: Control Foundation + Change Checks + basic architecture tests are "set and fo
 
 | Stuck at step | Where to go |
 |---------------|-------------|
-| I don't understand our architecture | [`ARCHITECTURE-INVENTORY.md`](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md) |
+| I don't understand our architecture | [`ARCHITECTURE-INVENTORY.md`](../templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md) |
 | I don't know which skills to choose | [`ADAPTATION.md`](../templates/skills/ADAPTATION.md) |
 | I don't know how to configure the agent | [`docs/agents/`](agents/) → choose yours |
 | I don't understand how a control works | [README.md "How it works"](../README.md#how-it-works) + [EVIDENCE.md](EVIDENCE.md) (what each level caught) |
 | I want to perform an audit manually | [`human-audit-bridge.md`](solutions/human-audit-bridge.md) |
-| The agent does not find skills | [`INSTALL.md`](../templates/skills/skeptical-ai-bootstrap/INSTALL.md) |
-| Ready-made artifacts do not fit | [`NEW-SKILL-TEMPLATE.md`](../templates/skills/skeptical-ai-bootstrap/NEW-SKILL-TEMPLATE.md) + [`SKILL-ARCHITECTURE.md`](../templates/skills/skeptical-ai-bootstrap/SKILL-ARCHITECTURE.md) |
+| The agent does not find skills | [`INSTALL.md`](../templates/skills/acceptance-bootstrap/INSTALL.md) |
+| Ready-made artifacts do not fit | [`NEW-SKILL-TEMPLATE.md`](../templates/skills/acceptance-bootstrap/NEW-SKILL-TEMPLATE.md) + [`SKILL-ARCHITECTURE.md`](../templates/skills/acceptance-bootstrap/SKILL-ARCHITECTURE.md) |
 
 ---
 
-> **Principle:** SAE is not about perfection. It is about preventing the agent from breaking code faster than the team can fix it. Start small, add layers as the project grows.
+> **Principle:** Agentic Acceptance is not about perfection. It is about preventing the agent from breaking code faster than the team can fix it. Start small, add layers as the project grows.

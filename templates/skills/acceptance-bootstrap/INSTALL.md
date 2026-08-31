@@ -1,4 +1,4 @@
-# Installing the Skeptical AI Bootstrap Skill
+# Installing the Acceptance Bootstrap Skill
 
 ## Why
 
@@ -14,17 +14,17 @@ From the `agentic-acceptance-dotnet` repository, copy the executable skill and s
 
 ```bash
 # From the root of YOUR .NET project
-mkdir -p ./.kimi/skills/skeptical-ai-bootstrap
-cp /path/to/agentic-acceptance-dotnet/.agents/skills/skeptical-ai-bootstrap/SKILL.md ./.kimi/skills/skeptical-ai-bootstrap/
-cp -r /path/to/agentic-acceptance-dotnet/templates/skills/skeptical-ai-bootstrap/* ./.kimi/skills/skeptical-ai-bootstrap/
+mkdir -p ./.kimi/skills/acceptance-bootstrap
+cp /path/to/agentic-acceptance-dotnet/.agents/skills/acceptance-bootstrap/SKILL.md ./.kimi/skills/acceptance-bootstrap/
+cp -r /path/to/agentic-acceptance-dotnet/templates/skills/acceptance-bootstrap/* ./.kimi/skills/acceptance-bootstrap/
 ```
 
 Or manually:
-- Create `.kimi/skills/skeptical-ai-bootstrap/` in your project
-- Copy `.agents/skills/skeptical-ai-bootstrap/SKILL.md`
-- Copy the needed supporting templates from `templates/skills/skeptical-ai-bootstrap/`
+- Create `.kimi/skills/acceptance-bootstrap/` in your project
+- Copy `.agents/skills/acceptance-bootstrap/SKILL.md`
+- Copy the needed supporting templates from `templates/skills/acceptance-bootstrap/`
 
-**Language:** all operational skill templates in `templates/skills/` are English-only. Copy the executable `SKILL.md` from `.agents/skills/skeptical-ai-bootstrap/` and the supporting templates from `templates/skills/skeptical-ai-bootstrap/` as-is, then translate examples and thresholds into the target project's working language if needed.
+**Language:** all operational skill templates in `templates/skills/` are English-only. Copy the executable `SKILL.md` from `.agents/skills/acceptance-bootstrap/` and the supporting templates from `templates/skills/acceptance-bootstrap/` as-is, then translate examples and thresholds into the target project's working language if needed.
 
 ### 2. Make sure Kimi Code CLI sees the skill
 
@@ -32,17 +32,17 @@ Or manually:
 kimi skills list
 ```
 
-`skeptical-ai-bootstrap` should appear in the list.
+`acceptance-bootstrap` should appear in the list.
 
 ### 3. Run onboarding
 
 ```bash
-kimi run skeptical-ai-bootstrap
+kimi run acceptance-bootstrap
 ```
 
 Or in chat with Kimi:
 ```
-@skeptical-ai-bootstrap scan this project in standard mode
+@acceptance-bootstrap scan this project in standard mode
 ```
 
 ### 4. Get the report
@@ -62,9 +62,9 @@ The agent will find `.csproj`, assess layers, and propose a plan.
 
 ## One-Shot Tool
 
-`skeptical-ai-bootstrap` is **not a permanent skill**. Run it once, take the
+`acceptance-bootstrap` is **not a permanent skill**. Run it once, take the
 `.backlog/onboarding-{date}.md` report, then remove the skill from your project
-(`.kimi/skills/skeptical-ai-bootstrap/` or the equivalent folder). Keep it only
+(`.kimi/skills/acceptance-bootstrap/` or the equivalent folder). Keep it only
 if you plan periodic maturity re-assessment — in that case, reference it from
 your fork rather than an ad-hoc copy.
 

@@ -1,5 +1,5 @@
 ---
-name: skeptical-ai-bootstrap
+name: acceptance-bootstrap
 description: >
   Scans a .NET project through the Engineering Assurance Levels model,
   determines guardrail maturity, and produces a backlog.
@@ -7,7 +7,7 @@ description: >
   the agent proposes creating new skills instead of forcing foreign patterns.
 ---
 
-# Skeptical AI Bootstrap — Bootstrap Agent
+# Acceptance Bootstrap — Bootstrap Agent
 
 ## Context Marker
 
@@ -49,7 +49,7 @@ You are an **assessment and planning** agent, NOT a code generation agent.
 You are inside the `agentic-acceptance-dotnet` repository.
 This is a project-scope skill.
 
-**Main task:** help the user apply the Skeptical AI Engineering methodology to an **external** .NET project.
+**Main task:** help the user apply the Agentic Acceptance methodology to an **external** .NET project.
 
 **If the user asks to modify the methodology repository itself** — follow the rules in the root `AGENTS.md`. Do NOT modify this repo unless explicitly asked.
 
@@ -82,10 +82,10 @@ An artifact is classified by **what it verifies**, not by where it runs.
 
 1. Find `.sln`, all `.csproj`, `Directory.Build.props`
 2. Check if `ARCHITECTURE-INVENTORY.md` exists in the project. If yes — use it as ground truth instead of guessing.
-   If not — propose creating one from the template [`ARCHITECTURE-INVENTORY.md`](../../../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md).
+   If not — propose creating one from the template [`ARCHITECTURE-INVENTORY.md`](../../../templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md).
 3. Check if `DECISION-GUARDS.md` exists (or a similar `PERF-###` / `DB-###` registry).
    If yes — use it to avoid proposing "fixes" for documented architectural compromises.
-   If not — propose creating one from the template [`DECISION-GUARDS.md`](../../../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) if conscious deviations exist.
+   If not — propose creating one from the template [`DECISION-GUARDS.md`](../../../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) if conscious deviations exist.
 4. Determine the **type of AI agent** used in the project:
    - **Kimi Code CLI** → does `.kimi/skills/` exist?
    - **Claude Code** → does `.claude/CLAUDE.md` exist?
@@ -237,7 +237,7 @@ The backlog contains 5 types of tasks:
 
 ### Phase 7: Creating New Skills (if needed)
 
-If the agent decides a new skill is needed, it uses the [`NEW-SKILL-TEMPLATE.md`](../../../templates/skills/skeptical-ai-bootstrap/NEW-SKILL-TEMPLATE.md) template.
+If the agent decides a new skill is needed, it uses the [`NEW-SKILL-TEMPLATE.md`](../../../templates/skills/acceptance-bootstrap/NEW-SKILL-TEMPLATE.md) template.
 
 **Language:** the new skill is created in the user's language (RU or EN from Phase 4).
 If the user selected Russian — generate only `SKILL.md` (RU).
@@ -261,7 +261,7 @@ If English — only `SKILL.md` (EN).
 
 ## Report Format
 
-The agent MUST generate a report using the [`REPORT-TEMPLATE.md`](../../../templates/skills/skeptical-ai-bootstrap/REPORT-TEMPLATE.md) template.
+The agent MUST generate a report using the [`REPORT-TEMPLATE.md`](../../../templates/skills/acceptance-bootstrap/REPORT-TEMPLATE.md) template.
 The report MUST contain **all 6 sections**:
 
 1. **Check structure** — what is deployed, what is in backlog, what is not applicable.

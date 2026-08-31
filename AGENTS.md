@@ -1,6 +1,6 @@
-# AGENTS.md — Skeptical AI Engineering
+# AGENTS.md — Agentic Acceptance
 
-> **Skeptical AI Engineering (SAE)** — a methodology for scaling quality control through AI agents.  
+> **Agentic Acceptance** — a methodology for scaling quality control through AI agents.  
 > This file controls AI agent behavior in this repository.
 
 ## Mission
@@ -40,8 +40,8 @@ Summary:
 
 | Step | What to do | Where to go |
 |------|-----------|-------------|
-| 0. Record architecture | Fill in assembly inventory, critical paths, and conscious deviations | [`templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md`](templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md) + [`DECISION-GUARDS.md`](templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) |
-| 1. Assess maturity | Run the onboarding skill or a manual assessment | [`.agents/skills/skeptical-ai-bootstrap/SKILL.md`](.agents/skills/skeptical-ai-bootstrap/SKILL.md) |
+| 0. Record architecture | Fill in assembly inventory, critical paths, and conscious deviations | [`templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md`](templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md) + [`DECISION-GUARDS.md`](templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) |
+| 1. Assess maturity | Run the onboarding skill or a manual assessment | [`.agents/skills/acceptance-bootstrap/SKILL.md`](.agents/skills/acceptance-bootstrap/SKILL.md) |
 | 2. Adapt | Cross out inapplicable checks for your stack | [`templates/skills/ADAPTATION.md`](templates/skills/ADAPTATION.md) |
 | 3. Constitution | Copy `rules/AGENTS_TEMPLATE.md` to your project root and adapt to your stack | [`rules/AGENTS_TEMPLATE.md`](rules/AGENTS_TEMPLATE.md) |
 | 4. Controls | Implement Assurance Levels 1→2 (tests, architecture tests, behavior checks) from the onboarding backlog | [`docs/ONBOARDING.md`](docs/ONBOARDING.md) |
@@ -90,8 +90,8 @@ If you are an AI agent reading this file in the context of a **different** repos
 | Trap description | `docs/traps/` |
 | Architecture tests | `docs/solutions/architecture-tests.md` |
 | AI development patterns | `docs/solutions/ai-patterns.md` |
-| Intentional deviations (Decision Guards) | `templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md` |
-| Project onboarding | `templates/skills/skeptical-ai-bootstrap/` |
+| Intentional deviations (Decision Guards) | `templates/skills/acceptance-bootstrap/DECISION-GUARDS.md` |
+| Project onboarding | `templates/skills/acceptance-bootstrap/` |
 | Frontier agents (Kimi, Claude Code, Codex) | `docs/agents/FRONTIER-AGENTS.md` |
 | Step-by-step agents (Cursor, OpenCode, local models) | `docs/agents/STEP-BY-STEP-AGENTS.md` |
 | Bootstrap Protocol | `docs/agents/BOOTSTRAP-PROTOCOL.md` |

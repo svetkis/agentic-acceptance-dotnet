@@ -9,7 +9,7 @@
 
 **Date:** 2026-06-15  
 **Mode:** standard  
-**Agent:** skeptical-ai-bootstrap
+**Agent:** acceptance-bootstrap
 
 ---
 

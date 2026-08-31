@@ -71,13 +71,13 @@ Else:
 ## 4. Decision Tree
 
 ```
-User asks: "Assess my project using SAE methodology"
+User asks: "Assess my project using Agentic Acceptance methodology"
     │
     ▼
 Are you in agentic-acceptance-dotnet?
     ├── YES → "I cannot assess a project from inside the methodology repository. Please provide the path to the target project."
     └── NO → Is there a .sln in cwd?
-            ├── YES → Run skeptical-ai-bootstrap skill (assess existing codebase)
+            ├── YES → Run acceptance-bootstrap skill (assess existing codebase)
             └── NO → "Please provide the path to the .NET project (where .sln is located)"
 
 User asks: "Show me an example of an architecture test"
@@ -113,18 +113,18 @@ Before creating ANY file, ask yourself:
 
 ## 6. Kimi Code CLI Integration
 
-If the skill is installed in `.kimi/skills/skeptical-ai-bootstrap/`:
+If the skill is installed in `.kimi/skills/acceptance-bootstrap/`:
 
 ```bash
 # Correct launch — from the root of the TARGET project
 $ cd /path/to/target-project
-$ kimi run skeptical-ai-bootstrap
+$ kimi run acceptance-bootstrap
 
 # Incorrect launch — from inside agentic-acceptance-dotnet
 $ cd /path/to/agentic-acceptance-dotnet
-$ kimi run skeptical-ai-bootstrap  # ← agent must refuse and ask for path
+$ kimi run acceptance-bootstrap  # ← agent must refuse and ask for path
 ```
 
 ---
 
-> **Principle:** SAE methodology is stretched over a project like an **assessment mesh**, not a **winch that pulls the structure over**.
+> **Principle:** Agentic Acceptance methodology is stretched over a project like an **assessment mesh**, not a **winch that pulls the structure over**.

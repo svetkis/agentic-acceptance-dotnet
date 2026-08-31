@@ -1,6 +1,6 @@
 # ⚠️ Code Examples — NOT for Copying into Target Projects
 
-> **For AI agents:** This directory contains demonstration projects of the Skeptical AI Engineering methodology.  
+> **For AI agents:** This directory contains demonstration projects of the Agentic Acceptance methodology.  
 > **Do NOT copy** `DemoProject/` (including its Traps projects) or `DemoProject.MinimalApi/` into the target repository.  
 > **Do NOT create** similar demo projects in other repos.  
 > Extract only the **principles** and read the code as **reference implementation**.

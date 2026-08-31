@@ -1,4 +1,4 @@
-# .NET Skeptical AI Engineering
+# .NET Agentic Acceptance
 
 AI-accelerated quality control methodology for .NET teams. Audits, review, and guardrails that used to require expensive expertise now scale.
 
@@ -20,7 +20,7 @@ This repository contains ready-made artifacts for .NET projects: rules, **skills
 
 AI agents (Cursor, Claude, Copilot) speed up code writing, but generate hidden tech debt, violate architectural boundaries, and break security. Manual review of such code becomes a bottleneck.
 
-**Skeptical AI** is a verification methodology for generated code, by analogy with Zero Trust: no agent artifact is considered correct without a deterministic check. Control moves from probabilistic prompts into deterministic pipelines.
+**Agentic Acceptance** is a verification methodology for generated code, by analogy with Zero Trust: no agent artifact is considered correct without a deterministic check. Control moves from probabilistic prompts into deterministic pipelines.
 
 ## How it works
 
@@ -70,7 +70,7 @@ dotnet build
 dotnet run --project tests/DemoProject.Tests
 
 # 3. Assess your project
-# Open .agents/skills/skeptical-ai-bootstrap/SKILL.md and run the checklist —
+# Open .agents/skills/acceptance-bootstrap/SKILL.md and run the checklist —
 # figure out what you already have and what to implement first.
 
 # 4. Adapt skills to your stack
@@ -184,7 +184,7 @@ Lost? The full knowledge map — every artifact indexed by role — lives in
 
 ## Author
 
-**Svetlana Meleshkina** — creator of the Skeptical AI Engineering methodology, speaker.
+**Svetlana Meleshkina** — creator of the Agentic Acceptance methodology, speaker.
 
 - 💬 Telegram channel: [@kot_review](https://t.me/kot_review)
 - ✉️ Telegram: [@svetkis](https://t.me/svetkis)

@@ -43,7 +43,7 @@ Thank you for your interest! This repository contains defensive artifacts for .N
 - [ ] If adding an agent — `docs/agents/` is updated
 - [ ] If adding an artifact (skill, pattern, trap) — `docs/README.md` (knowledge map), root `README.md`, and `docs/ONBOARDING.md` and `GLOSSARY.md` are updated when terms or steps change
 - [ ] If changing `README.md` — `README.ru.md` is updated in the same commit (it is a full manual mirror)
-- [ ] If changing `templates/skills/skeptical-ai-bootstrap/` — the installable counterpart in `.agents/skills/skeptical-ai-bootstrap/` and its relative links are checked in the same PR
+- [ ] If changing `templates/skills/acceptance-bootstrap/` — the installable counterpart in `.agents/skills/acceptance-bootstrap/` and its relative links are checked in the same PR
 - [ ] `dotnet build` passes without warnings (if applicable)
 - [ ] Commits follow Conventional Commits (`feat:`, `fix:`, `docs:`, `test:`)
 

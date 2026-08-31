@@ -35,7 +35,7 @@ If multiple agents are used in the project or the agent is unknown —
 use the universal `AGENTS.md` in the project root (adapted from
 [`rules/AGENTS_TEMPLATE.md`](../../rules/AGENTS_TEMPLATE.md)). Any agent reads it.
 
-Use the `skeptical-ai-bootstrap` skill for automatic scanning: it determines the
+Use the `acceptance-bootstrap` skill for automatic scanning: it determines the
 agent type and generates configuration in the correct format.
 
 ## Recommendation

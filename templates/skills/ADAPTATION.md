@@ -29,7 +29,7 @@ have such hardcoded paths.
 ## Not applicable when
 
 - The project does not match any of the technological prerequisites of the skill (e.g., no HTTP — `api-design-audit` is not applicable).
-- More than 50% of the skill's checks require adaptation — better create a new skill via `skeptical-ai-bootstrap`.
+- More than 50% of the skill's checks require adaptation — better create a new skill via `acceptance-bootstrap`.
 
 ---
 
@@ -60,7 +60,7 @@ have such hardcoded paths.
 | Projections to DTO everywhere | `performance-audit`, `code-review` → missing `AsNoTracking` on projections | ORM doesn't track projections, `AsNoTracking` not needed |
 | Worker Service / Desktop / Game (no HTTP) | `security-audit` → rate limiting, XSS, authorization attributes | No endpoints in the classical sense |
 | Worker Service / Desktop / Game | `code-review` → OpenAPI snapshot, HTTP DTO | No HTTP responses |
-| Legacy runtime (.NET Framework, etc.) | All skills → NetArchTest, modern test frameworks, Minimal API | Stack differs radically; use `skeptical-ai-bootstrap` |
+| Legacy runtime (.NET Framework, etc.) | All skills → NetArchTest, modern test frameworks, Minimal API | Stack differs radically; use `acceptance-bootstrap` |
 | Vertical Slice Architecture / other module boundaries | `code-review` → standard layer rules | Boundaries by feature, not by layer; use custom architecture test |
 | No hot path methods / not latency-sensitive | `allocation-budget-audit` | Nothing to measure |
 | No public API / docs | `spellcheck-audit` → public API names | Check only markdown / comments |
@@ -108,7 +108,7 @@ All audit skills since version 2026-06 mark findings with a confidence level:
 | `performance-audit` | ⚡ |
 | `security-audit` | 🔒 |
 | `simplicity-audit` | ✂️ |
-| `skeptical-ai-bootstrap` | 🚀 |
+| `acceptance-bootstrap` | 🚀 |
 | `task-compliance` | 📌 |
 | `tech-debt-audit` | 🔧 |
 | `test-audit` | 🧪 |
@@ -131,7 +131,7 @@ Adaptations:
 
 ### Example 2: Custom Roslyn analyzers
 
-If the project has custom analyzers with project-specific diagnostic IDs, replace the `SAE###` examples with your own IDs and add coverage rules for positive/negative cases to `analyzer-tests-audit`.
+If the project has custom analyzers with project-specific diagnostic IDs, replace the `AA###` examples with your own IDs and add coverage rules for positive/negative cases to `analyzer-tests-audit`.
 
 ---
 
@@ -139,8 +139,8 @@ If the project has custom analyzers with project-specific diagnostic IDs, replac
 
 If ready-made skills require more than 50% adaptation — don't adapt, create a new one:
 
-1. Run `skeptical-ai-bootstrap` — it provides a framework for creating a new skill
+1. Run `acceptance-bootstrap` — it provides a framework for creating a new skill
 2. Use `SKILL-ARCHITECTURE.md` to design a guardrail from scratch
 3. Use `NEW-SKILL-TEMPLATE.md` to generate files for the new skill
 
-See `templates/skills/skeptical-ai-bootstrap/SKILL-ARCHITECTURE.md`
+See `templates/skills/acceptance-bootstrap/SKILL-ARCHITECTURE.md`

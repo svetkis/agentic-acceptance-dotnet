@@ -14,7 +14,7 @@
 ## 1. The Goal (give this to the agent verbatim)
 
 ```
-Integrate Skeptical AI Engineering guardrails into this .NET project.
+Integrate Agentic Acceptance guardrails into this .NET project.
 
 Desired end state:
 1. A root AGENTS.md constitution adapted from rules/AGENTS_TEMPLATE.md
@@ -37,7 +37,7 @@ Acceptance criteria:
 - A report listing: what was reused, what was adapted, what was created, what was skipped and why.
 ```
 
-Start from the `skeptical-ai-bootstrap` skill — it performs the maturity scan and produces the backlog.
+Start from the `acceptance-bootstrap` skill — it performs the maturity scan and produces the backlog.
 
 ## 2. Shared Onboarding Prompt
 

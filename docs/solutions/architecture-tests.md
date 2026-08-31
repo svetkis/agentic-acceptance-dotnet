@@ -267,7 +267,7 @@ Project hookup:
 
 1. State the bug class: which specific agent bug this catches.
 2. Write 2-3 tiny code examples: should trigger / should not trigger.
-3. Create a `DiagnosticDescriptor` with an `SAE###` ID.
+3. Create a `DiagnosticDescriptor` with an `AA###` ID.
 4. Register a syntax or operation action.
 5. Use `SemanticModel` when the rule depends on types or symbols.
 6. Hook the analyzer with `OutputItemType="Analyzer"`.

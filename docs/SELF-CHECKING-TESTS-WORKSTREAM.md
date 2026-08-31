@@ -3,7 +3,7 @@
 > Follow-up of the completed methodology revision 2026-07-14 (METH-001…METH-024;
 > the plan document was removed after full execution — see `CHANGELOG.md` and git history).
 > **Status:** SV-001…SV-005 done; SV-006 — in progress with open blockers (see below).
-> **Practice source:** a production .NET project under SAE audit (2026-07-14).
+> **Practice source:** a production .NET project under Agentic Acceptance audit (2026-07-14).
 > The source revision is not yet fixed — **do not copy code, fixtures, or
 > configs from it**; port analyzers from principles and re-implement.
 > **Remove this document after SV-006 blockers are closed** (record in `CHANGELOG.md`).
@@ -15,7 +15,7 @@ Three distinct properties — do not merge them (see `GLOSSARY.md`):
 | Term | Origin | Meaning |
 |------|--------|---------|
 | **Self-Checking Test** | industry-standard (xUnit Test Patterns, Meszaros) | The test determines pass/fail automatically, without manual interpretation |
-| **Assertion Reachability** | SAE-specific | No successful execution path bypasses the assertions |
+| **Assertion Reachability** | methodology-specific | No successful execution path bypasses the assertions |
 | **Fault Sensitivity** | borrowed (mutation testing) | The test fails when a relevant defect is present |
 
 This workstream strengthens **assertion reachability** and **fault

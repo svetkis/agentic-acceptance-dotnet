@@ -1,4 +1,4 @@
-# DemoProject.Traps — Failing Demo for Skeptical AI Engineering
+# DemoProject.Traps — Failing Demo for Agentic Acceptance
 
 > **Intentionally broken code.** Every test here fails, demonstrating a guardrail in action.
 >

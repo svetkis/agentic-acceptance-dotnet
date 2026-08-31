@@ -11,9 +11,9 @@
 | I am a ... | Where to start |
 |------------|----------------|
 | **Newcomer** to agentic development | [GLOSSARY.md](../GLOSSARY.md) (terms) → [README.md "How it works"](../README.md#how-it-works) (levels model) → this map → `examples/DemoProject/` → [ONBOARDING.md](ONBOARDING.md) (apply to your project) |
-| **Tech Lead** implementing guardrails | [ONBOARDING.md](ONBOARDING.md) → [.agents/skills/skeptical-ai-bootstrap/SKILL.md](../.agents/skills/skeptical-ai-bootstrap/SKILL.md) → [ADAPTATION.md](../templates/skills/ADAPTATION.md) → [EVIDENCE.md](EVIDENCE.md) (what each level caught) |
+| **Tech Lead** implementing guardrails | [ONBOARDING.md](ONBOARDING.md) → [.agents/skills/acceptance-bootstrap/SKILL.md](../.agents/skills/acceptance-bootstrap/SKILL.md) → [ADAPTATION.md](../templates/skills/ADAPTATION.md) → [EVIDENCE.md](EVIDENCE.md) (what each level caught) |
 | **Developer** looking for a test pattern | [tests/patterns/](#test-patterns) → copy into your project |
-| **Implementing SAE from scratch** | [ONBOARDING.md](ONBOARDING.md) → step-by-step guide with checkpoints |
+| **Implementing Agentic Acceptance from scratch** | [ONBOARDING.md](ONBOARDING.md) → step-by-step guide with checkpoints |
 | **Auditor** preparing for an audit | [templates/skills/](#skills-audits) → take CHECKLIST.md → [human-audit-bridge.md](solutions/human-audit-bridge.md) for manual walkthrough |
 | **Contributor** | [CONTRIBUTING.md](../CONTRIBUTING.md) → "What can be added" section |
 
@@ -28,7 +28,7 @@ in the observed case, ROI, and the risk-justification principle — lives in
 
 | Level / process | What it is | Key artifacts | Extended reading |
 |-----------------|------------|---------------|------------------|
-| **Control Foundation** | Instructions for the agent before code: constitution + Decision Guards | [AGENTS_TEMPLATE.md](../rules/AGENTS_TEMPLATE.md) (+ [efcore](../rules/AGENTS_TEMPLATE.efcore.md) / [dapper](../rules/AGENTS_TEMPLATE.dapper.md) add-ons), [DECISION-GUARDS.md](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) | [ONBOARDING.md Step 3](ONBOARDING.md#step-3-write-the-constitution-control-foundation) |
+| **Control Foundation** | Instructions for the agent before code: constitution + Decision Guards | [AGENTS_TEMPLATE.md](../rules/AGENTS_TEMPLATE.md) (+ [efcore](../rules/AGENTS_TEMPLATE.efcore.md) / [dapper](../rules/AGENTS_TEMPLATE.dapper.md) add-ons), [DECISION-GUARDS.md](../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) | [ONBOARDING.md Step 3](ONBOARDING.md#step-3-write-the-constitution-control-foundation) |
 | **1. Change Checks** | Fast feedback from compiler, types, analyzers | `.editorconfig`, `Directory.Build.props`, banned APIs, `DemoProject.Analyzers` (custom Roslyn analyzers) | [architecture-tests.md §Roslyn](solutions/architecture-tests.md#11-roslyn-analyzers-as-the-default-for-c) |
 | **2. Behavior Checks** | Tests, architecture rules, ratchets, pre-commit review, scope gates | [tests/patterns/](#test-patterns), [code-review](../templates/skills/code-review/SKILL.md), [task-compliance](../templates/skills/task-compliance/SKILL.md) | [ONBOARDING.md Steps 5–7](ONBOARDING.md#step-5-implement-behavior-checks-architecture-rules) |
 | **3. System Checks** | Smoke, E2E, load — the system works as a whole | [LoadTest.cs](../tests/patterns/LoadTest.cs), [SnapshotTest.cs](../tests/patterns/SnapshotTest.cs) | [ONBOARDING.md Steps 8–9, 11](ONBOARDING.md#step-8-implement-system-checks-smoke-tests) |
@@ -75,7 +75,7 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 ## Skills (Audits)
 
 Each standalone skill = an agent role. It usually contains `SKILL.md` (instructions) + `CHECKLIST.md` (checklist).
-Exception: `templates/skills/skeptical-ai-bootstrap/` contains supporting templates; the executable bootstrap skill lives in `.agents/skills/skeptical-ai-bootstrap/`.
+Exception: `templates/skills/acceptance-bootstrap/` contains supporting templates; the executable bootstrap skill lives in `.agents/skills/acceptance-bootstrap/`.
 
 | Skill | When to run |
 |-------|-------------|
@@ -105,7 +105,7 @@ Exception: `templates/skills/skeptical-ai-bootstrap/` contains supporting templa
 | [load-test-ops](../templates/skills/load-test-ops/SKILL.md) | Before release / after infrastructure changes (load runs and trend comparison) |
 | [perf-test-authoring](../templates/skills/perf-test-authoring/SKILL.md) | When adding / changing hot paths and their budget tests |
 | [guardrails-review](../templates/skills/guardrails-review/SKILL.md) | On any change to guardrail/verifier/gate code (fail-closed adversarial audit) |
-| [skeptical-ai-bootstrap](../.agents/skills/skeptical-ai-bootstrap/SKILL.md) | Once at project start |
+| [acceptance-bootstrap](../.agents/skills/acceptance-bootstrap/SKILL.md) | Once at project start |
 | [adaptation-guide](../templates/skills/ADAPTATION.md) | Before first skill run |
 
 ### Artifact Grooming
@@ -148,8 +148,8 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [ai-patterns.md](solutions/ai-patterns.md) | 10 proven AI-driven development patterns |
 | [human-audit-bridge.md](solutions/human-audit-bridge.md) | How to use AI checklists for manual human audit |
 | [EVIDENCE.md](EVIDENCE.md) | Effectiveness metrics and ROI of the control levels (observed case), risk-justification principle for guardrails |
-| [ARCHITECTURE-INVENTORY.md](../templates/skills/skeptical-ai-bootstrap/ARCHITECTURE-INVENTORY.md) | Template for recording current architecture before implementing guardrails |
-| [DECISION-GUARDS.md](../templates/skills/skeptical-ai-bootstrap/DECISION-GUARDS.md) | Template for intentional deviation registry (`PERF-###`, `DB-###`, `AUD-###`) |
+| [ARCHITECTURE-INVENTORY.md](../templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md) | Template for recording current architecture before implementing guardrails |
+| [DECISION-GUARDS.md](../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) | Template for intentional deviation registry (`PERF-###`, `DB-###`, `AUD-###`) |
 
 ---
 
