@@ -4,19 +4,19 @@
 
 This skill is installed into **your** .NET project so that Kimi Code CLI can scan it and produce a guardrail implementation backlog.
 
-> **Repo-internal / for methodology archive.** Some artifacts referenced by this skill (`docs/agents/`, `rules/AGENTS_TEMPLATE.md`, `templates/skills/`, `examples/`, `tests/patterns/`) are part of the `dotnet-ai-guardrails` repository ecosystem. They are useful as internal self-audit of this repository, but should not be copied into another project as a mandatory ecosystem. Adapt or create your own guardrails based on the methodology, not the folder structure.
+> **Repo-internal / for methodology archive.** Some artifacts referenced by this skill (`docs/agents/`, `rules/AGENTS_TEMPLATE.md`, `templates/skills/`, `examples/`, `tests/patterns/`) are part of the `agentic-acceptance-dotnet` repository ecosystem. They are useful as internal self-audit of this repository, but should not be copied into another project as a mandatory ecosystem. Adapt or create your own guardrails based on the methodology, not the folder structure.
 
 ## Quick Install
 
 ### 1. Copy the skill into your project
 
-From the `dotnet-ai-guardrails` repository, copy the executable skill and supporting templates into your project:
+From the `agentic-acceptance-dotnet` repository, copy the executable skill and supporting templates into your project:
 
 ```bash
 # From the root of YOUR .NET project
 mkdir -p ./.kimi/skills/skeptical-ai-bootstrap
-cp /path/to/dotnet-ai-guardrails/.agents/skills/skeptical-ai-bootstrap/SKILL.md ./.kimi/skills/skeptical-ai-bootstrap/
-cp -r /path/to/dotnet-ai-guardrails/templates/skills/skeptical-ai-bootstrap/* ./.kimi/skills/skeptical-ai-bootstrap/
+cp /path/to/agentic-acceptance-dotnet/.agents/skills/skeptical-ai-bootstrap/SKILL.md ./.kimi/skills/skeptical-ai-bootstrap/
+cp -r /path/to/agentic-acceptance-dotnet/templates/skills/skeptical-ai-bootstrap/* ./.kimi/skills/skeptical-ai-bootstrap/
 ```
 
 Or manually:
@@ -54,7 +54,7 @@ The agent will generate a `.backlog/onboarding-{date}.md` file in your project +
 If you don't want to install the skill, simply open your project in Kimi Code CLI and ask:
 
 ```
-Scan this .NET project using the Engineering Assurance Levels methodology from dotnet-ai-guardrails.
+Scan this .NET project using the Engineering Assurance Levels methodology from agentic-acceptance-dotnet.
 Produce a guardrail implementation backlog.
 ```
 
@@ -70,20 +70,20 @@ your fork rather than an ad-hoc copy.
 
 ## After Onboarding
 
-The report contains links to artifacts from `dotnet-ai-guardrails`. These links are **guidelines and examples** for your project, not a mandatory set of files to copy:
+The report contains links to artifacts from `agentic-acceptance-dotnet`. These links are **guidelines and examples** for your project, not a mandatory set of files to copy:
 
 | Artifact | Where to get |
 |----------|--------------|
-| `rules/AGENTS_TEMPLATE.md` | `dotnet-ai-guardrails/rules/AGENTS_TEMPLATE.md` |
-| `rules/CONVENTIONS.md` | `dotnet-ai-guardrails/rules/CONVENTIONS.md` |
-| Architecture tests | `dotnet-ai-guardrails/tests/patterns/ArchitectureRules.cs` |
-| Ratchet tests | `dotnet-ai-guardrails/tests/patterns/RatchetTest.cs` |
-| CI workflow | `dotnet-ai-guardrails/ci/github-actions/safe-ci.yml` |
-| Code review skill | `dotnet-ai-guardrails/templates/skills/code-review/` (English-only; adapt examples to your project language) |
-| Audits | `dotnet-ai-guardrails/templates/skills/*-audit/` (English-only; adapt examples to your project language) |
-| Grooming | `dotnet-ai-guardrails/templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` (English-only; adapt examples to your project language) |
+| `rules/AGENTS_TEMPLATE.md` | `agentic-acceptance-dotnet/rules/AGENTS_TEMPLATE.md` |
+| `rules/CONVENTIONS.md` | `agentic-acceptance-dotnet/rules/CONVENTIONS.md` |
+| Architecture tests | `agentic-acceptance-dotnet/tests/patterns/ArchitectureRules.cs` |
+| Ratchet tests | `agentic-acceptance-dotnet/tests/patterns/RatchetTest.cs` |
+| CI workflow | `agentic-acceptance-dotnet/ci/github-actions/safe-ci.yml` |
+| Code review skill | `agentic-acceptance-dotnet/templates/skills/code-review/` (English-only; adapt examples to your project language) |
+| Audits | `agentic-acceptance-dotnet/templates/skills/*-audit/` (English-only; adapt examples to your project language) |
+| Grooming | `agentic-acceptance-dotnet/templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` (English-only; adapt examples to your project language) |
 
-**Recommendation:** fork `dotnet-ai-guardrails` and reference artifacts from your fork — this way you control versions.
+**Recommendation:** fork `agentic-acceptance-dotnet` and reference artifacts from your fork — this way you control versions.
 
 ## Agent Selection
 

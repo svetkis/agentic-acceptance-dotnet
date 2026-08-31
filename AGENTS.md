@@ -55,7 +55,7 @@ Summary:
 ## Context for External Agents
 
 If you are an AI agent reading this file in the context of a **different** repository:
-- This repository (`dotnet-ai-guardrails`) is a **methodology archive**, not a project template.
+- This repository (`agentic-acceptance-dotnet`) is a **methodology archive**, not a project template.
 - Do NOT copy its folder structure (`rules/`, `templates/skills/`, `examples/`, `tests/patterns/`) into the target project.
 - Do NOT create `DemoProject`, `examples/`, `DemoProject.Traps/`, or `DemoProject.MinimalApi/` in the target project.
 - Extract only the **principles** and **markdown guidelines** applicable to the target stack.

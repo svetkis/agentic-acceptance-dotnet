@@ -6,7 +6,7 @@
 
 ![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![License MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![CI](https://github.com/svetkis/dotnet-ai-guardrails/workflows/Examples%20CI/badge.svg)
+![CI](https://github.com/svetkis/agentic-acceptance-dotnet/workflows/Examples%20CI/badge.svg)
 
 > Принципы (Decision Guards, Engineering Assurance Levels, гигиена промптов) не привязаны к стеку, но все готовые артефакты в этом репозитории — только для .NET. Для других стеков извлекайте принципы; рабочих артефактов для них здесь нет.
 
@@ -62,7 +62,7 @@ AI-агенты (Cursor, Claude, Copilot) ускоряют написание к
 
 ```bash
 # 1. Клонируй
-git clone https://github.com/svetkis/dotnet-ai-guardrails.git
+git clone https://github.com/svetkis/agentic-acceptance-dotnet.git
 
 # 2. Запусти DemoProject
 cd examples/DemoProject

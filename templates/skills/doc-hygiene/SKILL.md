@@ -8,7 +8,7 @@ description: >
 
 # Doc Hygiene Agent
 
-> **Repo-internal / for methodology archive.** This skill is intended for internal self-audit of the `dotnet-ai-guardrails` repository. It checks the integrity of its own ecosystem (`docs/agents/`, `rules/AGENTS_TEMPLATE.md`, `templates/skills/`, `examples/`). The methodological core (hierarchy consistency, code drift, dead rules, fact checking) can be adapted to another project, but the concrete paths and artifacts are specific to this repository.
+> **Repo-internal / for methodology archive.** This skill is intended for internal self-audit of the `agentic-acceptance-dotnet` repository. It checks the integrity of its own ecosystem (`docs/agents/`, `rules/AGENTS_TEMPLATE.md`, `templates/skills/`, `examples/`). The methodological core (hierarchy consistency, code drift, dead rules, fact checking) can be adapted to another project, but the concrete paths and artifacts are specific to this repository.
 
 ## Purpose and Non-Goals
 
@@ -20,7 +20,7 @@ description: >
 ## Applicability and Exclusions
 
 - Applies to repositories with hierarchical agent documentation (`AGENTS.md` at root and in subfolders) plus `docs/`, `README`, and examples.
-- Concrete paths below are specific to `dotnet-ai-guardrails`; adapt the file list when applying to another project.
+- Concrete paths below are specific to `agentic-acceptance-dotnet`; adapt the file list when applying to another project.
 - Not applicable: repositories without agent-facing rule files, or where docs are generated from a single source.
 
 ## Required Inputs

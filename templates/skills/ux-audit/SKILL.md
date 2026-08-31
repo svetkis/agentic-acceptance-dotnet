@@ -13,7 +13,7 @@ description: >
 > rules + UX Audit role active; prepend `♻️` when re-reading). The skill is
 > fully usable without this marker.
 
-> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `dotnet-ai-guardrails` repository. The methodological core (scenario analysis, states and feedback, UI race conditions, cross-layer invariants) applies to any project, but the examples are illustrations, not a universal template.
+> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `agentic-acceptance-dotnet` repository. The methodological core (scenario analysis, states and feedback, UI race conditions, cross-layer invariants) applies to any project, but the examples are illustrations, not a universal template.
 
 ## Purpose and Non-Goals
 

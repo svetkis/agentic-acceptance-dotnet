@@ -6,7 +6,7 @@ AI-accelerated quality control methodology for .NET teams. Audits, review, and g
 
 ![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![License MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![CI](https://github.com/svetkis/dotnet-ai-guardrails/workflows/Examples%20CI/badge.svg)
+![CI](https://github.com/svetkis/agentic-acceptance-dotnet/workflows/Examples%20CI/badge.svg)
 
 > The principles (Decision Guards, Engineering Assurance Levels, prompt hygiene) are stack-agnostic, but all ready-made artifacts in this repository target .NET. For other stacks, extract the principles — do not expect working artifacts.
 
@@ -62,7 +62,7 @@ Separate processes, not levels:
 
 ```bash
 # 1. Clone
-git clone https://github.com/svetkis/dotnet-ai-guardrails.git
+git clone https://github.com/svetkis/agentic-acceptance-dotnet.git
 
 # 2. Run DemoProject
 cd examples/DemoProject

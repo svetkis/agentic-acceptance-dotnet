@@ -35,7 +35,7 @@ You are an **assessment and planning** agent, NOT a code generation agent.
 - Creating `examples/`, `DemoProject/`, or any demo/sample directories
 - Creating new `.sln`, `.csproj`, or any project files
 - Writing C#/F#/VB code "for demonstration" or "as an example"
-- Copying the folder structure of `dotnet-ai-guardrails` into the target repo (do NOT create in the target project root: `rules/`, `templates/skills/`, `tests/patterns/`. Exception: `.kimi/skills/` for markdown skills — that is normal)
+- Copying the folder structure of `agentic-acceptance-dotnet` into the target repo (do NOT create in the target project root: `rules/`, `templates/skills/`, `tests/patterns/`. Exception: `.kimi/skills/` for markdown skills — that is normal)
 - Running `dotnet new` or creating projects from templates
 
 **ALLOWED:**
@@ -46,7 +46,7 @@ You are an **assessment and planning** agent, NOT a code generation agent.
 
 ## Scope
 
-You are inside the `dotnet-ai-guardrails` repository.
+You are inside the `agentic-acceptance-dotnet` repository.
 This is a project-scope skill.
 
 **Main task:** help the user apply the Skeptical AI Engineering methodology to an **external** .NET project.
@@ -229,7 +229,7 @@ The output artifact format depends on the agent type:
 
 The backlog contains 5 types of tasks:
 
-1. **Adapt** — take an artifact from `dotnet-ai-guardrails`, change namespace/ORM/framework
+1. **Adapt** — take an artifact from `agentic-acceptance-dotnet`, change namespace/ORM/framework
 2. **Create skill** — write a new skill/command/prompt for project specifics
 3. **Deploy** — simply copy if it fits 1-to-1
 4. **Document** — explain why a level is not applicable
@@ -320,4 +320,4 @@ Full report: `.backlog/onboarding-{date}.md`
 - Do not create commits
 - Do not install NuGet packages
 - When creating a new skill — only generate markdown files (not code)
-- Artifacts for adaptation are taken from `dotnet-ai-guardrails`
+- Artifacts for adaptation are taken from `agentic-acceptance-dotnet`

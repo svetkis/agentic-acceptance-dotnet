@@ -14,7 +14,7 @@ When re-reading this skill, prepend `♻️` to the skill marker.
 
 ## Principle: Skill = Role + Context + Rules + Integration
 
-Ready-made skills from `dotnet-ai-guardrails` are **examples**. They show:
+Ready-made skills from `agentic-acceptance-dotnet` are **examples**. They show:
 - How to formulate a role
 - How to structure rules
 - How to integrate with the pipeline

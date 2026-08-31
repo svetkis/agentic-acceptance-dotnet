@@ -12,7 +12,7 @@ description: >
 > **[ADAPT] Path profile:** paths like `src/*/Api/`, `src/*/Infrastructure/` used below are the DemoProject layered-layout example. Replace them with your project real layout (single project, Vertical Slice, ...) before the first run. See `ADAPTATION.md` §Path profile.
 
 
-> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `dotnet-ai-guardrails` repository. The methodological core (audit the seam, not the file; cross-layer drift; end-to-end invariants) applies to any project, but the scenario examples are illustrations, not a universal template.
+> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `agentic-acceptance-dotnet` repository. The methodological core (audit the seam, not the file; cross-layer drift; end-to-end invariants) applies to any project, but the scenario examples are illustrations, not a universal template.
 
 > Optional interaction convention (agent-specific): some agents mark an active
 > skill with an emoji in their status stack (e.g., `🧩` for this skill, prefixed

@@ -3,7 +3,7 @@ name: task-compliance
 description: Feature-scope compliance check. Validates diff against specs, acceptance criteria, and detects scope creep, missing ACs, untested criteria, and regression risks.
 ---
 
-> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `dotnet-ai-guardrails` repository. The methodological core (traceability, scope creep, hygiene checks) applies to any project, but the concrete report examples are illustrations, not a universal template.
+> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `agentic-acceptance-dotnet` repository. The methodological core (traceability, scope creep, hygiene checks) applies to any project, but the concrete report examples are illustrations, not a universal template.
 
 # Task Compliance & Traceability Agent
 

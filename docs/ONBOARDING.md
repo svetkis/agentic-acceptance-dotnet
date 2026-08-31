@@ -265,7 +265,7 @@
 | **AGENTS.md from another project** | Rules about another stack mislead the team | Write your own using [`rules/AGENTS_TEMPLATE.md`](../rules/AGENTS_TEMPLATE.md) as a template |
 | **Architecture tests without inventory** | NetArchTest configured for non-existent assemblies | Step 0 first — fix boundaries |
 | **"We are not ready for guardrails"** | Guardrails are needed exactly when an agent writes code | Start with Fast mode (1–2 days) |
-| **Cloning DemoProject** | Agent creates `examples/DemoProject/` in the target repo, copying structure from `dotnet-ai-guardrails` | `examples/` is a demonstration of the methodology, not a template to copy. Do not create demo projects in the working repo. |
+| **Cloning DemoProject** | Agent creates `examples/DemoProject/` in the target repo, copying structure from `agentic-acceptance-dotnet` | `examples/` is a demonstration of the methodology, not a template to copy. Do not create demo projects in the working repo. |
 
 ---
 

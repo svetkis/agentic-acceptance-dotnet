@@ -1,6 +1,6 @@
 # New Skill Template
 
-> Use this template when ready-made artifacts from `dotnet-ai-guardrails`
+> Use this template when ready-made artifacts from `agentic-acceptance-dotnet`
 > don't fit the project stack or architecture.
 
 ---

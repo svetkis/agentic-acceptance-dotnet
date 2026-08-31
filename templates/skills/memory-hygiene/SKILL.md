@@ -6,7 +6,7 @@ description: >
   memory and hierarchical guardrails (AGENTS.md).
 ---
 
-> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `dotnet-ai-guardrails` repository. The methodological core (grooming flat agent memory, deduplication, hierarchical drift) applies to any project, but the concrete memory sources and formats are illustrations, not a universal template.
+> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `agentic-acceptance-dotnet` repository. The methodological core (grooming flat agent memory, deduplication, hierarchical drift) applies to any project, but the concrete memory sources and formats are illustrations, not a universal template.
 
 # Memory Hygiene Agent
 

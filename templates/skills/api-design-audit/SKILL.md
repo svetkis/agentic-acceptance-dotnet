@@ -6,7 +6,7 @@ description: >
   Runs when API endpoints, DTOs, or controllers change.
 ---
 
-> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `dotnet-ai-guardrails` repository. The methodological core (HTTP statuses, pagination, DTO consistency, error handling, rate limiting) applies to any project with an HTTP API, but the examples are illustrations, not a universal template.
+> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `agentic-acceptance-dotnet` repository. The methodological core (HTTP statuses, pagination, DTO consistency, error handling, rate limiting) applies to any project with an HTTP API, but the examples are illustrations, not a universal template.
 
 # API Design Audit Agent
 

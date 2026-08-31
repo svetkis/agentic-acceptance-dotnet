@@ -12,7 +12,7 @@ Optional interaction convention (agent-specific): when this skill is active,
 add ✂️ to your STARTER_CHARACTER stack (example: `🍀 ✂️`). Prepend `♻️` when
 re-reading the skill. The skill is fully usable without emoji markers.
 
-> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `dotnet-ai-guardrails` repository. The methodological core (accidental complexity, pattern overuse, data bloat) applies to any project, but the metrics and examples are illustrations, not a universal template.
+> **Repo-internal / for methodology archive.** This skill describes a methodological guardrail inside the `agentic-acceptance-dotnet` repository. The methodological core (accidental complexity, pattern overuse, data bloat) applies to any project, but the metrics and examples are illustrations, not a universal template.
 
 ## Purpose and Non-Goals
 
