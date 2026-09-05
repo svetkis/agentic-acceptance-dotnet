@@ -43,7 +43,7 @@ created by agents focused on features. Do not write new tests — find gaps.
 - [ ] For each service — is there a test file? (not indirectly through other tests)
 - [ ] Are public methods covered? (not only happy path)
 - [ ] Are edge cases covered: errors, `null`, empty collections, boundary values?
-- [ ] For user input / parsers / normalizers: is there at least one property-based test (generator + invariant), not only hand-picked examples? ([PropertyBasedTest.cs](../../tests/patterns/PropertyBasedTest.cs))
+- [ ] For user input / parsers / normalizers: is there at least one property-based test (generator + invariant), not only hand-picked examples? ([PropertyBasedTest.cs](../../../tests/patterns/PropertyBasedTest.cs))
 - [ ] Are there concurrency tests (race conditions)?
 
 ### Endpoints
