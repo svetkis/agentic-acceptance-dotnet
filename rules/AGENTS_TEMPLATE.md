@@ -161,6 +161,9 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 
 - Intentional deviation from standard must be documented with ID: `PERF-###`, `DB-###`, `AUD-###`
 - IDs must be unique — checked by architectural test
+- The registry link is verified in **both** directions by architectural test: every entry's
+  code reference points to an existing file, and the ID appears in that file
+  (see `tests/patterns/DecisionGuardLinkTest.cs`)
 - Example: `// PERF-022: QueryFilter removed — JOIN added 3ms to every query`
 - Full registry template: [`DECISION-GUARDS.md`](../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md)
 

@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `tests/patterns/DecisionGuardLinkTest.cs` — test pattern: decision registry verified in both directions (unique IDs, code links resolve, ID present in the linked file); generalized from a production adaptation.
+- `docs/traps/testing.md#false-green-gate` — "False-Green Gate" trap: a gate over an external data source answers "clean" when the source stopped serving data; solution — canary (known-bad input) + tri-state exit codes, fail closed on "inconclusive".
+- `rules/AGENTS_TEMPLATE.md` — Decision Guards section now prescribes the bidirectional registry↔code link check (`DecisionGuardLinkTest.cs`).
 - `templates/skills/external-contract-verification/`, `templates/skills/load-test-ops/`, `templates/skills/perf-test-authoring/`, `templates/skills/guardrails-review/` — four skills restored from project-specific adaptations that survived in global agent skill directories after the original disk was lost; generalized to stack-neutral form.
 - `docs/agents/STEP-BY-STEP-AGENTS.md` — Cursor IDE integration (`.cursorrules`, `.cursor/rules/`, Composer mode).
 - `docs/obstacles/context-rot.md` — "Context Rot" obstacle and compensation via stateless guardrails.

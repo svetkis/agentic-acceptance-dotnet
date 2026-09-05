@@ -46,6 +46,70 @@ For two weeks the team thinks everything is checked. In reality:
 See `tests/conventions/TUnit_Guide.md` and `ci/github-actions/safe-ci.yml`
 
 
+## False-Green Gate
+### Scenario
+
+A gate queries an external data source: `dotnet list package --vulnerable` against a
+corporate NuGet proxy, a scanner against a mirrored advisory database, a link checker
+against a caching proxy. The source stops serving the data — a v2 proxy feed does not
+implement the `VulnerabilityInfo` resource, a mirror is stale, an endpoint silently
+returns an empty result.
+
+The gate answers "no findings" with exit code 0. CI is green.
+
+### Why This Is Dangerous
+
+"Source did not answer" and "source answered: clean" produce **identical output**. The
+team reads green as "checked and clean" while the gate has been verifying nothing —
+possibly since the day it was added. This is the gate-level generalization of
+false safety: the runner-level version is a broken test count, this one is a broken
+evidence source.
+
+Production case (2026-09-05): a project restoring through a corporate Artifactory
+NuGet proxy ran `dotnet list package --vulnerable`; a solution containing
+`Newtonsoft.Json 12.0.1` (GHSA-5crp-9r3c-p9vr, High) reported "has no vulnerable
+packages" through the proxy and the same command against `api.nuget.org` reported the
+advisory. The audit had been green for the wrong reason.
+
+### Root Causes
+
+- A gate that treats "empty response" as "passed" (fail-open) instead of "unknown"
+- A proxy/mirror that serves packages but not the metadata resource the gate consumes
+- The gate was validated once against a working source; the source degraded later and
+  nothing re-detected it
+
+### Solution
+
+1. **Positive control (canary).** Before the real check, run the gate against an input
+   with a **known finding** — e.g. a throwaway project referencing a package version
+   with a public advisory that will not be retroactively withdrawn. If the canary
+   produces no finding, the evidence source is unavailable and the run is inconclusive.
+2. **Tri-state exit codes.** `0` = clean, `1` = findings, `2` = **inconclusive**
+   (canary silent, source unreachable, partial restore). CI treats `2` as a failure —
+   the gate fails closed.
+3. **Separate the data path from the evidence path** when they need different sources:
+   restore through the corporate proxy, run the vulnerability check with `--source`
+   pointing at a feed that actually serves advisories. Scope the override to the
+   check only, so routine restores stay on the corporate feed.
+4. Detect inconclusive output explicitly (network errors, `NU####` codes, partial
+   restore) in addition to the canary — some failures return exit code 0.
+
+### Related Traps
+
+- [false-safety](testing.md#false-safety) — the runner-level instance: green CI with
+  zero tests executed. Same disease (a gate green for the wrong reason), different
+  layer; the "0 tests ran" guard does not detect a dead evidence source, and a canary
+  does not detect a broken runner. You need both.
+- [non-validating-tests](testing.md#non-validating-tests) — the test-level instance.
+
+### Pattern
+
+See the `run-and-verify-tests.sh` idea applied to evidence sources: canary check +
+tri-state exit in a `scripts/check-dependencies.sh`-style audit script. The general
+rule: **any gate over an external source must contain a known-bad input that it is
+required to catch.**
+
+
 ## Non-Validating Tests
 > **Status:** in force — wired into `rules/AGENTS_TEMPLATE.md` (Tests), Test Audit and Mutation Audit skills. Part of the [Self-Checking Tests workstream](../SELF-CHECKING-TESTS-WORKSTREAM.md) (SV-006 analyzer blockers still open).
 

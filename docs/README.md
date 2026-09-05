@@ -65,6 +65,7 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **DependencyDriftTest** | Cyclic dependencies between projects and layer drift | [tests/patterns/DependencyDriftTest.cs](../tests/patterns/DependencyDriftTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/DependencyDriftTest.cs` |
 | **EntityLeakTest** | Application interfaces do not return Domain Entity (ratchet) | [tests/patterns/EntityLeakTest.cs](../tests/patterns/EntityLeakTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/EntityLeakTest.cs` |
 | **StronglyTypedIds** | Domain entities must use strongly typed IDs, not raw Guid/string/int | [tests/patterns/StronglyTypedIds.cs](../tests/patterns/StronglyTypedIds.cs) | `examples/DemoProject/tests/DemoProject.Tests/StronglyTypedIds.cs` |
+| **DecisionGuardLinkTest** | Decision registry does not rot: unique IDs, code links resolve, ID present in the linked file | [tests/patterns/DecisionGuardLinkTest.cs](../tests/patterns/DecisionGuardLinkTest.cs) | — |
 | **BUG_TEMPLATE** | Regression test format | [tests/conventions/BUG_TEMPLATE.cs](../tests/conventions/BUG_TEMPLATE.cs) | — |
 | **TUnit_Guide** | Test conventions | [tests/conventions/TUnit_Guide.md](../tests/conventions/TUnit_Guide.md) | — |
 | **AnalyzerDiagnostics** | Catalog of custom Roslyn analyzer diagnostics (SAE001-SAE009) | [tests/conventions/AnalyzerDiagnostics.md](../tests/conventions/AnalyzerDiagnostics.md) | `examples/DemoProject/src/DemoProject.Analyzers/` |
@@ -137,6 +138,7 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [dependency-drift](traps/code-quality.md#dependency-drift) | +1 using/#include closes a cycle in the dependency graph | [DependencyDriftTest.cs](../tests/patterns/DependencyDriftTest.cs) |
 | [over-engineering](traps/agent-behavior.md#over-engineering) | Agent builds an architectural cathedral instead of a simple solution | [simplicity-audit](../templates/skills/simplicity-audit/SKILL.md) |
 | [non-validating-tests](traps/testing.md#non-validating-tests) | Test is green but cannot fail when behavior breaks | [test-audit](../templates/skills/test-audit/SKILL.md), [mutation-audit](../templates/skills/mutation-audit/SKILL.md) |
+| [false-green-gate](traps/testing.md#false-green-gate) | Gate over an external source answers "clean" when the source stopped serving data | canary + tri-state exit codes in audit scripts |
 
 ---
 
