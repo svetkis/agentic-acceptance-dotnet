@@ -145,9 +145,12 @@
 3. **Snapshot test:** if there is an API — add an OpenAPI snapshot test ([`SnapshotTest.cs`](../tests/patterns/SnapshotTest.cs))
 4. **Characterization tests:** capture behavior of critical algorithms (see [`ai-patterns.md`](solutions/ai-patterns.md))
 5. If using TUnit — read [`TUnit_Guide.md`](../tests/conventions/TUnit_Guide.md)
+6. **Server-side merge gate:** configure repository settings so the gate cannot be bypassed locally — no merge without a green pipeline (skipped ≠ green), no direct push to the default branch, no force push to feature branches ([`repository-settings-as-guardrails.md`](solutions/repository-settings-as-guardrails.md))
 
 **Readiness criterion:**
 - CI fails if `0 tests ran`
+- MR/PR does not merge without a green pipeline
+- Direct push to the default branch is closed for everyone
 - Every `fix:` commit has a `BUG*Tests.cs`
 - Backend changed DTO → snapshot test fails
 
@@ -278,6 +281,7 @@ Go through this list after implementation. If everything is checked — guardrai
 - [ ] `dotnet build` fails on warnings
 - [ ] Architecture tests pass (NetArchTest or equivalent)
 - [ ] `run-and-verify-tests.sh` checks that tests actually ran
+- [ ] MR/PR cannot merge without a green pipeline; direct push to the default branch is closed (see [`repository-settings-as-guardrails.md`](solutions/repository-settings-as-guardrails.md))
 
 ### Behavior Checks (tests, review) + System Checks (Should have)
 - [ ] Regression tests cover all reproducible bug fixes (capability: no closed bug without a `BUG###_` test or a justified alternative)
