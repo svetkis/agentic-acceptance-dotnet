@@ -859,6 +859,243 @@ public class AnalyzerTests
             .Because("Only methods decorated with a test attribute are analyzed.");
     }
 
+    [Test]
+    public async Task LayerGuardAnalyzer_FlagsDbContextOutsideInfrastructure()
+    {
+        const string code = """
+            namespace DemoProject.Persistence
+            {
+                public class AppDbContext : DbContext { }
+
+                public class DbContext { }
+            }
+
+            namespace DemoProject.Api.Controllers
+            {
+                using DemoProject.Persistence;
+
+                public class BookingController
+                {
+                    private AppDbContext _db;
+
+                    public object Get() => new AppDbContext();
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<LayerGuardAnalyzer>(code);
+
+        await Assert.That(diagnostics)
+            .Contains(d => d.Id == LayerGuardAnalyzer.DbContextOutsideInfrastructureId)
+            .Because("A DbContext used in the API layer must trigger SAE010 at compile time.");
+    }
+
+    [Test]
+    public async Task LayerGuardAnalyzer_IgnoresDbContextInsideInfrastructure()
+    {
+        const string code = """
+            namespace DemoProject.Persistence
+            {
+                public class DbContext { }
+            }
+
+            namespace DemoProject.Infrastructure
+            {
+                using DemoProject.Persistence;
+
+                public class AppDbContext : DbContext { }
+
+                public class BookingRepository
+                {
+                    private readonly AppDbContext _db;
+
+                    public BookingRepository(AppDbContext db) => _db = db;
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<LayerGuardAnalyzer>(code);
+
+        await Assert.That(diagnostics)
+            .DoesNotContain(d => d.Id == LayerGuardAnalyzer.DbContextOutsideInfrastructureId)
+            .Because("DbContext usage inside the Infrastructure layer is the intended design.");
+    }
+
+    [Test]
+    public async Task LayerGuardAnalyzer_FlagsDomainEntityInApiLayer()
+    {
+        const string code = """
+            namespace DemoProject.Domain
+            {
+                public class Booking { }
+            }
+
+            namespace DemoProject.Api.Controllers
+            {
+                using DemoProject.Domain;
+
+                public class BookingController
+                {
+                    public Booking Get() => new Booking();
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<LayerGuardAnalyzer>(code);
+
+        await Assert.That(diagnostics)
+            .Contains(d => d.Id == LayerGuardAnalyzer.DomainEntityInApiLayerId)
+            .Because("A domain entity returned from the API layer must trigger SAE011 at compile time.");
+    }
+
+    [Test]
+    public async Task LayerGuardAnalyzer_IgnoresDomainEntityInApplicationLayer()
+    {
+        const string code = """
+            namespace DemoProject.Domain
+            {
+                public class Booking { }
+            }
+
+            namespace DemoProject.Application
+            {
+                using DemoProject.Domain;
+
+                public class BookingService
+                {
+                    public Booking Load() => new Booking();
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<LayerGuardAnalyzer>(code);
+
+        await Assert.That(diagnostics)
+            .IsEmpty()
+            .Because("The Application layer may work with domain entities; only the API layer leaks the contract.");
+    }
+
+    [Test]
+    public async Task LayerGuardAnalyzer_FlagsQueryThatMutatesState()
+    {
+        const string code = """
+            namespace DemoProject.Application;
+
+            using DemoProject.Domain;
+
+            public class BookingState
+            {
+                public string Status { get; set; } = string.Empty;
+            }
+
+            public class BookingQueryService
+            {
+                [Query]
+                public BookingState Load(BookingState booking)
+                {
+                    booking.Status = "confirmed";
+                    return booking;
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<LayerGuardAnalyzer>(code,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .Contains(d => d.Id == LayerGuardAnalyzer.QueryMutatesStateId)
+            .Because("A member assignment inside a [Query] method must trigger SAE012.");
+    }
+
+    [Test]
+    public async Task LayerGuardAnalyzer_FlagsQueryThatCallsSaveChanges()
+    {
+        const string code = """
+            namespace DemoProject.Application;
+
+            using DemoProject.Domain;
+
+            public class BookingQueryService
+            {
+                [Query]
+                public object Load(AppDb db)
+                {
+                    db.SaveChanges();
+                    return db;
+                }
+            }
+
+            public class AppDb
+            {
+                public void SaveChanges() { }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<LayerGuardAnalyzer>(code,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .Contains(d => d.Id == LayerGuardAnalyzer.QueryMutatesStateId)
+            .Because("A SaveChanges call inside a [Query] method must trigger SAE012.");
+    }
+
+    [Test]
+    public async Task LayerGuardAnalyzer_IgnoresReadOnlyQuery()
+    {
+        const string code = """
+            namespace DemoProject.Application;
+
+            using DemoProject.Domain;
+
+            public class BookingQueryService
+            {
+                [Query]
+                public BookingStatus Load(Booking booking)
+                {
+                    var status = booking.Status;
+                    return status;
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<LayerGuardAnalyzer>(code,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .DoesNotContain(d => d.Id == LayerGuardAnalyzer.QueryMutatesStateId)
+            .Because("A read-only [Query] method must not trigger SAE012.");
+    }
+
+    [Test]
+    public async Task LayerGuardAnalyzer_IgnoresMutationOutsideQuery()
+    {
+        const string code = """
+            namespace DemoProject.Application;
+
+            using DemoProject.Domain;
+
+            public class BookingState
+            {
+                public string Status { get; set; } = string.Empty;
+            }
+
+            public class BookingCommandService
+            {
+                public void Confirm(BookingState booking)
+                {
+                    booking.Status = "confirmed";
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<LayerGuardAnalyzer>(code,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .DoesNotContain(d => d.Id == LayerGuardAnalyzer.QueryMutatesStateId)
+            .Because("Mutations are allowed in commands — only the [Query] read path is restricted.");
+    }
+
     private static async Task AssertSingleDiagnosticAsync(string sourceCode, string expectedId, string expectedSnippet)
     {
         var diagnostics = await RunAnalyzerAsync(sourceCode);

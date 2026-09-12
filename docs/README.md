@@ -70,7 +70,7 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **DecisionGuardLinkTest** | Decision registry does not rot: unique IDs, code links resolve, ID present in the linked file | [tests/patterns/DecisionGuardLinkTest.cs](../tests/patterns/DecisionGuardLinkTest.cs) | — |
 | **BUG_TEMPLATE** | Regression test format | [tests/conventions/BUG_TEMPLATE.cs](../tests/conventions/BUG_TEMPLATE.cs) | — |
 | **TUnit_Guide** | Test conventions | [tests/conventions/TUnit_Guide.md](../tests/conventions/TUnit_Guide.md) | — |
-| **AnalyzerDiagnostics** | Catalog of custom Roslyn analyzer diagnostics (SAE001-SAE009) | [tests/conventions/AnalyzerDiagnostics.md](../tests/conventions/AnalyzerDiagnostics.md) | `examples/DemoProject/src/DemoProject.Analyzers/` |
+| **AnalyzerDiagnostics** | Catalog of custom Roslyn analyzer diagnostics (SAE001-SAE012, incl. layer rules SAE010-SAE012: DbContext outside Infrastructure, domain entity in the API layer, mutating `[Query]`) | [tests/conventions/AnalyzerDiagnostics.md](../tests/conventions/AnalyzerDiagnostics.md) | `examples/DemoProject/src/DemoProject.Analyzers/` |
 | **Traps Demo** | Intentionally broken code to demonstrate guardrails (see [`TRAPS.md`](../examples/DemoProject/TRAPS.md) for the current failing-test count) | — | `examples/DemoProject/TRAPS.md` |
 | **MinimalApi Demo** | Single-project MVP without Clean Architecture — naming, banned APIs, ratchet | — | `examples/DemoProject.MinimalApi/` |
 
@@ -138,6 +138,7 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [log-leak](traps/runtime.md#log-leak) | PII leaks into logs | [PiiGuardTest.cs](../tests/patterns/PiiGuardTest.cs) |
 | [code-duplication](traps/code-quality.md#code-duplication) | Agent duplicates business logic instead of reuse | [DuplicationGuardTest.cs](../tests/patterns/DuplicationGuardTest.cs) |
 | [dependency-drift](traps/code-quality.md#dependency-drift) | +1 using/#include closes a cycle in the dependency graph | [DependencyDriftTest.cs](../tests/patterns/DependencyDriftTest.cs) |
+| [silent-culture-footguns](traps/code-quality.md#silent-culture-footguns) | Culture-dependent string/parsing defaults and timeout-less regex look idiomatic but break on other locales / ReDoS | Meziantou.Analyzer (MA0002/0006/0009/0011/0074) + BannedSymbols.txt |
 | [over-engineering](traps/agent-behavior.md#over-engineering) | Agent builds an architectural cathedral instead of a simple solution | [simplicity-audit](../templates/skills/simplicity-audit/SKILL.md) |
 | [non-validating-tests](traps/testing.md#non-validating-tests) | Test is green but cannot fail when behavior breaks | [test-audit](../templates/skills/test-audit/SKILL.md), [mutation-audit](../templates/skills/mutation-audit/SKILL.md) |
 | [false-green-gate](traps/testing.md#false-green-gate) | Gate over an external source answers "clean" when the source stopped serving data | canary + tri-state exit codes in audit scripts |

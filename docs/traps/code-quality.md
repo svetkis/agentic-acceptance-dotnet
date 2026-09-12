@@ -265,6 +265,27 @@ P:System.DateTime.Now;Use DateTime.UtcNow or TimeProvider instead. AGENT-GUARD: 
 M:Microsoft.EntityFrameworkCore.DbSet`1.FindAsync(System.Object[]);Use read-optimized queries
 ```
 
+**Full symbol syntax** — the file bans types, methods (by signature), properties, fields, events, and constructors; everything after `;` is the message shown to the agent:
+
+```txt
+# Ban a whole type
+T:System.IO.File
+
+# Ban a specific method (parameters disambiguate overloads)
+M:System.Console.WriteLine(System.String);Use ILogger instead
+
+# Ban a property
+P:System.DateTime.Now;Use DateTime.UtcNow
+
+# Ban a constructor
+M:System.Uri.#ctor(System.String);Use UriBuilder with validation
+
+# Ban a field
+F:MyLibrary.LegacyConfig.DefaultTimeout;Read from IConfiguration instead
+```
+
+Documentation ID prefix reference: `T:` type, `M:` method/constructor (`#ctor`), `P:` property, `F:` field, `E:` event. Generic arity uses a backtick: `List`1`.
+
 ```ini
 ## .editorconfig — make it an error, not a warning
 dotnet_diagnostic.RS0030.severity = error
@@ -272,7 +293,7 @@ dotnet_diagnostic.RS0030.severity = error
 
 **Where to see it:** `examples/DemoProject/BannedSymbols.txt`, `examples/DemoProject/Directory.Build.props`
 
-**Limitation:** BannedApiAnalyzers catches only specific APIs (methods, types, properties). It **does not** catch architectural layers ("Domain must not depend on Infrastructure") or measure coupling. For layers — NetArchTest, for coupling metrics — semantic tests.
+**Limitation:** BannedApiAnalyzers catches only specific APIs (methods, types, properties). It **does not** catch architectural layers ("Domain must not depend on Infrastructure") or measure coupling. For layers — NetArchTest, for layer usages inside one compilation — a custom Roslyn analyzer (`LayerGuardAnalyzer`, SAE010-SAE012), for coupling metrics — semantic tests.
 
 #### 7. Rule after cosmetic refactoring
 If a PR contains "moved header / extracted using / generalized import" and touches **>5 files** — a `grep` for new cross-layer dependencies is mandatory.
@@ -289,3 +310,74 @@ If a PR contains "moved header / extracted using / generalized import" and touch
 3. **The guard should be compile-time.** Tests can be skipped. `dotnet build` with BannedApiAnalyzers — cannot.
 4. **Entity leak is a hidden cycle.** Application → Entity does not look like a cycle in `.csproj`. But it is a semantic cycle that breaks layer isolation.
 5. **If the agent adds the same using in 3+ files of the same layer — it's a pattern.** The type lives in the wrong layer. An abstraction is needed, not copied imports.
+
+## Silent Culture Footguns
+> **TL;DR:** The agent writes `a == b`, `new Regex(pattern)`, `DateTime.TryParse(s, out _)` — code that compiles, passes tests on the dev machine, and breaks on a server with a different `CultureInfo` or dies on adversarial input (ReDoS). These bugs are invisible in review because the code looks idiomatic.
+
+| | Symptom |
+|---|---|
+| **What** | String comparison, parsing, and regex rely on implicit culture-dependent or timeout-less defaults |
+| **In review** | Looks idiomatic: `"" == ""`, `new Regex("^...")` — nothing to flag |
+| **Consequences** | Behavior differs between dev machine and server locale; ReDoS on user input |
+| **AI agent** | Replicates the most common Stack Overflow pattern, which is exactly the culture-implicit one |
+
+### Scenario
+
+The agent adds an "innocent" lookup:
+
+```csharp
+// Compiles, passes tests on a machine with InvariantCulture...
+var seen = new HashSet<string>();
+if (name == "admin") { ... }
+var iso = DateTime.Parse(raw);
+var pattern = new Regex(userSupplied);
+```
+
+All four lines are time bombs: the `HashSet` compares strings culture-sensitively, `==`
+hides the comparison semantics, `Parse` throws on a server with a different locale, and
+the regex without a timeout can hang on adversarial input.
+
+### Defense
+
+#### 1. Ready-made rules: Meziantou.Analyzer
+
+[Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer) is a free (MIT)
+Roslyn analyzer pack with 200+ rules that catch exactly this class of subtle mistakes:
+
+| Rule | Catches |
+|------|---------|
+| **MA0002** | `HashSet<string>`, `Dictionary<string, ...>`, `Distinct()` and other string-comparing calls without an explicit `StringComparer` / `IEqualityComparer<string>` — hidden culture-dependent comparison |
+| **MA0006** | `==` / `!=` on strings — use `string.Equals(a, b, StringComparison.Ordinal)` so the comparison semantics are explicit |
+| **MA0009** | Regex without a match timeout (`new Regex(...)`, `[GeneratedRegex]`) — ReDoS on adversarial input |
+| **MA0011** | `Parse` / `TryParse` / `ToString` overloads without `IFormatProvider` — culture leaks in parsing and formatting |
+| **MA0074** | Implicit culture-sensitive methods (`string.StartsWith`, `ToLower`, ...) where the default comparison is not ordinal |
+
+```xml
+<!-- Directory.Build.props -->
+<PackageReference Include="Meziantou.Analyzer" Version="2.0.0">
+  <PrivateAssets>all</PrivateAssets>
+  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+</PackageReference>
+```
+
+Adopt selectively: enable the categories that match your agent's recurring bugs in
+`.editorconfig` (`dotnet_diagnostic.MA0002.severity = error`), keep the rest off — a wall of
+unsurveyed warnings trains the agent (and the team) to ignore diagnostics. Treat it as a
+complement to `BannedApiAnalyzers` (your project-specific blacklist, see the
+[Dependency Drift](#dependency-drift) trap) and custom analyzers (your architectural rules),
+not a replacement.
+
+#### 2. Blacklist the culture-implicit APIs you never want
+
+`BannedSymbols.txt` can ban the worst offenders outright (syntax reference in the
+[Dependency Drift](#dependency-drift) trap):
+
+```txt
+M:System.DateTime.Parse(System.String);Use DateTime.ParseExact with CultureInfo or TimeProvider
+```
+
+#### Takeaways
+
+1. **Culture-dependent defaults are invisible in review.** The code looks idiomatic; the bug appears only on a differently-configured server.
+2. **ReDoS is a compile-time problem too.** A regex without a timeout is a production outage waiting for adversarial input — MA0009 makes it a squiggle.
+3. **Don't adopt 200 rules at once.** Enable what matches your agent's actual bug history; diagnostics that nobody surveys are noise.

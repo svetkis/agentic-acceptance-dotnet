@@ -255,6 +255,12 @@ For source-level C# guardrails, the default choice is a Roslyn analyzer. Regex s
 
 **Working example:** `examples/DemoProject/src/DemoProject.Analyzers/HotPathAnalyzer.cs`
 
+**Example 3 — Layers (the "DbContext in a controller" class):** `BannedApiAnalyzers` cannot express layer rules — it is a flat blacklist. `LayerGuardAnalyzer` promotes the classic NetArchTest layer rules to compile time: `SAE010` flags a DbContext created or injected outside `*.Infrastructure`, `SAE011` flags a domain entity referenced from `*.Api` / `*.Controllers` / `*.Endpoints` (return a DTO instead), and `SAE012` flags a `[Query]` method that mutates state (member assignment or `SaveChanges`/`Add`/`Remove`/`Update`) — the CQRS read path must be side-effect free. The feedback loop moves from "run architecture tests" (~minutes) to a red squiggle (~0.5 s).
+
+**Working example:** `examples/DemoProject/src/DemoProject.Analyzers/LayerGuardAnalyzer.cs`, attribute — `examples/DemoProject/src/DemoProject.Domain/QueryAttribute.cs`, diagnostics catalog — `tests/conventions/AnalyzerDiagnostics.md`.
+
+**Boundary:** assembly-dependency rules ("Domain must not reference Infrastructure") stay in NetArchTest — Roslyn sees one compilation at a time and is the wrong tool for assembly graphs. Layer rules about *usages inside one compilation* are exactly where Roslyn wins.
+
 Project hookup:
 
 ```xml
