@@ -12,3 +12,9 @@ TestResults/
 
 # NuGet
 *.nupkg
+
+# Storm Petrel baseline-rewrite artifacts (must not be committed)
+*.backup*
+# Verify snapshot first-run files (accept -> .verified.txt only)
+*.received.txt
+.*.swp

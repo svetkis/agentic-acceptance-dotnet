@@ -10,7 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TUnit" Version="1.19.74" />
+    <PackageReference Include="Scand.StormPetrel.Generator" Version="3.0.1" />
+    <PackageReference Include="TUnit" Version="1.66.27" />
+    <PackageReference Include="VarDump" Version="2.0.9" />
+    <PackageReference Include="Verify.TUnit" Version="32.0.1" />
     <PackageReference Include="NetArchTest.eNhancedEdition" Version="1.4.5" />
     <PackageReference Include="NBomber" Version="6.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />

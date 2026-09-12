@@ -1,0 +1,11 @@
+﻿{
+  Id: {
+    Value: Guid_1
+  },
+  CustomerId: {
+    Value: Guid_2
+  },
+  CustomerName: Demo Customer,
+  ScheduledAt: DateTime_1,
+  Status: Confirmed
+}

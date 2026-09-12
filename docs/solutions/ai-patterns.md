@@ -84,7 +84,22 @@ The agent, seeing that other configurations have QueryFilter, will try to "fix" 
 
 **Generalization:** Tests for JSON format, not business logic. Catch timezone errors that unit tests don't see.
 
-**Pattern:** `tests/patterns/SnapshotTest.cs`
+**Pattern:** `tests/patterns/SnapshotTest.cs` (hand-rolled, zero dependencies)
+**With a library:** `tests/patterns/VerifySnapshotTest.cs` — Verify.TUnit gives readable diffs, auto-scrubbing of `Guid`/`DateTime`, and `.received`/`.verified` workflow. Two adoption traps: (1) blindly accepting a regenerated snapshot lets a contract change slip through review; (2) Verify 33+ enables SponsorCheck — the build fails (SC021) unless the team sponsors or opts out, a licensing decision to record in DECISION-GUARDS.
+**Alternative — Storm Petrel:** baselines live in test code as ordinary values; a source generator emits a `*TestStormPetrel` copy whose manual run rewrites the baseline, so contract changes surface as code diffs in review — an agent cannot silently "accept a snapshot file". MIT, no license gates. xUnit/NUnit/MSTest work out of the box. **TUnit works with two conditions** (verified end-to-end 2026-09, TUnit 1.66.27 / Generator 3.0.1): (1) declare the `[Test]` attribute via `SCAND_STORM_PETREL_GENERATOR_CONFIG` env var (TUnit is not in the generator's default list yet — upstream PR: [storm-petrel#6](https://github.com/Scandltd/storm-petrel/pull/6)); (2) enable TUnit Reflection mode (`[assembly: TUnit.Core.ReflectionMode]` in a dedicated file) — TUnit's own source generator cannot see test classes emitted by other generators. Traps and recipe: `tests/patterns/StormPetrelSnapshotTest.cs`.
+
+#### Snapshot tooling landscape (2026-09)
+
+| Tool | ~Stars | State | License gate | TUnit | Example in this repo |
+|------|--------|-------|--------------|-------|----------------------|
+| Hand-rolled (`SnapshotTest.cs`) | — | you own it | none | ✅ | `examples/DemoProject/tests/DemoProject.Tests/SnapshotTests.cs` |
+| Verify.TUnit | ~3400 | very active, de-facto standard | ⚠️ SponsorCheck from v33 (SC021 build gate; free for non-commercial OSS with declared exemption) | ✅ | `examples/DemoProject/tests/DemoProject.Tests/VerifySnapshotTests.cs` |
+| Storm Petrel | ~10 | small but reactive | none (MIT) | ✅ with env-var config + Reflection mode | `examples/DemoProject/tests/DemoProject.Tests/StormPetrelSnapshotTests.cs` |
+| ApprovalTests.Net | ~600 | maintained, previous generation | none | ➖ not evaluated | — |
+| Snapshooter | ~400 | effectively frozen | none | ➖ | — |
+| Snapper | ~300 | minimal activity | none | ➖ | — |
+
+**How to choose:** "big but licensing-gated" vs "small but gate-free" is a deliberate trade-off — record it in DECISION-GUARDS at adoption time, not when the build breaks. Frozen projects (Snapshooter, Snapper) are a supply-chain risk for long-lived guardrail suites.
 
 ---
 
@@ -191,7 +206,7 @@ _logger.LogInformation("User {UserId} logged in", user.Id);
 | **Roslyn-first source guardrails** | C# diagnostics in IDE / `dotnet build`, not regex over strings | `examples/DemoProject/src/DemoProject.Analyzers/` |
 | **Bug-as-fixture** | One file = one bug = all code paths | `tests/conventions/BUG_TEMPLATE.cs` |
 | **Numbered optimization decisions** | `PERF-022`, `DB-013` in code comments | [`templates/skills/acceptance-bootstrap/DECISION-GUARDS.md`](../../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) |
-| **Serialization contract tests** | Tests for JSON format, not business logic | `tests/patterns/SnapshotTest.cs` |
+| **Serialization contract tests** | Tests for JSON format, not business logic | `tests/patterns/SnapshotTest.cs`, `tests/patterns/VerifySnapshotTest.cs` |
 | **Shared state contract tests** | Test for ordering-dependent failures in shared cache | `tests/patterns/ArchitectureRules.cs` |
 | **Hierarchical agent instructions** | AGENTS.md per directory, not one per project | `rules/AGENTS_TEMPLATE.md` |
 | **Concurrency with real DB** | Race condition tests on Testcontainers | `tests/patterns/` |
