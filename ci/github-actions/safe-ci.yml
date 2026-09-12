@@ -23,8 +23,11 @@ jobs:
 
       - name: Restore
         # ADAPT: pass your solution or project path, for example:
-        # dotnet restore MyProject.sln
-        run: dotnet restore
+        # dotnet restore MyProject.sln /p:NuGetAuditMode=all /p:NuGetAuditLevel=low
+        # GUARDRAIL: vulnerable/deprecated NuGet packages (incl. transitive) produce
+        # NU1901-NU1905 warnings, and the build below treats warnings as errors.
+        # See docs/solutions/nuget-audit-as-error.md
+        run: dotnet restore /p:NuGetAuditMode=all /p:NuGetAuditLevel=low
 
       # GUARDRAIL: The build must pass with no warnings
       - name: Build

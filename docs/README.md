@@ -153,6 +153,7 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [ai-patterns.md](solutions/ai-patterns.md) | 10 proven AI-driven development patterns |
 | [human-audit-bridge.md](solutions/human-audit-bridge.md) | How to use AI checklists for manual human audit |
 | [repository-settings-as-guardrails.md](solutions/repository-settings-as-guardrails.md) | Server-side repo settings (GitLab / GitHub) as guardrails: merge gate, protected branches, no force push — enforcement that cannot be bypassed locally |
+| [nuget-audit-as-error.md](solutions/nuget-audit-as-error.md) | NuGet audit warnings (NU1901–NU1905: vulnerable/deprecated packages, direct and transitive) as build errors — Level 1 gate that hardens version-audit |
 | [EVIDENCE.md](EVIDENCE.md) | Effectiveness metrics and ROI of the control levels (observed case), risk-justification principle for guardrails |
 | [ARCHITECTURE-INVENTORY.md](../templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md) | Template for recording current architecture before implementing guardrails |
 | [DECISION-GUARDS.md](../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) | Template for intentional deviation registry (`PERF-###`, `DB-###`, `AUD-###`) |
@@ -190,6 +191,7 @@ Active plans: [SELF-CHECKING-TESTS-WORKSTREAM.md](SELF-CHECKING-TESTS-WORKSTREAM
 |----------|---------|
 | [ci/github-actions/safe-ci.yml](../ci/github-actions/safe-ci.yml) | Workflow template: build + test + verification |
 | [repository-settings-as-guardrails.md](solutions/repository-settings-as-guardrails.md) | Server-side merge gate and branch protection (GitLab / GitHub) — the settings that make CI non-bypassable |
+| [nuget-audit-as-error.md](solutions/nuget-audit-as-error.md) | Vulnerable/deprecated NuGet dependencies fail the build (`NuGetAuditMode=all` + warnings-as-errors) |
 | [ci/lefthook.yml](../ci/lefthook.yml) | Template for local pre-commit hooks (lefthook): format + static checks on staged files — enforcement the agent cannot forget |
 | [ci/scripts/run-and-verify-tests.sh](../ci/scripts/run-and-verify-tests.sh) | Finds and runs all test projects via `dotnet run --project`, then verifies that tests actually ran (not 0 ran) |
 | [.github/workflows/demo-project-ci.yml](../.github/workflows/demo-project-ci.yml) | CI of this repository — builds DemoProject and DemoProject.MinimalApi |
