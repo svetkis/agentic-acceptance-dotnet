@@ -20,6 +20,11 @@
 //        reuses the original file's usings — missing `using System.Globalization;` breaks the copy's compile.
 // TRAP 4: Running the *TestStormPetrel copy rewrites baselines and leaves *.backup* files — gitignore them
 //        and never commit; also filter the copies out of regular CI runs (they are update tools, not tests).
+// TRAP 5 (field report, ~2200-test suite): `Array.Empty<string>()` inside a baseline breaks the generated
+//        copy (dumped as `ArrayStormPetrel`) — use `new string[0]` instead.
+// TRAP 6: a variable reused as `expected` twice in one method crashed the whole generator with CS8785
+//        (duplicate key in VarHelper) — fixed in upstream PR branch; a CS8785 on ANY file means the
+//        generator crashed, not that your config is wrong. Diagnose via IgnoreFilePathRegex to isolate.
 //
 // Framework adaptation: xUnit / NUnit / MSTest work out of the box with no env var and no Reflection mode.
 
