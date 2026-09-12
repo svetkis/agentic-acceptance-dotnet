@@ -76,7 +76,7 @@ wrong.
 ## 4. Verify the Guardrail Itself
 
 Guardrails rot. Verify the settings are actually in place — the same
-fail-closed principle as [`guardrails-review`](../templates/skills/guardrails-review/SKILL.md).
+fail-closed principle as [`guardrails-review`](../../templates/skills/guardrails-review/SKILL.md).
 
 **GitLab** (project id is an example):
 
@@ -105,7 +105,7 @@ gh api repos/<OWNER>/<REPO>/branches/main/protection
 ```
 
 A settings audit like this is a natural item for the
-[`guardrails-review`](../templates/skills/guardrails-review/SKILL.md) skill:
+[`guardrails-review`](../../templates/skills/guardrails-review/SKILL.md) skill:
 any change to guardrail code or gate configuration should re-verify these
 expectations.
 
