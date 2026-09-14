@@ -113,7 +113,8 @@
    ```
 2. Add `.editorconfig` with severity=error for critical rules
 3. For frontend (if any): `tsc --noEmit` in strict mode + generate types from OpenAPI
-4. Check: does `dotnet build` fail on warnings?
+4. If the project ships a contract (library / shared package / plugin host — **not** a single-deployment app): declare the public surface — PublicApiAnalyzers + internal-by-default, so surface changes fail the build and land in the unshipped-file report ([`docs/solutions/public-api-surface.md`](solutions/public-api-surface.md); working demo: `examples/DemoProject/src/DemoProject.Domain/` green, `examples/DemoProject/traps-src/DemoProject.Traps.PublicApi/` red)
+5. Check: does `dotnet build` fail on warnings?
 
 **Readiness criterion:** `dotnet build` without warnings = green CI.
 

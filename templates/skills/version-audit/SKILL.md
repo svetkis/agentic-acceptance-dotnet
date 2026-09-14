@@ -24,7 +24,7 @@ Non-goals: do not upgrade packages yourself; report versions and let the team de
 
 Division of labor: a *new* vulnerable/deprecated dependency should already fail
 the build at Level 1 (`NuGetAuditMode=all` + warnings-as-errors — see
-[`docs/solutions/nuget-audit-as-error.md`](../../docs/solutions/nuget-audit-as-error.md)).
+[`docs/solutions/nuget-audit-as-error.md`](../../../docs/solutions/nuget-audit-as-error.md)).
 This audit covers what the build gate cannot: drift between audits, advisories
 published after the last build, outdated-but-not-vulnerable versions.
 

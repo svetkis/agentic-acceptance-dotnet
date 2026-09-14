@@ -1,0 +1,46 @@
+#nullable enable
+DemoProject.Domain.Booking
+DemoProject.Domain.Booking.CustomerId.get -> DemoProject.Domain.CustomerId
+DemoProject.Domain.Booking.CustomerId.init -> void
+DemoProject.Domain.Booking.CustomerName.get -> string!
+DemoProject.Domain.Booking.CustomerName.init -> void
+DemoProject.Domain.Booking.Id.get -> DemoProject.Domain.BookingId
+DemoProject.Domain.Booking.Id.init -> void
+DemoProject.Domain.Booking.ScheduledAt.get -> System.DateTime
+DemoProject.Domain.Booking.ScheduledAt.init -> void
+DemoProject.Domain.Booking.Status.get -> DemoProject.Domain.BookingStatus
+DemoProject.Domain.Booking.Status.init -> void
+DemoProject.Domain.BookingId
+DemoProject.Domain.BookingId.BookingId() -> void
+DemoProject.Domain.BookingId.BookingId(System.Guid Value) -> void
+DemoProject.Domain.BookingId.Value.get -> System.Guid
+DemoProject.Domain.BookingId.Value.init -> void
+DemoProject.Domain.BookingIdJsonConverter
+DemoProject.Domain.BookingIdJsonConverter.BookingIdJsonConverter() -> void
+DemoProject.Domain.BookingStatus
+DemoProject.Domain.BookingStatus.Cancelled = 2 -> DemoProject.Domain.BookingStatus
+DemoProject.Domain.BookingStatus.Confirmed = 1 -> DemoProject.Domain.BookingStatus
+DemoProject.Domain.BookingStatus.Pending = 0 -> DemoProject.Domain.BookingStatus
+DemoProject.Domain.CustomerId
+DemoProject.Domain.CustomerId.CustomerId() -> void
+DemoProject.Domain.CustomerId.CustomerId(System.Guid Value) -> void
+DemoProject.Domain.CustomerId.Value.get -> System.Guid
+DemoProject.Domain.CustomerId.Value.init -> void
+DemoProject.Domain.CustomerIdJsonConverter
+DemoProject.Domain.CustomerIdJsonConverter.CustomerIdJsonConverter() -> void
+DemoProject.Domain.HotPathAttribute
+DemoProject.Domain.HotPathAttribute.HotPathAttribute() -> void
+DemoProject.Domain.IBookingService
+DemoProject.Domain.IBookingService.ConfirmAsync(DemoProject.Domain.BookingId id, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+DemoProject.Domain.IBookingService.GetByIdAsync(DemoProject.Domain.BookingId id, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<DemoProject.Domain.Booking?>!
+DemoProject.Domain.IBookingService.GetPendingAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<DemoProject.Domain.Booking!>!>!
+DemoProject.Domain.QueryAttribute
+DemoProject.Domain.QueryAttribute.QueryAttribute() -> void
+DemoProject.Domain.TypedIdJsonConverter<T>
+DemoProject.Domain.TypedIdJsonConverter<T>.TypedIdJsonConverter(System.Func<System.Guid, T>! factory) -> void
+override DemoProject.Domain.BookingId.ToString() -> string!
+override DemoProject.Domain.CustomerId.ToString() -> string!
+override DemoProject.Domain.TypedIdJsonConverter<T>.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> T
+override DemoProject.Domain.TypedIdJsonConverter<T>.Write(System.Text.Json.Utf8JsonWriter! writer, T value, System.Text.Json.JsonSerializerOptions! options) -> void
+static DemoProject.Domain.BookingId.New() -> DemoProject.Domain.BookingId
+static DemoProject.Domain.CustomerId.New() -> DemoProject.Domain.CustomerId

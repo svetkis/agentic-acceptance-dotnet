@@ -2,6 +2,13 @@
 # BannedApiAnalyzers: banned symbol usage must fail the build
 dotnet_diagnostic.RS0030.severity = error
 
+# PublicApiAnalyzers: undeclared surface changes must fail the build
+# (RS0016 added/changed symbol, RS0017 removed/renamed symbol — see docs/solutions/public-api-surface.md)
+# RS0016 is reported on the .cs location; RS0017 is reported on the .txt declaration
+# line, where .editorconfig diagnostics do not reach — both are escalated to errors
+# via <WarningsAsErrors> in the csproj.
+dotnet_diagnostic.RS0016.severity = error
+
 # SonarAnalyzer: complexity guardrails (warning for demo; use error for new projects)
 dotnet_diagnostic.S3776.severity = warning
 dotnet_diagnostic.S1541.severity = warning

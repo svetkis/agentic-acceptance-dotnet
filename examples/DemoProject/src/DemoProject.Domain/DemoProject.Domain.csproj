@@ -4,12 +4,29 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- RS0017 is reported on the PublicAPI.*.txt declaration line, where .editorconfig
+         severities do not reach — escalate both surface diagnostics here instead -->
+    <WarningsAsErrors>RS0016;RS0017</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DemoProject.Analyzers\DemoProject.Analyzers.csproj"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- GUARDRAIL: the public surface of the Domain assembly is a declared artifact.
+       Domain plays the role of a library consumed OUTSIDE this repository —
+       the situation where surface changes are contract changes. Adding, removing
+       or renaming a public symbol without updating the declaration files fails
+       the build (RS0016/RS0017). Unshipped.txt diff = the contract-change report. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <AdditionalFiles Include="PublicAPI.Shipped.txt" />
+    <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
   </ItemGroup>
 
 </Project>

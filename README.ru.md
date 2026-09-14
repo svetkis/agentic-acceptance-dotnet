@@ -31,7 +31,7 @@ AI-агенты (Cursor, Claude, Copilot) ускоряют написание к
 | Уровень | Когда срабатывает | Что входит | Главный вопрос |
 |---------|-------------------|------------|----------------|
 | **Control Foundation** | До изменения кода | `AGENTS.md`, architecture boundaries, Decision Guards, policies | Какие ограничения и решения уже приняты? |
-| **1. Change Checks** | IDE, build, pre-commit | Компилятор, nullable, анализаторы, formatting, banned APIs, предупреждения NuGet audit как ошибки (уязвимые/устаревшие пакеты) | Может ли изменение технически существовать? |
+| **1. Change Checks** | IDE, build, pre-commit | Компилятор, nullable, анализаторы, formatting, banned APIs, декларирование публичной API-поверхности, предупреждения NuGet audit как ошибки (уязвимые/устаревшие пакеты) | Может ли изменение технически существовать? |
 | **2. Behavior Checks** | Локальный или CI test run | Unit, regression, contract, архитектурные тесты, ratchets; уровень замыкает **ревью агента** (гейт перед PR) | Сохранились ли ожидаемые свойства и поведение? |
 | **3. System Checks** | PR, CI, release pipeline | Integration, характеризующие, E2E, smoke, Testcontainers, нагрузочные (NBomber), deployment verification | Работает ли система целиком? |
 | **4. Reality Checks** | По расписанию или risk-trigger | LLM-аудиты (security, database, performance, UX, API, i18n, tech-debt), дрейф сложности (когнитивная/цикломатическая через baseline + ratchet), устаревшие и уязвимые зависимости | Какие свойства кодовой базы дрейфуют со временем и не видны на уровне отдельного изменения? |
@@ -49,7 +49,7 @@ AI-агенты (Cursor, Claude, Copilot) ускоряют написание к
 | Уровень / процесс | Артефакты репозитория |
 |-------------------|-----------------------|
 | Control Foundation | `rules/AGENTS_TEMPLATE.md` (+ efcore/dapper add-ons), `rules/CONVENTIONS.md`, Decision Guards (`PERF-###`/`DB-###`) |
-| 1. Change Checks | Banned APIs, Roslyn-анализаторы (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml`, NuGet audit как ошибка сборки ([docs/solutions/nuget-audit-as-error.md](docs/solutions/nuget-audit-as-error.md)) |
+| 1. Change Checks | Banned APIs, Roslyn-анализаторы (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml`, NuGet audit как ошибка сборки ([docs/solutions/nuget-audit-as-error.md](docs/solutions/nuget-audit-as-error.md)), декларирование публичной API-поверхности ([docs/solutions/public-api-surface.md](docs/solutions/public-api-surface.md)) |
 | 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests, PropertyBasedTest), `tests/conventions/`, `templates/skills/code-review/`, `templates/skills/task-compliance/` |
 | 3. System Checks | E2E/smoke паттерны, NBomber (`tests/patterns/LoadTest.cs`) |
 | 4. Reality Checks | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, simplicity, complexity, version, test, mutation, spellcheck, business-risk) |

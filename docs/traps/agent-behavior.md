@@ -330,3 +330,59 @@ The agent generates code based on training data, not on the actual state of the 
 ### Pattern
 
 See `tests/patterns/VersionAuditTest.cs` and `templates/skills/version-audit/`
+
+## Surface Leak
+### Scenario
+
+The agent changes the public surface as a side effect of an "improvement" — and
+every check inside the repository keeps passing:
+
+```csharp
+// Agent: "Another project needs this helper — making it public"
+public static class OrderNumberFormatter  // was internal
+
+// Agent: "CalculateTotal is a misleading name — renaming"
+public decimal CalculateGrandTotal(Guid orderId)  // consumers: CS1061
+
+// Agent: "This overload has no callers in the repo — removing"
+// (no callers *in this repo*; 40 callers in consuming repositories)
+```
+
+The failure surfaces days later, in someone else's build, with no link back to
+the commit that caused it.
+
+### Consequences
+
+- Consumers of the contract break at their next build — silent for the agent's own CI
+- Accidentally exported types become load-bearing: un-exporting later is a breaking change
+- The public surface grows monotonically; each leak shrinks the refactorable area
+- In code review the change hides behind one keyword (`public`) in a large diff
+
+### Why Standard Layers Don't Catch It
+
+| Layer | Why it doesn't catch |
+|-------|----------------------|
+| Compiler | `public` compiles; renames and deletions are valid code |
+| Tests | Repo-internal tests stay green — the breakage is external |
+| Architecture | NetArchTest / layer analyzers check who references whom, not surface stability |
+| Ratchet | `RatchetTest.cs` counts public types; a rename keeps the count |
+| Code Review | A visibility change hides in a 2000-line diff; the reviewer reads code, not surface |
+
+### Solution
+
+Three layers, one report — detailed in `docs/solutions/public-api-surface.md`:
+
+1. **Internal by default** — nothing is visible outside unless deliberately exported
+2. **`InternalsVisibleTo` as a narrow allowlist** (test assembly only) — removes
+   the last legitimate excuse to write `public` for testability
+3. **PublicApiAnalyzers** (`PublicAPI.Shipped.txt` / `PublicAPI.Unshipped.txt`):
+   every public symbol is declared; adding (RS0016) or removing (RS0017) it
+   without updating the declaration fails the build
+
+The unshipped-file diff becomes the report: one file to read tells review
+"this PR changes the contract". `*REMOVED*` lines and new `InternalsVisibleTo`
+entries are the same class of signal.
+
+### Pattern
+
+See `docs/solutions/public-api-surface.md`

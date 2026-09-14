@@ -67,6 +67,23 @@ jobs:
       - name: Run Traps Tests (Expect Failure)
         run: bash ci/scripts/run-and-verify-tests.sh examples/DemoProject/tests/DemoProject.Traps.Tests/DemoProject.Traps.Tests.csproj --expect-failure
 
+      # GUARDRAIL: Surface-leak trap — a build-time guardrail, so the demo is a
+      # failing BUILD, not a failing test. Leaked/renamed/removed public symbols
+      # must fail the build with RS0016 (undeclared) and RS0017 (declared but gone).
+      - name: PublicApi Trap (Expect Build Failure RS0016/RS0017)
+        run: |
+          set +e
+          output=$(dotnet build examples/DemoProject/traps-src/DemoProject.Traps.PublicApi/DemoProject.Traps.PublicApi.csproj --configuration Release 2>&1)
+          status=$?
+          set -e
+          echo "$output"
+          if [ "$status" -eq 0 ]; then
+            echo "::error::PublicApi trap built — the surface-leak guardrail did not fire"
+            exit 1
+          fi
+          echo "$output" | grep -q "error RS0016" || { echo "::error::RS0016 (undeclared public symbol) did not fire"; exit 1; }
+          echo "$output" | grep -q "error RS0017" || { echo "::error::RS0017 (removed/renamed declared symbol) did not fire"; exit 1; }
+
   repo-quality:
     runs-on: ubuntu-latest
     name: Repo Quality (docs & skills)

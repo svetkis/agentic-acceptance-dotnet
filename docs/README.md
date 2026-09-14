@@ -29,7 +29,7 @@ in the observed case, ROI, and the risk-justification principle — lives in
 | Level / process | What it is | Key artifacts | Extended reading |
 |-----------------|------------|---------------|------------------|
 | **Control Foundation** | Instructions for the agent before code: constitution + Decision Guards | [AGENTS_TEMPLATE.md](../rules/AGENTS_TEMPLATE.md) (+ [efcore](../rules/AGENTS_TEMPLATE.efcore.md) / [dapper](../rules/AGENTS_TEMPLATE.dapper.md) add-ons), [DECISION-GUARDS.md](../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) | [ONBOARDING.md Step 3](ONBOARDING.md#step-3-write-the-constitution-control-foundation) |
-| **1. Change Checks** | Fast feedback from compiler, types, analyzers | `.editorconfig`, `Directory.Build.props`, banned APIs, `DemoProject.Analyzers` (custom Roslyn analyzers) | [architecture-tests.md §Roslyn](solutions/architecture-tests.md#11-roslyn-analyzers-as-the-default-for-c) |
+| **1. Change Checks** | Fast feedback from compiler, types, analyzers | `.editorconfig`, `Directory.Build.props`, banned APIs, `DemoProject.Analyzers` (custom Roslyn analyzers), public API surface declaration ([public-api-surface.md](solutions/public-api-surface.md)) | [architecture-tests.md §Roslyn](solutions/architecture-tests.md#11-roslyn-analyzers-as-the-default-for-c) |
 | **2. Behavior Checks** | Tests, architecture rules, ratchets, pre-commit review, scope gates | [tests/patterns/](#test-patterns), [code-review](../templates/skills/code-review/SKILL.md), [task-compliance](../templates/skills/task-compliance/SKILL.md) | [ONBOARDING.md Steps 5–7](ONBOARDING.md#step-5-implement-behavior-checks-architecture-rules) |
 | **3. System Checks** | Smoke, E2E, load — the system works as a whole | [LoadTest.cs](../tests/patterns/LoadTest.cs), [SnapshotTest.cs](../tests/patterns/SnapshotTest.cs), [VerifySnapshotTest.cs](../tests/patterns/VerifySnapshotTest.cs) | [ONBOARDING.md Steps 8–9, 11](ONBOARDING.md#step-8-implement-system-checks-smoke-tests) |
 | **4. Reality Checks** | Deep audits on schedule: security, DB, performance, business risk | [templates/skills/](#skills-audits) | [ONBOARDING.md Step 10](ONBOARDING.md#step-10-implement-reality-checks-audits) |
@@ -142,6 +142,7 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [over-engineering](traps/agent-behavior.md#over-engineering) | Agent builds an architectural cathedral instead of a simple solution | [simplicity-audit](../templates/skills/simplicity-audit/SKILL.md) |
 | [non-validating-tests](traps/testing.md#non-validating-tests) | Test is green but cannot fail when behavior breaks | [test-audit](../templates/skills/test-audit/SKILL.md), [mutation-audit](../templates/skills/mutation-audit/SKILL.md) |
 | [false-green-gate](traps/testing.md#false-green-gate) | Gate over an external source answers "clean" when the source stopped serving data | canary + tri-state exit codes in audit scripts |
+| [surface-leak](traps/agent-behavior.md#surface-leak) | Agent widens visibility "for convenience", renames or removes public symbols — repo tests stay green, consumers of the contract break | [public-api-surface.md](solutions/public-api-surface.md): PublicApiAnalyzers + internal-by-default + IVT allowlist |
 
 ---
 
@@ -155,6 +156,7 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [human-audit-bridge.md](solutions/human-audit-bridge.md) | How to use AI checklists for manual human audit |
 | [repository-settings-as-guardrails.md](solutions/repository-settings-as-guardrails.md) | Server-side repo settings (GitLab / GitHub) as guardrails: merge gate, protected branches, no force push — enforcement that cannot be bypassed locally |
 | [nuget-audit-as-error.md](solutions/nuget-audit-as-error.md) | NuGet audit warnings (NU1901–NU1905: vulnerable/deprecated packages, direct and transitive) as build errors — Level 1 gate that hardens version-audit |
+| [public-api-surface.md](solutions/public-api-surface.md) | Public API surface as a declared artifact: PublicApiAnalyzers (RS0016/RS0017, `*REMOVED*` flow) + internal-by-default + `InternalsVisibleTo` allowlist; the `PublicAPI.Unshipped.txt` diff is the contract-change report for review. Level 1; libraries and shared contracts, not single-app deployments. Working demo: `DemoProject.Domain` (green) + `DemoProject.Traps.PublicApi` (red, build-failure trap verified in CI) |
 | [EVIDENCE.md](EVIDENCE.md) | Effectiveness metrics and ROI of the control levels (observed case), risk-justification principle for guardrails |
 | [ARCHITECTURE-INVENTORY.md](../templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md) | Template for recording current architecture before implementing guardrails |
 | [DECISION-GUARDS.md](../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) | Template for intentional deviation registry (`PERF-###`, `DB-###`, `AUD-###`) |

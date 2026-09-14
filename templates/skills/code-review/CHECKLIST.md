@@ -55,6 +55,13 @@
 - [ ] Business rule not removed/smeared with contradictory semantics after refactor
 - [ ] Every finding evaluated against: "which end-to-end invariant breaks though unit tests are green?"
 
+## Public API Surface (contract projects only)
+> Skip entirely if the project is a single-deployment app. Details: `docs/solutions/public-api-surface.md`.
+- [ ] Diff of `PublicAPI.Unshipped.txt` non-empty → this PR changes the contract — flag it in the report
+- [ ] `*REMOVED*` lines → breaking change: a versioning decision, not a refactor
+- [ ] New `InternalsVisibleTo` entry → internal surface widening — justify or reject
+- [ ] No new `public` symbols "for tests" — internal + `InternalsVisibleTo` covers testability
+
 ## Report Format
 
 ```markdown

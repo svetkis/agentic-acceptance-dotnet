@@ -89,6 +89,24 @@
 - New misspellings in public API names are **FORBIDDEN**
 - Intentional domain terms use `SPELL-###` ID if they cannot be added to dictionary
 
+## Public API Surface
+
+> Copy if the project ships a contract: a library, an SDK, a shared internal package,
+> a plugin host. Skip for single-deployment applications — the tracking files would
+> be pure noise. Details and working demo: `docs/solutions/public-api-surface.md`.
+
+- Types and members are `internal` by default; `public` requires a reason — "part of
+  the contract", never convenience or testability
+- The assembly surface is a declared artifact: `PublicAPI.Shipped.txt` /
+  `PublicAPI.Unshipped.txt` (PublicApiAnalyzers). Adding, renaming or removing a
+  public symbol without updating the declaration **fails the build** (RS0016/RS0017)
+- Removals are declared with the `*REMOVED*` prefix — deleting a public symbol is
+  never an accident, it is a written statement
+- `InternalsVisibleTo` is an allowlist (test assembly only); a new entry is a
+  contract signal, same as a non-empty unshipped diff
+- A non-empty `PublicAPI.Unshipped.txt` diff means the PR changes the contract —
+  flag it as such in review
+
 ## Mutation Testing
 
 > Copy for critical assemblies before release. Skip if Stryker does not support your test framework.

@@ -1,0 +1,5 @@
+#nullable enable
+DemoProject.Traps.PublicApi.OrderNumberFormatter
+static string DemoProject.Traps.PublicApi.OrderNumberFormatter.Format(string! prefix, int sequence) -> string!
+DemoProject.Traps.PublicApi.OrderRegistry
+static void DemoProject.Traps.PublicApi.OrderRegistry.Cancel(string! orderId) -> void

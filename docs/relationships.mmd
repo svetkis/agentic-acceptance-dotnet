@@ -21,6 +21,7 @@ graph LR
     T6[Agent Circles]
     T7[P50 vs Max]
     T8[Log Leak]
+    T9[Surface Leak]
   end
 
   %% === GUARDRAILS (how we protect) ===
@@ -34,6 +35,7 @@ graph LR
     P7[Concurrency with Real DB]
     P8[Attribute-driven PII Redaction]
     P9[Shared Cache Contract Tests]
+    P10[Declared Public Surface]
   end
 
   subgraph Skills
@@ -72,6 +74,7 @@ graph LR
   O1 -->|causes| T1
   O1 -->|causes| T3
   O1 -->|causes| T8
+  O1 -->|causes| T9
   X1 -->|compensates| O1
   X2 -->|compensates| O1
   X5 -->|compensates| O1
@@ -123,6 +126,11 @@ graph LR
   X5 -->|prevents| T8
   S2 -->|detects| T8
 
+  %% === SURFACE LEAK ===
+  P10 -->|prevents| T9
+  S1 -->|catches| T9
+  S5 -->|detects| T9
+
   %% === GROOMING LOOP ===
   G1 -->|compensates| O1
   G2 -->|compensates| O1
@@ -135,6 +143,7 @@ graph LR
   P6 -->|enables| S3
   P4 -->|supports| P2
   P4 -->|supports| P8
+  P4 -->|supports| P10
   P1 -->|supports| X1
   P3 -->|supports| X1
   P5 -->|supports| X4
@@ -188,7 +197,7 @@ graph LR
 ### Obstacles (1)
 - `O1` — Context Rot — `docs/obstacles/context-rot.md`
 
-### Traps (8)
+### Traps (9)
 - `T1` — Silent Breakdown — `docs/traps/silent-breakdown.md`
 - `T2` — Context Blindness — `docs/traps/context-blindness.md`
 - `T3` — Stale Stack — `docs/traps/stale-stack.md`
@@ -197,8 +206,9 @@ graph LR
 - `T6` — Agent Circles — `docs/traps/agent-circles.md`
 - `T7` — P50 vs Max — `docs/traps/p50-vs-max.md`
 - `T8` — Log Leak — `docs/traps/log-leak.md`
+- `T9` — Surface Leak — `docs/traps/agent-behavior.md#surface-leak`
 
-### Patterns (9)
+### Patterns (10)
 - `P1` — Attribute-driven Inventory — `docs/solutions/ai-patterns.md` §1
 - `P2` — Source-level Anti-pattern Gates — `docs/solutions/ai-patterns.md` §2
 - `P3` — Bug-as-Fixture — `docs/solutions/ai-patterns.md` §3
@@ -208,6 +218,7 @@ graph LR
 - `P7` — Concurrency with Real DB — `docs/solutions/ai-patterns.md` §8
 - `P8` — Attribute-driven PII Redaction — `docs/solutions/ai-patterns.md` §9
 - `P9` — Shared Cache Contract Tests — `docs/solutions/ai-patterns.md` §6
+- `P10` — Declared Public Surface — `docs/solutions/public-api-surface.md`
 
 ### Skills (8)
 - `S1` — Code Review Agent — `templates/skills/code-review/SKILL.md`
