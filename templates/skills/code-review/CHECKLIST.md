@@ -37,7 +37,8 @@
 ## Code Quality
 - [ ] No `async void` (if applicable)
 - [ ] No empty `catch { }`
-- [ ] Dates in agreed format (UTC / ISO 8601 / project convention)
+- [ ] Dates — invariant: UTC instants everywhere backend (`DateTimeKind.Utc`, ISO 8601 with `Z` in JSON); local time only at the display boundary
+- [ ] Dates — time source: `DateTime.Now` / `DateTime.UtcNow` called directly in domain/application code — flag for injectable source (`TimeProvider.GetUtcNow()`); composition root or documented decision is OK
 - [ ] Consistent naming for DB entities / columns
 
 ## Business Logic Duplication (Semantic)

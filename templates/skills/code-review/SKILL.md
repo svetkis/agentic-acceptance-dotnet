@@ -119,7 +119,8 @@ between layers. For changes touching 2+ layers, check:
 - **Dapper / Raw SQL:** interpolation in SQL — BLOCKER; parameterization required; `CommandTimeout`; `IDbTransaction` for writes; dynamic `IN` via TVP/temp table.
 - **Architecture:** Domain MUST NOT reference Infrastructure **only if the project has layer separation**.
 - **Tests:** `[Test]` + `await Assert.That(value).IsEqualTo(expected)` (TUnit convention). No xUnit/NUnit syntax.
-- **DateTime:** All backend dates MUST be UTC (`DateTime.UtcNow`, `DateTimeKind.Utc`).
+- **DateTime — invariant:** All backend dates MUST be UTC instants (`DateTimeKind.Utc`, `timestamptz`). Local time only at the display boundary.
+- **DateTime — time source:** HOW the time is obtained is separate from the invariant. `DateTime.Now` / `DateTime.UtcNow` called directly inside domain/application code — flag it; the source SHOULD be injectable (`TimeProvider.GetUtcNow()`), direct calls are acceptable in composition root or by documented decision. DB-side defaults (`now()`, `GETUTCDATE()`) satisfy the invariant too.
 - **PostgreSQL:** Column names `snake_case` via `.HasColumnName()`.
 - **BUG Pattern:** Every bug fix MUST have `BUG###_DescriptiveName` test.
 

@@ -136,6 +136,7 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 
 - All dates in DB: **UTC**
 - Backend: `DateTime.UtcNow`, `DateTime.SpecifyKind(..., DateTimeKind.Utc)`
+- Time source: in domain/application — injectable (`TimeProvider.GetUtcNow()`); direct `DateTime.UtcNow` only in the composition root or by documented decision
 - JSON: `"2025-02-27T10:00:00Z"` (with Z!)
 - ❌ UTC→Local conversion on backend — **FORBIDDEN**
 
