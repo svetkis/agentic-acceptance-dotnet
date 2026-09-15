@@ -46,6 +46,8 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 |---------|---------|----------|-------------------------------|
 | **ArchitectureRules** | Universal layer dependency check (NetArchTest) | [tests/patterns/ArchitectureRules.cs](../tests/patterns/ArchitectureRules.cs) | `examples/DemoProject/tests/DemoProject.Tests/ArchitectureRules.cs` |
 | **EfCoreGuardRules** | EF Core-specific guardrails: `FindAsync`, `Include`, `AsNoTracking` | [tests/patterns/EfCoreGuardRules.cs](../tests/patterns/EfCoreGuardRules.cs) | `examples/DemoProject/tests/DemoProject.Tests/EfCoreGuardRules.cs` |
+| **EfMigrationConsistencyTest** | Model changed but no migration generated / hand-written hallucinated SQL: `has-pending-model-changes` + empty-database apply | [tests/patterns/EfMigrationConsistencyTest.cs](../tests/patterns/EfMigrationConsistencyTest.cs) | — |
+| **CharacterizationTest** | Golden master for spec-less code: refactor must reproduce recorded behavior; boundary-first deterministic inputs, pinned environment | [tests/patterns/CharacterizationTest.cs](../tests/patterns/CharacterizationTest.cs) | — |
 | **DapperGuardRules** | Dapper / Raw SQL guardrails: parameterization, injections, timeouts | [tests/patterns/DapperGuardRules.cs](../tests/patterns/DapperGuardRules.cs) | — |
 | **ArchUnitNetSliceTest** | Cyclic dependencies between slices (ArchUnitNET) | [tests/patterns/ArchUnitNetSliceTest.cs](../tests/patterns/ArchUnitNetSliceTest.cs) | `examples/DemoProject/tests/DemoProject.Traps.Tests/ArchUnitNetSliceTest.cs` |
 | **RatchetTest** | Public types and tests did not decrease | [tests/patterns/RatchetTest.cs](../tests/patterns/RatchetTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/RatchetTests.cs` |
