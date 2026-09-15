@@ -22,6 +22,7 @@
 
 using System.Diagnostics;
 using TUnit;
+using Testcontainers.PostgreSql;
 
 namespace Tests.Patterns;
 
@@ -56,7 +57,7 @@ public class EfMigrationConsistencyTests
     [Test]
     public async Task Migrations_ShouldApplyToEmptyDatabase()
     {
-        await using var postgres = new PostgreSqlContainerBuilder()
+        await using var postgres = new PostgreSqlBuilder()
             .WithImage("postgres:17-alpine")
             .Build();
         await postgres.StartAsync();

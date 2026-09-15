@@ -32,8 +32,8 @@ for f in tests/patterns/*.cs tests/conventions/*.cs tests/conventions/*.md; do
     check_present "$(basename "$f")" "test pattern"
 done
 
-# Docs: traps and solutions
-for f in docs/traps/*.md docs/solutions/*.md; do
+# Docs: traps, solutions, obstacles, case studies, agents
+for f in docs/traps/*.md docs/solutions/*.md docs/obstacles/*.md docs/case-studies/*.md docs/agents/*.md; do
     [ -e "$f" ] || continue
     check_present "$(basename "$f")" "doc"
 done

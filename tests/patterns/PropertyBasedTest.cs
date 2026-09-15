@@ -16,6 +16,7 @@
 // Package: dotnet add package FsCheck
 
 using FsCheck.Fluent;
+using TUnit;
 
 namespace Tests.Patterns;
 
@@ -36,6 +37,10 @@ public class PropertyBasedTests
         return "+" + digits;
     }
 
+    // Seeded: junk characters must be identical on every run — the same FsCheck
+    // seed must reproduce the exact same test cases (Random.Shared would break that).
+    private static readonly Random junkRandom = new(seed: 42);
+
     // Generator: phone-like strings — digits wrapped in separators,
     // the shapes users and bots actually send.
     private static FsCheck.Gen<string> PhoneLike =>
@@ -43,7 +48,7 @@ public class PropertyBasedTests
         from junkCount in Gen.Choose(0, 5)
         from junkFirst in Gen.Elements([true, false])
         let junk = new string(Enumerable.Range(0, junkCount)
-            .Select(_ => Junk[Random.Shared.Next(Junk.Length)]).ToArray())
+            .Select(_ => Junk[junkRandom.Next(Junk.Length)]).ToArray())
         let body = new string(digits.Select(d => (char)('0' + d)).ToArray())
         select junkFirst ? junk + body : body + junk;
 

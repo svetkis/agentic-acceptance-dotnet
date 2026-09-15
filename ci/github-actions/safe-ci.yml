@@ -25,7 +25,7 @@ jobs:
         # ADAPT: pass your solution or project path, for example:
         # dotnet restore MyProject.sln /p:NuGetAuditMode=all /p:NuGetAuditLevel=low
         # GUARDRAIL: vulnerable/deprecated NuGet packages (incl. transitive) produce
-        # NU1901-NU1905 warnings, and the build below treats warnings as errors.
+        # NU1901-NU1904 warnings (low..critical), and the build below treats warnings as errors.
         # See docs/solutions/nuget-audit-as-error.md
         run: dotnet restore /p:NuGetAuditMode=all /p:NuGetAuditLevel=low
 
@@ -90,5 +90,5 @@ jobs:
       # Or remove this job if the target project has no OpenAPI snapshot yet.
       - name: Verify OpenAPI Snapshot
         run: |
-          dotnet run --project tests/IntegrationTests/IntegrationTests.csproj --filter "FullyQualifiedName~OpenApi"
+          dotnet run --project tests/IntegrationTests/IntegrationTests.csproj -- --filter-class "*OpenApi*"
           git diff --exit-code tests/IntegrationTests/Snapshots/ || (echo "OpenAPI snapshot changed! Update it intentionally." && exit 1)

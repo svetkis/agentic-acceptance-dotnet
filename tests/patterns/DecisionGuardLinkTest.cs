@@ -17,6 +17,7 @@
 // - MSTest: [TestMethod] + Assert.IsTrue(condition, message)
 
 using System.Text.RegularExpressions;
+using TUnit;
 
 namespace Tests.Patterns;
 

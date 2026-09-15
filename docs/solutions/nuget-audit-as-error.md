@@ -19,7 +19,8 @@ between audits.
 ## 1. The Minimum: `TreatWarningsAsErrors` Already Does Half the Work
 
 Since .NET 8, `dotnet restore` runs a vulnerability audit for **direct**
-dependencies by default and emits NU1901–NU1903 as warnings. If the build
+dependencies by default (transitive since .NET 10) and emits NU1901–NU1904 as
+warnings. If the build
 already runs with `TreatWarningsAsErrors=true` (as in
 [`ci/github-actions/safe-ci.yml`](../../ci/github-actions/safe-ci.yml)),
 those warnings fail the build — no new properties required.
@@ -45,13 +46,19 @@ usually four hops down the transitive graph — exactly the place no one looks.
 
 Severity coverage per mode:
 
-| Warning | Meaning | Default |
-|---------|---------|---------|
-| NU1901 | Critical severity vulnerability | on |
-| NU1902 | High severity vulnerability | on |
-| NU1903 | Moderate severity vulnerability | on |
-| NU1904 | Low severity vulnerability | off (`NuGetAuditLevel=low` enables) |
-| NU1905 | Package is deprecated (since .NET 10) | off unless audit level allows |
+Severity codes are **ascending** — do not copy the order from memory, it is the
+most common transcription error here:
+
+| Warning | Meaning | Controlled by |
+|---------|---------|---------------|
+| NU1901 | Low severity vulnerability | `NuGetAuditLevel` (default `low` → on) |
+| NU1902 | Moderate severity vulnerability | `NuGetAuditLevel` (on at default) |
+| NU1903 | High severity vulnerability | `NuGetAuditLevel` (on at default) |
+| NU1904 | Critical severity vulnerability | `NuGetAuditLevel` (on at default) |
+| NU1905 | An audit source does not provide a vulnerability database | raised regardless of level when `auditSources` is configured but serves no vulnerability data |
+
+Deprecated packages are **not** NU1905 — deprecated-version drift is the domain
+of `dotnet list package --outdated` in the scheduled `version-audit`.
 
 In CI, the same can be passed per-run without touching the repo file:
 
@@ -112,10 +119,10 @@ for Level 4:
 
 ## Checklist (copy into your project)
 
-- [ ] Build fails on NU1901–NU1903 (either `TreatWarningsAsErrors` or audit as error) in **CI**, not just locally
+- [ ] Build fails on NU1901–NU1904 (either `TreatWarningsAsErrors` or audit as error) in **CI**, not just locally
 - [ ] `NuGetAuditMode=all` — transitive dependencies are audited
-- [ ] `NuGetAuditLevel` chosen deliberately (default `moderate`; `low` for strict)
-- [ ] Deprecated packages (NU1905) fail the build or are tracked consciously
+- [ ] `NuGetAuditLevel` chosen deliberately (default `low` — all severities reported)
+- [ ] If `auditSources` is configured: NU1905 (source without vulnerability data) is not silently suppressed
 - [ ] `NuGetAuditSuppress` entries carry owner + expiry and are verified by a lifecycle check
 - [ ] No `NoWarn>NU19xx` anywhere in the repo (grep is part of guardrails-review)
 - [ ] Central Package Management (`Directory.Packages.props`) or a conscious decision recorded otherwise

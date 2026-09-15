@@ -50,7 +50,7 @@ public class DapperGuardRules
     [Test]
     public void DapperCalls_ShouldHaveCommandTimeout()
     {
-        // Look for Dapper calls without the third commandTimeout argument
+        // Look for Dapper calls without the fourth commandTimeout argument (sql, param, transaction, commandTimeout)
         // Examples: connection.QueryAsync<Order>(sql, param) — violation
         //           connection.QueryAsync<Order>(sql, param, commandTimeout: 30) — ok
         var violations = ScanSourceFiles(

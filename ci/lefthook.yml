@@ -6,7 +6,7 @@
 # compiler (Level 1): a zero-cost gate that runs in seconds on staged files only.
 #
 # HOW TO USE:
-# 1. Install: `dotnet tool install -g lefthook` (or npm/pip/go — pick one channel)
+# 1. Install: `npm install -g lefthook` (npm/pip/go channel — there is NO lefthook package on NuGet)
 # 2. Copy this file to your project root as `lefthook.yml`
 # 3. Initialize: `lefthook install`
 # 4. Strike out commands your stack does not use

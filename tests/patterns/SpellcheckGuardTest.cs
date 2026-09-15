@@ -8,8 +8,7 @@
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
 //
 // NOTE: Requires `cspell` installed globally or locally:
-//       npm install -g cspell
-//       or dotnet tool install --global cspell
+//       npm install -g cspell   (npm only — there is no cspell package on NuGet)
 
 using System.Diagnostics;
 using TUnit;

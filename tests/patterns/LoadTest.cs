@@ -1,6 +1,7 @@
 // TRAP: The agent optimizes reads with AsNoTracking but breaks writes.
 // GUARDRAIL: NBomber shows that the $Max$ of write operations has degraded.
 
+using System.Net.Http.Json;
 using NBomber.Contracts;
 using NBomber.CSharp;
 using TUnit;
@@ -42,6 +43,6 @@ public class LoadTests
         Assert.That(writeStats.Ok.Latency.MaxMs).IsLessThanOrEqualTo(500);
 
         // GUARDRAIL: There must be no failed requests (otherwise the state machine is broken)
-        Assert.That(writeStats.Fail.Count).IsEqualTo(0);
+        Assert.That(writeStats.Fail.Request.Count).IsEqualTo(0);
     }
 }
