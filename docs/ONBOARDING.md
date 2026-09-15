@@ -144,7 +144,7 @@
 1. **"0 tests ran" check:** copy [`ci/scripts/run-and-verify-tests.sh`](../ci/scripts/run-and-verify-tests.sh) into CI
 2. **BUG-regression convention:** for every bug fix create `BUG###_DescriptiveName.cs` ([`BUG_TEMPLATE.cs`](../tests/conventions/BUG_TEMPLATE.cs))
 3. **Snapshot test:** if there is an API — add an OpenAPI snapshot test ([`SnapshotTest.cs`](../tests/patterns/SnapshotTest.cs))
-4. **Characterization tests:** capture behavior of critical algorithms (see [`ai-patterns.md`](solutions/ai-patterns.md))
+4. **Characterization tests:** capture behavior of spec-less code before refactoring — golden master pattern ([`CharacterizationTest.cs`](../tests/patterns/CharacterizationTest.cs))
 5. If using TUnit — read [`TUnit_Guide.md`](../tests/conventions/TUnit_Guide.md)
 6. **Server-side merge gate:** configure repository settings so the gate cannot be bypassed locally — no merge without a green pipeline (skipped ≠ green), no direct push to the default branch, no force push to feature branches ([`repository-settings-as-guardrails.md`](solutions/repository-settings-as-guardrails.md))
 

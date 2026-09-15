@@ -33,6 +33,8 @@ namespace Tests.Patterns;
 public class DiscountEngineCharacterizationTests
 {
     // Path to the committed golden master. It is DATA, checked into the repo.
+    // NOTE: test runners' working directory varies — anchor the path to the
+    // solution/test-project root (e.g. via TestContext / assembly location).
     private const string GoldenMasterPath = "golden/discount-engine.json";
 
     // Regenerate switch: true only on step (1), against the OLD implementation.
