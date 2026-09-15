@@ -140,6 +140,7 @@ For each level answer the questions:
 | Vertical Slice / Modular | Standard NetArchTest rules (about layers) don't apply. Need custom rules about feature boundaries | ⚠️ **Adapt**: NetArchTest with rules about `Features.X.*` → `Features.Y.*` |
 | .NET Framework 4.8 | NetArchTest works, but consider Roslyn analyzers for speed | ⚠️ **Adapt**: NetArchTest + Roslyn analyzers for critical rules |
 | Dapper (no EF) | EF-specific tests are useless | ⚠️ Adapt: remove EF rules, add Dapper rules |
+| EF Core (migrations) | `tests/patterns/EfMigrationConsistencyTest.cs` (model↔migration sync + empty-DB apply) | ✅ Adapt project path |
 | Big Ball of Mud | No layers to check | 🔴 Refactor first, then arch tests |
 | Methods with high complexity | `tests/patterns/ComplexityRatchetTest.cs` + `templates/skills/complexity-audit/` | ⚠️ **Adapt**: baseline + ratchet for legacy |
 | `[HotPath]` methods exist | `tests/patterns/AllocationBudgetTest.cs` + `templates/skills/allocation-budget-audit/` | ⚠️ **Adapt**: record allocation baseline |
@@ -171,6 +172,7 @@ For each level answer the questions:
 | Project type | Ready-made artifacts | Decision |
 |--------------|----------------------|----------|
 | Web API + OpenAPI | `tests/patterns/SnapshotTest.cs` | ✅ Adapt |
+| Legacy core, spec lost (pricing/scheduling calculations, imports) | `tests/patterns/CharacterizationTest.cs` (golden master: record old behavior before any refactor) | ✅ Adapt |
 | Web API without OpenAPI | Snapshot not applicable | ⚠️ Create contract tests via HTTP client |
 | Worker Service | No HTTP | ❌ **Create `e2e-worker`** (check queue, logs, metrics) |
 | Desktop app | No HTTP | ❌ **Create `e2e-desktop`** (UI automation or backend API) |
