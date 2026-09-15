@@ -26,9 +26,9 @@ Audit skill).
 - **Applies to:** service-layer hot paths (read paths, write paths, polling,
   cache-stampede scenarios), allocation-sensitive code, query-count-sensitive
   operations.
-- **Excludes:** one-off investigations (a quick console measurement is fine),
-  cold paths where latency does not matter, and comparisons across different
-  hardware.
+- **Excludes:** one-off investigations (a quick console measurement or a
+  BenchmarkDotNet A/B run — see `tests/patterns/BenchmarkTest.cs`), cold paths
+  where latency does not matter, and comparisons across different hardware.
 
 ## Required Inputs
 
