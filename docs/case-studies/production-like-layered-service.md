@@ -2,7 +2,7 @@
 
 > **Evidence class:** *illustrative composite* — the control set and green/trap
 > behavior are reproducible in this repository (`examples/DemoProject/`,
-> `examples/DemoProject/TRAPS.md`, 33 tests); the incident narrative is a composite
+> `examples/DemoProject/TRAPS.md`; the test count is tracked in CI, not hardcoded here); the incident narrative is a composite
 > of the trap catalog (`docs/traps/`), not a single measured
 > project. Costs are *estimates*, marked `~`.
 
@@ -53,7 +53,7 @@ the service handles PII (customer names, phones).
 
 ## Findings (reproducible + composite)
 
-- **Reproducible here:** all 33 tests green in `examples/DemoProject/`;
+- **Reproducible here:** the DemoProject suite is green in CI (`ci/scripts/run-and-verify-tests.sh`);
   every trap in `examples/DemoProject/TRAPS.md` is caught (CI job "Traps —
   Guardrails Must Catch").
 - **Composite (from `docs/traps/`):** stale cache survived compiler + unit

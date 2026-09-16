@@ -97,7 +97,7 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-специфичные правила
 │   ├── AGENTS_TEMPLATE.dapper.md # Add-on: Dapper / Raw SQL-специфичные правила
 │   └── CONVENTIONS.md            # Коммиты, воркфлоу, тесты
-├── templates/skills/                        # 28 скиллов-ролей (полный каталог: docs/README.md)
+├── templates/skills/                        # скиллы-роли (полный каталог: docs/README.md)
 ├── docs/
 │   ├── traps/                     # Ловушки агента
 │   └── solutions/

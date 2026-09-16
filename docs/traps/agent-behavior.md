@@ -10,6 +10,11 @@ The agent enters a fix → fix → fix (or fix → revert) loop when an optimiza
 
 #### Examples from Practice
 
+> Observed case (commit messages of a single project) — an observation, not a
+> benchmark. The p99 figures here and in [runtime.md](runtime.md) are different
+> scenarios: this one is the tracking-behavior fix, runtime.md's are the
+> projection + ExecuteUpdateAsync optimization.
+
 **1. NoTracking default — 21 hours in production**
 ```
 perf: QueryTrackingBehavior.NoTracking globally (p99: 2727→209ms, 13x!)

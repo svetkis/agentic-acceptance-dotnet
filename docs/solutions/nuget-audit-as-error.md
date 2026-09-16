@@ -19,8 +19,10 @@ between audits.
 ## 1. The Minimum: `TreatWarningsAsErrors` Already Does Half the Work
 
 Since .NET 8, `dotnet restore` runs a vulnerability audit for **direct**
-dependencies by default (transitive since .NET 10) and emits NU1901–NU1904 as
-warnings. If the build
+dependencies by default (transitive coverage became the SDK default in later
+versions; verify your SDK's behavior in the
+[NuGet audit docs](https://learn.microsoft.com/nuget/concepts/auditing-packages))
+and emits NU1901–NU1904 as warnings. If the build
 already runs with `TreatWarningsAsErrors=true` (as in
 [`ci/github-actions/safe-ci.yml`](../../ci/github-actions/safe-ci.yml)),
 those warnings fail the build — no new properties required.

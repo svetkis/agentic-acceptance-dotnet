@@ -122,6 +122,9 @@ In code review the diff looks benign. But that single line closes a cycle in the
 
 #### Real-world case: CERN ACTS
 
+> Reported anecdotally (conference talk); figures as told, not verified against
+> the ACTS repository. The mechanism, not the numbers, is the point.
+
 A colleague performed a "cosmetic" refactoring in the ACTS project (CERN). Added **+1 `#include` in 70 files**. In review the diff looked like a trivial header cleanup. The result — **40 new circular dependencies**. Compiler passed, tests passed, but the architecture was broken: full rebuild time grew from 12 to 47 minutes, parallel module compilation became impossible.
 
 ```cpp

@@ -16,6 +16,9 @@ A query that "on average" responds in 6ms can hang for 4.4 seconds. The agent op
 
 ### Data from Practice
 
+> Observed case (single project, NBomber spike scenario) — same evidence class
+> as [EVIDENCE.md](../EVIDENCE.md): an observation, not a benchmark.
+
 #### Before Optimization (Spike test)
 
 | Metric | Global | view_profile | view_slots |
