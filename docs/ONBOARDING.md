@@ -18,7 +18,7 @@
 | **Standard** | 2–4 weeks, incrementally | Control Foundation → Change Checks → Behavior Checks; then one control/audit per sprint | Main scenario. Most projects start here. |
 | **High-assurance** | 1–2 months, incrementally | All levels + Engineering Governance + Control Maintenance | High-risk project (fintech, health, high-load). |
 
-> **Do not try to implement everything in one day.** Guardrails work only if the team understands and supports them. Timelines above are calendar estimates; adoption is always incremental: one control at a time, verified working before the next.
+> **Do not try to implement everything in one day.** Timelines above are calendar estimates; adoption is always incremental: one control at a time, verified working before the next.
 
 ---
 
@@ -112,9 +112,13 @@
    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
    ```
 2. Add `.editorconfig` with severity=error for critical rules
-3. For frontend (if any): `tsc --noEmit` in strict mode + generate types from OpenAPI
-4. If the project ships a contract (library / shared package / plugin host — **not** a single-deployment app): declare the public surface — PublicApiAnalyzers + internal-by-default, so surface changes fail the build and land in the unshipped-file report ([`docs/solutions/public-api-surface.md`](solutions/public-api-surface.md); working demo: `examples/DemoProject/src/DemoProject.Domain/` green, `examples/DemoProject/traps-src/DemoProject.Traps.PublicApi/` red)
-5. Check: does `dotnet build` fail on warnings?
+3. Include the dead-code set — agents leave more dead code than humans, and it
+   grows context and misleads future edits: `CS0162` (unreachable),
+   `CS0219`/`CS8321` (unused variable / local function), `CS0414` (unused
+   private field), `IDE0051`/`IDE0052` (unused / unread private member)
+4. For frontend (if any): `tsc --noEmit` in strict mode + generate types from OpenAPI
+5. If the project ships a contract (library / shared package / plugin host — **not** a single-deployment app): declare the public surface — PublicApiAnalyzers + internal-by-default, so surface changes fail the build and land in the unshipped-file report ([`docs/solutions/public-api-surface.md`](solutions/public-api-surface.md); working demo: `examples/DemoProject/src/DemoProject.Domain/` green, `examples/DemoProject/traps-src/DemoProject.Traps.PublicApi/` red)
+6. Check: does `dotnet build` fail on warnings?
 
 **Readiness criterion:** `dotnet build` without warnings = green CI.
 
@@ -312,13 +316,13 @@ A: Yes, but adapt. Enable nullable per file (`#nullable enable`), replace NetArc
 A: Not layers, but conventions: naming, forbidden API calls, ratchet on public types. See [`ADAPTATION.md`](../templates/skills/ADAPTATION.md).
 
 **Q: The team resists — "this slows down development".**  
-A: Start with Fast mode (1–2 days). Show how `AGENTS.md` prevents the agent from rewriting code. Guardrails save time, not waste it.
+A: Start with Fast mode (1–2 days). Show how `AGENTS.md` prevents the agent from rewriting code — then decide.
 
 **Q: Can we implement without an AI agent (just for the team)?**  
 A: Yes, but a significant part of the value (estimate) is protection FROM agents. Without an agent it is just good engineering practices.
 
 **Q: How much does maintenance cost?**  
-A: Control Foundation + Change Checks + basic architecture tests are "set and forget" (minimal maintenance). Audits — 1–2 hours per sprint. E2E — setup 1 day, then self-running.
+A: Control Foundation + Change Checks + basic architecture tests are "set and forget" (minimal maintenance). Audits — 1–2 hours per sprint. E2E — setup ~1 day, then ~1 hour per run (see EVIDENCE.md).
 
 ---
 

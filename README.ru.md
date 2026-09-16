@@ -1,6 +1,6 @@
 # .NET Agentic Acceptance
 
-Методология ускорения инженерных практик через AI-агентов. Audit, review и guardrails, которые раньше требовали дорогой экспертизы, теперь масштабируются.
+Методология ускорения инженерных практик через AI-агентов. Audit, review и guardrails для кода, который пишут AI-агенты (observed case: docs/EVIDENCE.md).
 
 [🇬🇧 English version](README.md)
 
@@ -167,7 +167,7 @@ dotnet run --project tests/DemoProject.MinimalApi.Tests
 
 ## Навигация
 
-Потерялись? Полная карта знаний — все артефакты по ролям — живёт в
+Потерялись? Полная карта знаний живёт в
 [docs/README.md](docs/README.md). Самые частые запросы:
 
 | Что нужно | Куда идти |

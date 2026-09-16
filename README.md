@@ -1,6 +1,6 @@
 # .NET Agentic Acceptance
 
-AI-accelerated quality control methodology for .NET teams. Audits, review, and guardrails that used to require expensive expertise now scale.
+AI-accelerated quality control methodology for .NET teams. Audits, review, and guardrails for code written by AI agents (observed case: docs/EVIDENCE.md).
 
 [🇷🇺 Русская версия](README.ru.md)
 
@@ -167,7 +167,7 @@ See also [`examples/DemoProject.MinimalApi/README.md`](examples/DemoProject.Mini
 
 ## Navigation
 
-Lost? The full knowledge map — every artifact indexed by role — lives in
+Lost? The full knowledge map lives in
 [docs/README.md](docs/README.md). The most common entries:
 
 | What you need | Where to go |

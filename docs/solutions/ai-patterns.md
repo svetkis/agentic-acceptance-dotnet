@@ -130,6 +130,16 @@ The agent, seeing that other configurations have QueryFilter, will try to "fix" 
 
 **Generalization:** Hierarchical agent instructions co-located with code layers. A single `AGENTS.md` quickly bloats and loses relevance.
 
+**See also — LSP/MCP for code reading:** give the agent a Language Server
+Protocol tool (e.g. the [Serena](https://github.com/oraios/serena) MCP server)
+so it reads code through symbol navigation (find definition, references,
+rename preview) instead of raw file dumps. On a codebase beyond toy size this
+lets the agent read code by symbol instead of whole files, saving context and making edits precise.
+Without it, the agent greps whole files, burns context, and edits "by feel" —
+one of the feeders of the context-rot obstacle. This is agent configuration,
+not a repo artifact: wire it in your agent's MCP settings, then keep the
+constitution rules lean (see pattern 7 above and [Context Rot](../obstacles/context-rot.md)).
+
 ---
 
 ## 8. Concurrency integration test with real database

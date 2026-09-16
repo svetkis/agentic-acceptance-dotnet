@@ -369,11 +369,7 @@ The agent must maintain a "skill map" of the project:
 - 📋 Backlog — description only, no code
 ```
 
-This map helps the agent understand:
-- What already exists
-- What is in progress
-- What is not yet created
-- What gaps exist between levels
+This map shows the agent what exists, what is WIP, and what is missing per level.
 
 ---
 
