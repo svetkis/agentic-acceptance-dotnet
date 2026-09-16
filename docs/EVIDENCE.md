@@ -31,26 +31,6 @@ Counts are approximate: rows sum to ~451 against the ~450-commit denominator.
 Integration-test fixes were not separated from unit-test fixes in the observed
 git history and are counted in the "Unit tests" row.
 
-## Who caused the fix: agent errors vs normal engineering (same observed case)
-
-A different cut of the same git history — by **cause**, not by which control caught it.
-Ratio of fix commits to feature commits was **1.8 : 1** (≈375 fixes vs ≈210 features;
-in industry-reported non-AI development, features usually outnumber fixes 1 : 3.5).
-
-| Cause | Share of fixes | Reading |
-|-------|----------------|---------|
-| Direct AI error (hallucination, wrong API, plausible-but-wrong code) | 11% | The minority — the pattern classifier below is the real problem surface |
-| Business logic discovered during development | 25% | Normal engineering — same class as human-driven development |
-| Serious bugs in edge cases | 20% | Normal engineering |
-| Platform pain (env, config, infrastructure) | 14% | Normal engineering |
-| Other / unclassified | 30% | Gray zone of the same history |
-
-**Interpretation (hypothesis, not a benchmark):** the agent's error rate is not the
-dominant cost. What changed is the throughput — bugs appear and get fixed faster,
-so the metric "typing speed" is dead; the working metric is **time-to-stabilization**
-(an agent fixes its bug in minutes, a human in hours). This is why the methodology
-invests in fast feedback loops (Levels 1–2) rather than in "making the AI smarter".
-
 ### The invisible layer paradox
 
 Compiler, arch tests, and smoke are **presumably the most effective** controls
