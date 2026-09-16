@@ -63,10 +63,11 @@ for skill_dir in "$SKILLS_DIR"/*/; do
     FAIL=1
   fi
 
-  # 3. Required sections (headings only).
+  # 3. Required sections (headings only). The phrase must appear as whole words in
+  #    a heading — a substring inside a longer word (e.g. "Procedures") does not count.
   headings="$(grep -i '^#\{1,3\} ' "$skill" || true)"
   for section in "${REQUIRED_SECTIONS[@]}"; do
-    if ! echo "$headings" | grep -qi "$section"; then
+    if ! echo "$headings" | grep -qiE "(^|[^a-z])${section}([^a-z]|$)"; then
       echo "FAIL $name: required section missing ('$section')"
       FAIL=1
     fi
