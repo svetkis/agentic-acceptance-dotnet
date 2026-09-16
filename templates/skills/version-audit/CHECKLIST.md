@@ -24,4 +24,4 @@
 ## Infrastructure
 - [ ] `Dockerfile` — base image is not `preview`, not `rc`
 - [ ] GitHub Actions — `actions/setup-dotnet` with version specified or `global.json`
-- [ ] GitHub Actions — `actions/checkout@v4`, not `v2` or `v3`
+- [ ] GitHub Actions — `actions/checkout@v5`, not `v2`-`v4`

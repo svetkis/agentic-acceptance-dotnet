@@ -302,7 +302,7 @@ jobs:
   code-review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run Code Review Agent
         run: |
           kimi run code-review --diff "$(git diff origin/main)"
@@ -318,7 +318,7 @@ jobs:
   architecture-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run Architecture Tests
         run: dotnet run --project tests/ArchitectureTests/
         # Tests read conventions from .kimi/skills/architecture-audit/
@@ -332,7 +332,7 @@ jobs:
   gpu-memory-audit:
     runs-on: [self-hosted, gpu]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run GPU Memory Audit
         run: ./scripts/gpu-memory-check.sh
         # Script implements rules from .kimi/skills/gpu-memory-audit/SKILL.md
