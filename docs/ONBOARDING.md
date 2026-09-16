@@ -206,6 +206,8 @@
 
 **Readiness criterion:** E2E finds a problem that unit tests do not catch (e.g., stale cache).
 
+**How:** [`docs/solutions/e2e-mcp-testing.md`](solutions/e2e-mcp-testing.md) — evidence-first scenario reports and what this layer is not.
+
 ---
 
 ### Step 10. Implement Reality Checks: Audits

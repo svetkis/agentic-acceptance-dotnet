@@ -92,7 +92,7 @@ The agent cannot hold the entire codebase in its head. It optimizes locally, but
 
 ### Solution
 
-1. **E2E MCP** — make the agent poke the system itself. Telegram bot, API client — real scenarios
+1. **E2E MCP** — make the agent poke the system itself. Telegram bot, API client — real scenarios ([how-to](../solutions/e2e-mcp-testing.md))
 2. **Batch audits** — create narrow personas:
    - **Security** — sees data leaks that the agent missed
    - **DBA** — sees N+1 and missing indexes
