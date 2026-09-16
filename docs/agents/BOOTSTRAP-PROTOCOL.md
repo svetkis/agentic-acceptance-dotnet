@@ -1,5 +1,6 @@
 # Bootstrap Protocol — Agent Mode Boundary
 
+> last_verified: 2026-09-16 (behavioral protocol — no vendor configuration to re-verify)
 > **Purpose:** Prevent situations where an agent, having received context from `agentic-acceptance-dotnet`, starts creating a `DemoProject` in the target repo.
 > **Audience:** AI agent (Kimi / Claude / Codex / OpenCode).
 
@@ -76,9 +77,9 @@ User asks: "Assess my project using Agentic Acceptance methodology"
     ▼
 Are you in agentic-acceptance-dotnet?
     ├── YES → "I cannot assess a project from inside the methodology repository. Please provide the path to the target project."
-    └── NO → Is there a .sln in cwd?
+    └── NO → Is there a .sln or .csproj in cwd?
             ├── YES → Run acceptance-bootstrap skill (assess existing codebase)
-            └── NO → "Please provide the path to the .NET project (where .sln is located)"
+            └── NO → "Please provide the path to the .NET project (where .sln or .csproj is located)"
 
 User asks: "Show me an example of an architecture test"
     │

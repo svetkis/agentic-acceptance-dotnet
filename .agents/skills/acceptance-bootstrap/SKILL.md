@@ -138,7 +138,7 @@ For each level answer the questions:
 |---------------|----------------------|----------|
 | Clean Architecture + .NET 6+ | `tests/patterns/ArchitectureRules.cs` (NetArchTest) | ✅ Adapt namespace |
 | Vertical Slice / Modular | Standard NetArchTest rules (about layers) don't apply. Need custom rules about feature boundaries | ⚠️ **Adapt**: NetArchTest with rules about `Features.X.*` → `Features.Y.*` |
-| .NET Framework 4.8 | NetArchTest works, but consider Roslyn analyzers for speed | ⚠️ **Adapt**: NetArchTest + Roslyn analyzers for critical rules |
+| .NET Framework 4.8 | NetArchTest targets modern .NET; on 4.8 it is unreliable | ❌ **Create** Roslyn analyzers / MSBuild targets for architecture rules (see anti-patterns below) |
 | Dapper (no EF) | EF-specific tests are useless | ⚠️ Adapt: remove EF rules, add Dapper rules |
 | EF Core (migrations) | `tests/patterns/EfMigrationConsistencyTest.cs` (model↔migration sync + empty-DB apply) | ✅ Adapt project path |
 | Big Ball of Mud | No layers to check | 🔴 Refactor first, then arch tests |
@@ -177,6 +177,7 @@ For each level answer the questions:
 | Worker Service | No HTTP | ❌ **Create `e2e-worker`** (check queue, logs, metrics) |
 | Desktop app | No HTTP | ❌ **Create `e2e-desktop`** (UI automation or backend API) |
 | Microservices | One OpenAPI snapshot is not enough | ❌ **Create `e2e-integration`** (consumer-driven contracts) |
+| External partner API / SDK dependency | `templates/skills/external-contract-verification/` | ✅ **Adopt**: verify external contracts against recorded expectations |
 
 #### Level 4: Reality Checks — Audits and Drift
 

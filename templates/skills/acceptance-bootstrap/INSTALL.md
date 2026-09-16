@@ -109,6 +109,8 @@ See `docs/agents/` for details on each agent:
 
 ## Modes
 
-- `fast` — only critical (1-2 days)
-- `standard` — all control levels (2-4 weeks; see [ONBOARDING.md](../../../docs/ONBOARDING.md) "How Long It Takes" for the canonical estimates)
-- `high-assurance` — everything + Reality Checks (1-2 months)
+Canonical scope and duration estimates: [ONBOARDING.md](../../../docs/ONBOARDING.md) "How Long It Takes".
+
+- `fast` — only critical controls (1-2 days)
+- `standard` — Foundation + Levels 1-2, then one control/audit per sprint (2-4 weeks)
+- `high-assurance` — all levels + Engineering Governance + Control Maintenance (1-2 months)

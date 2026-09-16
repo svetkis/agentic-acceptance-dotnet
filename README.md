@@ -52,7 +52,7 @@ Separate processes, not levels:
 | 1. Change Checks | Banned APIs, Roslyn analyzers (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml`, NuGet audit as build error ([docs/solutions/nuget-audit-as-error.md](docs/solutions/nuget-audit-as-error.md)), public API surface declaration ([docs/solutions/public-api-surface.md](docs/solutions/public-api-surface.md)) |
 | 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests, PropertyBasedTest), `tests/conventions/`, `templates/skills/code-review/`, `templates/skills/task-compliance/` |
 | 3. System Checks | E2E/smoke patterns, NBomber (`tests/patterns/LoadTest.cs`) |
-| 4. Reality Checks | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, simplicity, complexity, version, test, mutation, spellcheck, business-risk) |
+| 4. Reality Checks | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, simplicity, complexity, version, test, mutation, spellcheck, business-risk, ux) |
 | Control Maintenance | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
 | Engineering Governance | `docs/solutions/human-audit-bridge.md`, release decision |
 
@@ -97,7 +97,7 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-specific rules
 │   ├── AGENTS_TEMPLATE.dapper.md # Add-on: Dapper / Raw SQL-specific rules
 │   └── CONVENTIONS.md            # Commits, workflow, tests
-├── templates/skills/                        # 28 agent-role skills (full catalog: docs/README.md)
+├── templates/skills/                        # agent-role skills (full catalog: docs/README.md)
 ├── docs/
 │   ├── traps/                     # Agent traps
 │   └── solutions/

@@ -18,19 +18,25 @@
 |-------|---------|-----------|------------|----------|
 | Change Checks | Compiler + types | ~0 commits | — | Catches before commit, invisible in git |
 | Behavior Checks | Arch tests + Ratchet | ~0 commits | — | Catches before commit, invisible in git |
-| Behavior Checks | Unit/integration | 6 commits | 1.3% | Falling tests after refactoring |
+| Behavior Checks | Unit tests | 6 commits | 1.3% | Falling tests after refactoring |
 | Behavior Checks | Code review | 8 commits | 1.8% | XSS, await, data leak |
 | System Checks | Smoke | ~0 commits | — | Prevents critical-path regression before merge |
 | System Checks | E2E MCP | 9 commits | 2.0% | UI flow, stale cache, self-booking |
 | Reality Checks | Audits | 19 commits | 4.2% | Security, i18n, UX, perf |
 | System Checks | Load | ~0 commits | — | Prevents degradation before production |
-| Engineering Governance | Human judgment | ~78 commits | 17% | Business logic, edge cases |
+| Governance (process, not a level) | Human judgment | ~78 commits | 17% | Business logic, edge cases |
 | — | Gray zone | ~331 commits | 74% | Unknown who found it |
+
+Counts are approximate: rows sum to ~451 against the ~450-commit denominator.
+Integration-test fixes were not separated from unit-test fixes in the observed
+git history and are counted in the "Unit tests" row.
 
 ### The invisible layer paradox
 
-Compiler, arch tests, and smoke are the **most effective** controls, but in git they
-show 0 commits. They prevent bugs **before** code leaves the workstation.
+Compiler, arch tests, and smoke are **presumably the most effective** controls
+(hypothesis: they prevent bugs before code leaves the workstation, which git
+history cannot show), but in git they show 0 commits. A measured ranking —
+e.g. by injected-defect catch rate — has not been performed.
 
 ---
 
@@ -43,10 +49,13 @@ show 0 commits. They prevent bugs **before** code leaves the workstation.
 | Unit tests | ~2 weeks | ~30 min/feature | First month |
 | Code review | ~0 (AGENTS.md rule) | ~2 min/commit | First XSS |
 | Smoke | ~1 day | ~15 min/session | First broken critical path |
-| E2E MCP | ~3 days | ~1 hour/platform | After stale cache (22 days in prod) |
+| E2E MCP | ~3 days | ~1 hour/platform | After stale cache (observed case: 22 days in prod) |
 | Audits | ~0 (prompts) | ~2 hours/audit | First batch |
 | Load (NBomber) | ~1 day | ~30 min/scenario | First silent breakdown under load |
 | Human judgment | — | ~hours-days | Impossible to measure |
+
+Break-even cells marked "observed case" restate incidents from the single
+project described above — they are illustrations, not benchmarks.
 
 ### Grooming ROI (Control Maintenance)
 

@@ -10,13 +10,12 @@
 // A test is the only thing that catches it — the value never executes in a test run.
 //
 // Framework adaptation:
-// - TUnit:  [Test], [Arguments(...)] + FluentAssertions
+// - TUnit:  [Test], [Arguments(...)] + Assert.That(...).Contains / DoesNotContain
 // - xUnit:  [Theory], [InlineData(...)] + Assert.Contains / Assert.DoesNotContain
 // - NUnit:  [Test], [TestCase(...)] + Assert.Contains / Assert.DoesNotContain
 // - MSTest: [TestMethod], [DataRow(...)] + StringAssert.Contains
 
 using TUnit;
-using FluentAssertions;
 
 namespace Tests.Patterns;
 
@@ -33,29 +32,36 @@ public class ProductionConfigurationTest
         var repositoryRoot = FindRepositoryRoot();
         var dockerfile = File.ReadAllText(Path.Combine(repositoryRoot, relativePath));
 
-        dockerfile.Should().Contain("ENV DOTNET_GCHeapHardLimitPercent=0x4B");
-        dockerfile.Should().Contain("ENV DOTNET_GCHighMemPercent=0x4B");
-        dockerfile.Should().NotContain("ENV DOTNET_GCHeapHardLimitPercent=75");
-        dockerfile.Should().NotContain("ENV DOTNET_GCHighMemPercent=75");
+        Assert.That(dockerfile).Contains("ENV DOTNET_GCHeapHardLimitPercent=0x4B");
+        Assert.That(dockerfile).Contains("ENV DOTNET_GCHighMemPercent=0x4B");
+        Assert.That(dockerfile).DoesNotContain("ENV DOTNET_GCHeapHardLimitPercent=75");
+        Assert.That(dockerfile).DoesNotContain("ENV DOTNET_GCHighMemPercent=75");
     }
 
     // TRAP: An env var was added to code but not to the deployment manifest (or vice versa).
-    // GUARDRAIL: The set of env vars the code reads matches the set deployment provides.
+    // GUARDRAIL: The set of env vars the code reads and the set deployment provides match
+    //       in BOTH directions: an unset var fails in production, an unused one rots
+    //       the manifest and misleads the next agent.
     // NOTE: Adapt the extraction to your stack: regex over appsettings / compose / Dockerfile.
     //       The simple list-parsing below misses compose map syntax (`KEY: value`) and
     //       catches non-env list items (volumes) — for real projects use a YAML parser.
     [Test]
-    public void BUG_CONFIG002_EnvVars_InDeployment_ShouldBeReadByCode()
+    public void BUG_CONFIG002_EnvVars_ShouldMatchBetweenCodeAndDeployment()
     {
         var repositoryRoot = FindRepositoryRoot();
         var manifestVars = ExtractEnvVarNames(
             Path.Combine(repositoryRoot, "deploy", "docker-compose.yml"));
         var codeVars = ExtractConfiguredKeys(Path.Combine(repositoryRoot, "src"));
 
-        codeVars.Should().BeSubsetOf(
-            manifestVars,
-            because: "an env var the code reads but deployment never sets " +
-                     "fails only in production");
+        var unreadByCode = manifestVars.Except(codeVars).ToList();
+        var unsetByDeployment = codeVars.Except(manifestVars).ToList();
+
+        Assert.That(unreadByCode).IsEmpty()
+            .Because("env vars present in the manifest but read by no code " +
+                     "rot the deployment config: " + string.Join(", ", unreadByCode));
+        Assert.That(unsetByDeployment).IsEmpty()
+            .Because("env vars the code reads but deployment never sets " +
+                     "fail only in production: " + string.Join(", ", unsetByDeployment));
     }
 
     // --- Helpers ---

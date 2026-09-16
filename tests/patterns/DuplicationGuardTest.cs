@@ -21,7 +21,8 @@ public class DuplicationGuardTest
         {
             @"Status\s*==\s*BookingStatus\.Confirmed", // Example: status check
             @"Total\s*\*\s*0\.\d+",                    // Example: discount calculation
-            @"DateTime\.Now",                           // Antipattern: must be UtcNow or IClock
+            // NOTE: don't put single-occurrence rules (e.g. "DateTime.Now must be UtcNow")
+            // here — this pattern only flags DUPLICATION of business logic across files.
         };
 
         var srcPath = Path.Combine("..", "..", "..", "..", "src");

@@ -21,6 +21,15 @@ Ready-made skills from `agentic-acceptance-dotnet` are **examples**. They show:
 
 But a specific project may require **unique roles**. And the agent must be able to invent them.
 
+> **Note on example names.** Skills mentioned in this document as project-specific
+> (`architecture-audit`, `gpu-memory-audit`, `grpc-contract-guard`, `hipaa-phi-guard`,
+> and similar) are **invented examples of new skills the agent designs for the target
+> project** — they are not artifacts of this repository. For the ready-made set, see
+> the knowledge map ([`docs/README.md`](../../../docs/README.md)): architecture rules
+> live in `tests/patterns/ArchitectureRules.cs`, performance auditing in
+> `templates/skills/performance-audit/`, contract drift in
+> `templates/skills/external-contract-verification/`.
+
 ---
 
 ## New Skill Design Tree

@@ -102,11 +102,12 @@ public class ArchitectureRules
     }
 
     // TRAP: The agent created a duplicate ID for a documented decision.
-    // GUARDRAIL: PERF-###, DB-###, AUD-### must be unique across the entire codebase.
+    // GUARDRAIL: decision IDs (PERF/DB/AUD/COMPLEXITY/SPELL/MUTATION, see rules/CONVENTIONS.md)
+    //        must be unique across the entire codebase.
     [Test]
-    public void PerfAndDbDecisions_ShouldHaveUniqueIds()
+    public void DecisionGuardIds_ShouldBeUnique()
     {
-        var ids = ExtractDecisionIds("src", @"(PERF|DB|AUD)-\d{3}");
+        var ids = ExtractDecisionIds("src", @"(PERF|DB|AUD|COMPLEXITY|SPELL|MUTATION)-\d{3}");
         var duplicates = ids.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key);
 
         Assert.That(duplicates).IsEmpty()

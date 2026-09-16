@@ -64,6 +64,7 @@ have such hardcoded paths.
 | Vertical Slice Architecture / other module boundaries | `code-review` → standard layer rules | Boundaries by feature, not by layer; use custom architecture test |
 | No hot path methods / not latency-sensitive | `allocation-budget-audit` | Nothing to measure |
 | No public API / docs | `spellcheck-audit` → public API names | Check only markdown / comments |
+| No external partner APIs / third-party SDK contracts | `external-contract-verification` | Nothing external to verify |
 | Not a release / beta | `release-readiness-audit` | Won't do, document it |
 | No custom analyzers / Roslyn diagnostics | `analyzer-tests-audit` | Nothing to test |
 | No mutation testing in CI | `mutation-audit` → CI gate | Run as periodic audit |

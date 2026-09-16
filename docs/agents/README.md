@@ -1,5 +1,6 @@
 # AI Agents Integration
 
+> last_verified: 2026-09-16 (comparison overview — re-verify per-guide `last_verified` dates below)
 > This directory explains how to wire guardrails into AI agents and development tools.
 > There are **two integration styles** — pick by how much the agent can be trusted to
 > plan its own steps.

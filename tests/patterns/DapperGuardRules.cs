@@ -50,11 +50,12 @@ public class DapperGuardRules
     [Test]
     public void DapperCalls_ShouldHaveCommandTimeout()
     {
-        // Look for Dapper calls without the fourth commandTimeout argument (sql, param, transaction, commandTimeout)
-        // Examples: connection.QueryAsync<Order>(sql, param) — violation
+        // Look for Dapper calls lacking commandTimeout on the call line.
+        // The generic argument is optional: QueryAsync<T>(sql, ...) and QueryAsync(sql, ...) are both covered.
+        // Examples: connection.ExecuteAsync(sql, param) — violation
         //           connection.QueryAsync<Order>(sql, param, commandTimeout: 30) — ok
         var violations = ScanSourceFiles(
-            pattern: @"\.(QueryAsync|ExecuteAsync|QueryFirstAsync|QuerySingleAsync)<.*?>\s*\([^,]+,[^,]+\)",
+            pattern: @"\.(QueryAsync|ExecuteAsync|QueryFirstAsync|QuerySingleAsync)(<[^>]*>)?\s*\((?![^)]*commandTimeout)[^)]*,",
             fileGlob: "*.cs",
             whitelist: new[] { "GlobalCommandTimeout.cs: default timeout configured" });
 

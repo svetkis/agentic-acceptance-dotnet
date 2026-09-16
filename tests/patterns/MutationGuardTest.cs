@@ -8,7 +8,8 @@
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
 //
 // NOTE: As of 2026-06, Stryker.NET does not support TUnit / Microsoft Testing Platform.
-//       Use this pattern as a periodic audit or a CI job via the project's dotnet test.
+//       Use this pattern as a periodic audit or a CI job. Stryker needs an xUnit/NUnit/MSTest
+//       host, i.e. `dotnet test` — the repo-wide `dotnet run --project` convention does not apply here.
 
 using System.Diagnostics;
 using System.Text.Json;

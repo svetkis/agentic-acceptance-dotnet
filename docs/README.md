@@ -52,7 +52,7 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **ArchUnitNetSliceTest** | Cyclic dependencies between slices (ArchUnitNET) | [tests/patterns/ArchUnitNetSliceTest.cs](../tests/patterns/ArchUnitNetSliceTest.cs) | `examples/DemoProject/tests/DemoProject.Traps.Tests/ArchUnitNetSliceTest.cs` |
 | **RatchetTest** | Public types and tests did not decrease | [tests/patterns/RatchetTest.cs](../tests/patterns/RatchetTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/RatchetTests.cs` |
 | **SnapshotTest** | JSON serialization contract, OpenAPI | [tests/patterns/SnapshotTest.cs](../tests/patterns/SnapshotTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/SnapshotTests.cs` |
-| **VerifySnapshotTest** | Snapshot contract via Verify.TUnit: readable diffs, auto-scrubbing of `Guid`/`DateTime`; traps — auto-accepted snapshots, TUnit version lockstep, Verify 33+ SponsorCheck license gate | [tests/patterns/VerifySnapshotTest.cs](../tests/patterns/VerifySnapshotTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/VerifySnapshotTests.cs` |
+| **VerifySnapshotTest** | Snapshot contract via Verify.TUnit: readable diffs, auto-scrubbing of `Guid`/`DateTime`; traps — auto-accepted snapshots, TUnit version lockstep, Verify 28+ SponsorCheck license gate | [tests/patterns/VerifySnapshotTest.cs](../tests/patterns/VerifySnapshotTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/VerifySnapshotTests.cs` |
 | **StormPetrelSnapshotTest** | Baseline-in-code snapshot via source generator: contract changes are ordinary code diffs; agent cannot silently accept a snapshot file. TUnit needs env-var config + Reflection mode | [tests/patterns/StormPetrelSnapshotTest.cs](../tests/patterns/StormPetrelSnapshotTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/StormPetrelSnapshotTests.cs` |
 | **PropertyBasedTest** | Invariants over generated inputs (FsCheck) instead of hand-picked examples | [tests/patterns/PropertyBasedTest.cs](../tests/patterns/PropertyBasedTest.cs) | — |
 | **LoadTest** | Silent breakdown under load: read optimizations that break write path | [tests/patterns/LoadTest.cs](../tests/patterns/LoadTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/LoadTests.cs` |
@@ -164,6 +164,15 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [EVIDENCE.md](EVIDENCE.md) | Effectiveness metrics and ROI of the control levels (observed case), risk-justification principle for guardrails |
 | [ARCHITECTURE-INVENTORY.md](../templates/skills/acceptance-bootstrap/ARCHITECTURE-INVENTORY.md) | Template for recording current architecture before implementing guardrails |
 | [DECISION-GUARDS.md](../templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) | Template for intentional deviation registry (`PERF-###`, `DB-###`, `AUD-###`) |
+| [SKILL-CONTRACT.md](../templates/skills/SKILL-CONTRACT.md) | Contract for every skill in `templates/skills/` (structure, frontmatter, checklist markers), verified by `ci/scripts/check-skills.sh` |
+| [SKILL-ARCHITECTURE.md](../templates/skills/acceptance-bootstrap/SKILL-ARCHITECTURE.md) | How to design new guardrail skills from scratch (threat model → role → mechanism → pipeline) |
+| [NEW-SKILL-TEMPLATE.md](../templates/skills/acceptance-bootstrap/NEW-SKILL-TEMPLATE.md) | Skeleton for generating a new skill |
+| [INSTALL.md](../templates/skills/acceptance-bootstrap/INSTALL.md) | How to install `acceptance-bootstrap` into a target agent (Kimi / Claude / Codex / OpenCode) |
+| [REPORT-TEMPLATE.md](../templates/skills/acceptance-bootstrap/REPORT-TEMPLATE.md) | The 6-section onboarding report the bootstrap agent must produce |
+| [EXAMPLE-REPORT.md](../templates/skills/acceptance-bootstrap/EXAMPLE-REPORT.md) | Filled-in example of the onboarding report |
+| [ECOSYSTEM-MAP-TEMPLATE.md](../templates/skills/acceptance-bootstrap/ECOSYSTEM-MAP-TEMPLATE.md) | Template for the per-project skill map the bootstrap agent maintains |
+| [ADAPTATION.md](../templates/skills/ADAPTATION.md) | How to adapt ready-made skills to a project stack before the first run |
+| [acceptance-bootstrap/README.md](../templates/skills/acceptance-bootstrap/README.md) | Overview of the bootstrap bundle (support templates for the onboarding agent) |
 
 ---
 
@@ -201,6 +210,10 @@ Active plans: [SELF-CHECKING-TESTS-WORKSTREAM.md](SELF-CHECKING-TESTS-WORKSTREAM
 | [nuget-audit-as-error.md](solutions/nuget-audit-as-error.md) | Vulnerable NuGet dependencies fail the build (`NuGetAuditMode=all` + warnings-as-errors) |
 | [ci/lefthook.yml](../ci/lefthook.yml) | Template for local pre-commit hooks (lefthook): format + static checks on staged files — enforcement the agent cannot forget |
 | [ci/scripts/run-and-verify-tests.sh](../ci/scripts/run-and-verify-tests.sh) | Finds and runs all test projects via `dotnet run --project`, then verifies that tests actually ran (not 0 ran) |
+| [ci/scripts/check-skills.sh](../ci/scripts/check-skills.sh) | Verifies every skill against SKILL-CONTRACT.md (structure, checklist, finding schema) |
+| [ci/scripts/check-links.sh](../ci/scripts/check-links.sh) | Verifies that referenced artifact paths exist |
+| [ci/scripts/check-knowledge-map.sh](../ci/scripts/check-knowledge-map.sh) | Verifies this map covers all skills, patterns, docs, and rules |
+| [ci/scripts/check-guardrail-lifecycle.sh](../ci/scripts/check-guardrail-lifecycle.sh) | Verifies guardrail lifecycle rules for skills and docs |
 | [.github/workflows/demo-project-ci.yml](../.github/workflows/demo-project-ci.yml) | CI of this repository — builds DemoProject and DemoProject.MinimalApi |
 | `traps-guardrails` job in `demo-project-ci.yml` | Ensures intentionally broken tests in DemoProject.Traps actually fail (guardrails are working) |
 

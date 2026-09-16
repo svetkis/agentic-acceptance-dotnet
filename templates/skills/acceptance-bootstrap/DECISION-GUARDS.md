@@ -48,7 +48,7 @@ Lifecycle rules:
 **Status:** active  
 **Date:** 2026-03-15  
 **Owner:** @lead  
-**Review date:** 2026-09-15  
+**Review date:** 2027-03-15  
 **Context:** A global query filter added a JOIN to users via Tenant.Owner.DeletedAt in every EXISTS subquery. Under load — 400ms degradation.  
 **Decision:** Do not call `HasQueryFilter(s => !s.IsDeleted)` for this entity. Soft delete is implemented explicitly (`Where(s => !s.IsDeleted)`) in the affected queries.  
 **Consequences:** An agent seeing `HasQueryFilter` in other configs will try to "fix" this by adding a global filter. The number stops it.  

@@ -39,6 +39,15 @@ public class AnalyzerTests
         await Assert.That(diagnostics)
             .Contains(d => d.Id == "SAE001")
             .Because("The analyzer must report SAE001 for the positive case.");
+
+        // GUARDRAIL: verify the diagnostic span, not just the ID — an analyzer that fires
+        //        on the wrong node (whole file, wrong line) is a false positive factory.
+        var diagnostic = diagnostics.First(d => d.Id == "SAE001");
+        await Assert.That(diagnostic.Location.IsInSource).IsTrue();
+        await Assert.That(diagnostic.Location.SourceSpan.Length > 0).IsTrue();
+        var lineSpan = diagnostic.Location.GetLineSpan();
+        await Assert.That(lineSpan.StartLinePosition.Line).IsEqualTo(4)
+            .Because("SAE001 must point at the flagged property (line 4 of the snippet).");
     }
 
     // TRAP: The analyzer fires where it should not (false positive).
@@ -97,11 +106,15 @@ public class AnalyzerTests
         var version = Path.GetFileName(runtimeDir);
         var dotnetRoot = Directory.GetParent(Directory.GetParent(runtimeDir)!.Parent!.FullName)!.FullName;
 
-        var refAssemblyPath = Path.Combine(dotnetRoot, "packs", "Microsoft.NETCore.App.Ref", version, "ref", "net10.0", "System.Runtime.dll");
-        if (File.Exists(refAssemblyPath))
+        var refPackDir = Path.Combine(dotnetRoot, "packs", "Microsoft.NETCore.App.Ref", version, "ref");
+        // The TFM subdir name is not fixed (net8.0, net10.0, ...) — search within the pack.
+        var refAssemblyPath = Directory.Exists(refPackDir)
+            ? Directory.EnumerateFiles(refPackDir, "System.Runtime.dll", SearchOption.AllDirectories).FirstOrDefault()
+            : null;
+        if (refAssemblyPath is not null)
             return refAssemblyPath;
 
-        throw new InvalidOperationException($"Could not locate System.Runtime.dll reference assembly. Expected: {refAssemblyPath}");
+        throw new InvalidOperationException($"Could not locate System.Runtime.dll reference assembly under: {refPackDir}");
     }
 }
 

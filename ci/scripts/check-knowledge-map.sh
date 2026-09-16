@@ -44,6 +44,19 @@ for f in rules/*.md; do
     check_present "$(basename "$f")" "rule"
 done
 
+# Skill-contract and bootstrap support templates
+check_present "SKILL-CONTRACT.md" "skill contract"
+for f in templates/skills/acceptance-bootstrap/*.md templates/skills/*.md; do
+    [ -e "$f" ] || continue
+    check_present "$(basename "$f")" "bootstrap/support template"
+done
+
+# Repo-maintenance CI scripts
+for f in ci/scripts/*.sh; do
+    [ -e "$f" ] || continue
+    check_present "$(basename "$f")" "ci script"
+done
+
 if [ "$FAIL" -eq 0 ]; then
     echo "OK: knowledge map covers all artifacts."
 else

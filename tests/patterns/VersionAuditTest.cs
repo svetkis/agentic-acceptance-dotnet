@@ -10,13 +10,31 @@ namespace Tests.Patterns;
 
 public class VersionAuditTest
 {
+    // TRAP: The runner's working directory is not the repository root (CI checkout dir,
+    //       `dotnet run --project` from another folder) — scans silently return nothing
+    //       and the audit passes vacuously.
+    // GUARDRAIL: Anchor all paths to the repository root found via a marker file
+    //       (global.json here; use your .sln/.slnx if you have one), never to the CWD.
+    private static string RepoRoot
+    {
+        get
+        {
+            var dir = new DirectoryInfo(AppContext.BaseDirectory);
+            while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "global.json")))
+                dir = dir.Parent;
+
+            Assert.That(dir is not null).IsTrue(); // marker file not found above the test assembly
+            return dir!.FullName;
+        }
+    }
+
     // TRAP: The agent brought in .NET 10 preview, although the team standard is a stable SDK.
     // GUARDRAIL: global.json must not contain preview/rc/beta in version.
     [Test]
     public void GlobalJson_ShouldNotReferencePreviewSdk()
     {
         var violations = ScanFilesForPattern(
-            rootDir: ".",
+            rootDir: RepoRoot,
             fileGlob: "global.json",
             pattern: @"""version""\s*:\s*""[^""]*(?:preview|rc|beta)[^""]*""",
             whitelist: Array.Empty<string>());
@@ -30,11 +48,11 @@ public class VersionAuditTest
     [Test]
     public void MicrosoftPackages_ShouldMatchTargetFramework()
     {
-        var targetFramework = ExtractTargetFramework(".");
+        var targetFramework = ExtractTargetFramework(RepoRoot);
         var majorVersion = ExtractMajorVersion(targetFramework);
 
         var violations = new List<string>();
-        var csprojFiles = Directory.GetFiles(".", "*.csproj", SearchOption.AllDirectories);
+        var csprojFiles = Directory.GetFiles(RepoRoot, "*.csproj", SearchOption.AllDirectories);
 
         foreach (var file in csprojFiles)
         {
@@ -65,7 +83,7 @@ public class VersionAuditTest
     public void PackageReferences_ShouldNotBePrerelease()
     {
         var violations = ScanFilesForPattern(
-            rootDir: ".",
+            rootDir: RepoRoot,
             fileGlob: "*.csproj",
             pattern: @"<PackageReference[^>]*Version=""[^""]*(?:preview|rc|beta|alpha)[^""]*""",
             whitelist: new[] { "DemoProject.Tests.csproj: explicitly testing preview features" });
@@ -80,7 +98,7 @@ public class VersionAuditTest
     public void PackageJson_ShouldNotContainPrereleaseDependencies()
     {
         var violations = new List<string>();
-        var packageJsonFiles = Directory.GetFiles(".", "package.json", SearchOption.AllDirectories);
+        var packageJsonFiles = Directory.GetFiles(RepoRoot, "package.json", SearchOption.AllDirectories);
 
         foreach (var file in packageJsonFiles)
         {
@@ -102,7 +120,7 @@ public class VersionAuditTest
     public void GitHubActions_ShouldNotUseLegacyActionVersions()
     {
         var violations = ScanFilesForPattern(
-            rootDir: ".github",
+            rootDir: Path.Combine(RepoRoot, ".github"),
             fileGlob: "*.yml",
             pattern: @"uses:\s+actions/(checkout|setup-dotnet)@v[123]\b",
             whitelist: Array.Empty<string>());

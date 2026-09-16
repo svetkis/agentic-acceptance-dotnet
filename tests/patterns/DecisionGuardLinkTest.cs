@@ -8,7 +8,7 @@
 //        ID must literally appear in that file. Uniqueness of IDs is checked for free.
 //
 // This is an artifact scan: no C# semantic model is needed, a regex over markdown suffices.
-// It runs as a normal test — the registry is verified on every `dotnet test`, not in an audit.
+// It runs as a normal test — the registry is verified on every `dotnet run --project` (TUnit), not in an audit.
 //
 // Framework adaptation:
 // - TUnit:  [Test] + Assert.That(condition).IsTrue()
@@ -24,7 +24,8 @@ namespace Tests.Patterns;
 public class DecisionGuardLinkTests
 {
     // Adapt to your ID prefixes and repository-root marker file.
-    private const string IdPattern = @"^### ((?:PERF|DB|ARCH|AUD|COMPLEXITY)-\d{3}):";
+    // Prefixes must match rules/CONVENTIONS.md: PERF, DB, AUD, COMPLEXITY, SPELL, MUTATION.
+    private const string IdPattern = @"^((?:PERF|DB|AUD|COMPLEXITY|SPELL|MUTATION)-\d{3}):";
 
     private static string RepoRoot
     {

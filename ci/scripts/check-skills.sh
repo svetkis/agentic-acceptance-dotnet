@@ -77,6 +77,29 @@ for skill_dir in "$SKILLS_DIR"/*/; do
     echo "FAIL $name: legacy confidence labels (CERTAIN/REVIEW) — use CONFIRMED/NEEDS_REVIEW"
     FAIL=1
   fi
+
+  # 5. Frontmatter name must match the skill directory name.
+  fm_name="$(echo "$fm" | sed -n 's/^name:[[:space:]]*//p' | tr -d '"' | tr -d "'" | tr -d '[:space:]')"
+  if [ -n "$fm_name" ] && [ "$fm_name" != "$name" ]; then
+    echo "FAIL $name: frontmatter name '$fm_name' does not match directory name"
+    FAIL=1
+  fi
+
+  # 6. Finding schema must carry the canonical severity/confidence labels.
+  if ! grep -q 'CONFIRMED' "$skill" || ! grep -q 'NEEDS_REVIEW' "$skill"; then
+    echo "FAIL $name: canonical confidence labels (CONFIRMED/NEEDS_REVIEW) missing from SKILL.md"
+    FAIL=1
+  fi
+
+  # 7. Checklist markers: only [ ], [-], [x] (contract: Checklist Item Marking).
+  if [ -f "$checklist" ]; then
+    bad_markers="$(grep -nE '^\s*[-*]?\s*\[[^ x-]\]' "$checklist" || true)"
+    if [ -n "$bad_markers" ]; then
+      echo "FAIL $name: CHECKLIST.md uses non-canonical checkbox markers (allowed: [ ], [-], [x]):"
+      echo "$bad_markers"
+      FAIL=1
+    fi
+  fi
 done
 
 if [ "$FAIL" -eq 0 ]; then

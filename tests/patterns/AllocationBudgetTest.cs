@@ -23,8 +23,9 @@ public class AllocationBudgetTests
 {
     // TRAP: The agent added extra allocations to a critical method.
     // GUARDRAIL: Allocations of a [HotPath] method do not exceed baseline + 10%.
+    // Naming: {HotPathMethodName}_AllocationBudget — required by the meta-test below.
     [Test]
-    public void HotPath_GetAvailableSlots_AllocationBudget()
+    public void GetAvailableSlots_AllocationBudget()
     {
         var budget = MeasureAllocationBudget(
             action: () => YourHotPathService.GetAvailableSlots(DateTime.UtcNow),

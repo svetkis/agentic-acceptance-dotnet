@@ -14,6 +14,22 @@ public class SensitiveDataAttribute : Attribute { }
 
 public class PiiGuardTest
 {
+    // TRAP: The runner's working directory is not the repository root — the source scan
+    //       silently returns nothing and the guard passes vacuously.
+    // GUARDRAIL: Anchor scans to the repository root found via a marker file, not the CWD.
+    private static string RepoRoot
+    {
+        get
+        {
+            var dir = new DirectoryInfo(AppContext.BaseDirectory);
+            while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "global.json")))
+                dir = dir.Parent;
+
+            Assert.That(dir is not null).IsTrue(); // marker file not found above the test assembly
+            return dir!.FullName;
+        }
+    }
+
     // TRAP: The agent created an Email/Phone/Password property without [SensitiveData].
     // GUARDRAIL: All PII fields must have [SensitiveData].
     [Test]
@@ -51,7 +67,7 @@ public class PiiGuardTest
     public void LogCalls_ShouldNotUseInterpolatedStrings()
     {
         var violations = ScanSourceFiles(
-            rootDir: "..",
+            rootDir: RepoRoot,
             fileGlob: "*.cs",
             pattern: @"\b(_logger|logger|Log)\.(LogInformation|LogDebug|LogWarning|LogError|LogTrace)\s*\(\s*\$""",
             whitelist: new[] { "PiiGuardTest.cs: test itself uses interpolation" });
@@ -70,7 +86,7 @@ public class PiiGuardTest
         var pattern = $@"\b(_logger|logger|Log)\.(LogInformation|LogDebug|LogWarning|LogError|LogTrace)\s*\([^)]*\b({string.Join("|", piiVariables)})\b";
 
         var violations = ScanSourceFiles(
-            rootDir: "..",
+            rootDir: RepoRoot,
             fileGlob: "*.cs",
             pattern: pattern,
             whitelist: new[] { "PiiGuardTest.cs: test scans for patterns" });
@@ -85,7 +101,7 @@ public class PiiGuardTest
     [Test]
     public void SensitiveDataAttributes_ShouldNotDecrease()
     {
-        var currentCount = CountSensitiveDataAttributes("..");
+        var currentCount = CountSensitiveDataAttributes(RepoRoot);
         var baseline = GetBaselineOrSet(currentCount);
 
         Assert.That(currentCount).IsGreaterThanOrEqualTo(baseline)
@@ -147,10 +163,10 @@ public class PiiGuardTest
     }
 
     // NOTE: In CI, ensure pii-baseline.txt is committed or the ratchet becomes a no-op.
-    // Consider using a path relative to the project root instead of CurrentDirectory.
+    //       The baseline lives at the repository root, not in the runner's CWD.
     private static int GetBaselineOrSet(int current)
     {
-        var baselineFile = "pii-baseline.txt";
+        var baselineFile = Path.Combine(RepoRoot, "pii-baseline.txt");
         if (File.Exists(baselineFile) && int.TryParse(File.ReadAllText(baselineFile), out var baseline))
             return baseline;
 
