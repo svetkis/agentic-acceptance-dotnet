@@ -12,7 +12,7 @@ Thank you for your interest! This repository contains defensive artifacts for .N
 
 | Type | Location | Requirements |
 |------|----------|--------------|
-| New skill | `templates/skills/{name}/` | `SKILL.md` + `CHECKLIST.md` |
+| New skill | `templates/skills/{name}/` | `SKILL.md` + `CHECKLIST.md` (exception: `acceptance-bootstrap` is a support-template bundle without CHECKLIST — see `templates/skills/SKILL-CONTRACT.md`) |
 | New test pattern | `tests/patterns/` | Comments `// TRAP: ...` and `// GUARDRAIL: ...` |
 | New trap | `docs/traps/` | Scenario + consequences + solution + pattern link |
 | New solution | `docs/solutions/` | Detailed guide with examples |
@@ -37,7 +37,7 @@ Thank you for your interest! This repository contains defensive artifacts for .N
 ## Pre-PR Checklist
 
 - [ ] I have read `AGENTS.md` and `rules/AGENTS_TEMPLATE.md`
-- [ ] If adding a skill — `SKILL.md` + `CHECKLIST.md` are present
+- [ ] If adding a skill — `SKILL.md` + `CHECKLIST.md` are present (except the `acceptance-bootstrap` support bundle)
 - [ ] If adding a pattern — comments `// TRAP:` and `// GUARDRAIL:` are present
 - [ ] If adding a new control level — the Engineering Assurance Levels model in root `README.md` is updated (and `docs/EVIDENCE.md` if you have effectiveness/ROI data)
 - [ ] If adding an agent — `docs/agents/` is updated

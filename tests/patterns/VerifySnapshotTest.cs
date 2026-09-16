@@ -6,7 +6,7 @@
 // TRAP: Verify.TUnit drags in a recent TUnit.Core (>= 1.63 at the time of writing).
 //        Pinning an old TUnit alongside a new Verify.TUnit fails at RUNTIME with
 //        MissingFieldException 'TUnit.Core.Sources.BeforeEveryTestHooks' — keep them in lockstep.
-// TRAP: Verify (since 28) ships SponsorCheck: the BUILD fails (SC021) unless the team sponsors the project
+// TRAP: Verify (since 33) ships SponsorCheck: the BUILD fails (SC021) unless the team sponsors the project
 //        or sets <Verify_SponsorshipLicenseIgnored>true</Verify_SponsorshipLicenseIgnored>
 //        (which declares the build in breach of the package license). Evaluate this as a
 //        supply-chain/licensing decision BEFORE adopting, and record it in DECISION-GUARDS.

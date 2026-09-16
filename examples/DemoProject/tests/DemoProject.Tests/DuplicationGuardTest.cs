@@ -16,7 +16,8 @@ public class DuplicationGuardTest
         var businessPatterns = new[]
         {
             @"Status\s*==\s*BookingStatus\.Confirmed",
-            @"DateTime\.Now",
+            // NOTE: only DUPLICATION rules belong here — a pattern found in a single
+            // file (e.g. DateTime.Now) is never flagged, so don't list such rules.
         };
 
         var violations = new List<string>();

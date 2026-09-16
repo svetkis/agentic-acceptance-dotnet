@@ -111,6 +111,14 @@ public class AnalyzerTests
         await Assert.That(diagnostics)
             .Contains(d => d.Id == HotPathAnalyzer.NewDiagnosticId)
             .Because("`new` allocation in a [HotPath] method must trigger SAE003.");
+
+        // GUARDRAIL: verify the span, not just the ID — an analyzer firing on the wrong
+        //        node (whole file, wrong line) is a false-positive factory.
+        var diagnostic = diagnostics.First(d => d.Id == HotPathAnalyzer.NewDiagnosticId);
+        var lineSpan = diagnostic.Location.GetLineSpan();
+        await Assert.That(diagnostic.Location.IsInSource).IsTrue();
+        await Assert.That(lineSpan.StartLinePosition.Line).IsEqualTo(10)
+            .Because("SAE003 must point at the `new` expression (line 10 of the snippet).");
     }
 
     [Test]
