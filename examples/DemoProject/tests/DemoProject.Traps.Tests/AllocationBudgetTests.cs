@@ -21,18 +21,21 @@ public class AllocationBudgetTests
             warmupIterations: 3,
             measureIterations: 100);
 
-        const long baselineBytes = 0;
-        var threshold = (long)(baselineBytes * 1.10);
+        const long baselineBytesPerOp = 0; // per operation
+        var threshold = (long)(baselineBytesPerOp * 1.10);
 
-        await Assert.That(budget.BytesAllocated)
+        await Assert.That(budget.BytesAllocatedPerOperation)
             .IsLessThanOrEqualTo(threshold)
-            .Because($"Hot path allocations must not exceed baseline + 10%. Baseline={baselineBytes}, Current={budget.BytesAllocated}");
+            .Because($"Hot path allocations must not exceed baseline + 10% (per op). Baseline/op={baselineBytesPerOp}, Current/op={budget.BytesAllocatedPerOperation}");
     }
 
     [Test]
     public async Task AllHotPathMethods_HaveAllocationBudgetTests()
     {
-        var hotPathMethods = GetHotPathMethods(typeof(AllocationBudgetHotspot).Assembly);
+        var hotPathMethods = GetHotPathMethods(typeof(AllocationBudgetHotspot).Assembly).ToList();
+
+        await Assert.That(hotPathMethods.Count > 0).IsTrue()
+            .Because("no [HotPath] methods found — wrong assembly scanned or the attribute was renamed");
         var testMethods = GetTestMethods(typeof(AllocationBudgetTests).Assembly)
             .Select(m => m.Name)
             .ToHashSet();
@@ -62,7 +65,7 @@ public class AllocationBudgetTests
             action();
         var after = GC.GetAllocatedBytesForCurrentThread();
 
-        return new AllocationBudget(after - before);
+        return new AllocationBudget(TotalBytes: after - before, Operations: measureIterations);
     }
 
     private static IEnumerable<MethodInfo> GetHotPathMethods(Assembly assembly)
@@ -79,5 +82,8 @@ public class AllocationBudgetTests
             .Where(m => m.GetCustomAttribute<TestAttribute>() != null);
     }
 
-    private readonly record struct AllocationBudget(long BytesAllocated);
+    private readonly record struct AllocationBudget(long TotalBytes, int Operations)
+    {
+        public long BytesAllocatedPerOperation => Operations > 0 ? TotalBytes / Operations : TotalBytes;
+    }
 }

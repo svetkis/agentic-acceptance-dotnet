@@ -9,6 +9,8 @@
 //
 // NOTE: For stability, run in an isolated environment (same OS, .NET runtime, GC mode).
 //       Use warmup + several iterations to avoid flaky tests.
+// NOTE: GC.GetAllocatedBytesForCurrentThread sees ONLY the calling thread. If the hot
+//       path offloads work (Task.Run, ThreadPool), those allocations escape the budget.
 
 using System.Reflection;
 using TUnit;
@@ -22,7 +24,7 @@ public class HotPathAttribute : Attribute { }
 public class AllocationBudgetTests
 {
     // TRAP: The agent added extra allocations to a critical method.
-    // GUARDRAIL: Allocations of a [HotPath] method do not exceed baseline + 10%.
+    // GUARDRAIL: Allocations of a [HotPath] method do not exceed baseline + 10% (per operation).
     // Naming: {HotPathMethodName}_AllocationBudget — required by the meta-test below.
     [Test]
     public void GetAvailableSlots_AllocationBudget()
@@ -32,22 +34,29 @@ public class AllocationBudgetTests
             warmupIterations: 3,
             measureIterations: 100);
 
-        // Baseline was recorded during the first audit. Update manually after a deliberate optimization.
-        const long baselineBytes = 1024;
-        var threshold = (long)(baselineBytes * 1.10);
+        // Baseline is PER OPERATION — recorded during the first audit the same way
+        // (total bytes / iterations). Update manually after a deliberate optimization.
+        const long baselineBytesPerOp = 10;
+        var threshold = (long)(baselineBytesPerOp * 1.10);
 
-        Assert.That(budget.BytesAllocated)
+        Assert.That(budget.BytesAllocatedPerOperation)
             .IsLessThanOrEqualTo(threshold)
-            .Because($"Hot path allocations must not exceed baseline + 10%. " +
-                     $"Baseline={baselineBytes}, Current={budget.BytesAllocated}, Threshold={threshold}");
+            .Because($"Hot path allocations must not exceed baseline + 10% (per op). " +
+                     $"Baseline/op={baselineBytesPerOp}, Current/op={budget.BytesAllocatedPerOperation}, Threshold/op={threshold}");
     }
 
     // TRAP: The agent added a [HotPath] method but forgot to write an allocation test for it.
     // GUARDRAIL: Every public method with [HotPath] has a matching {MethodName}_AllocationBudget test.
+    //        Zero [HotPath] methods found = broken scan (wrong assembly, attribute renamed) —
+    //        fail instead of passing vacuously.
     [Test]
     public void AllHotPathMethods_HaveAllocationBudgetTests()
     {
-        var hotPathMethods = GetHotPathMethods(typeof(YourHotPathService).Assembly);
+        var hotPathMethods = GetHotPathMethods(typeof(YourHotPathService).Assembly).ToList();
+
+        Assert.That(hotPathMethods.Count > 0).IsTrue()
+            .Because("no [HotPath] methods found — wrong assembly scanned or the attribute was renamed");
+
         var testMethods = GetTestMethods(typeof(AllocationBudgetTests).Assembly)
             .Select(m => m.Name)
             .ToHashSet();
@@ -78,7 +87,7 @@ public class AllocationBudgetTests
             action();
         var after = GC.GetAllocatedBytesForCurrentThread();
 
-        return new AllocationBudget(after - before);
+        return new AllocationBudget(TotalBytes: after - before, Operations: measureIterations);
     }
 
     private static IEnumerable<MethodInfo> GetHotPathMethods(Assembly assembly)
@@ -95,5 +104,10 @@ public class AllocationBudgetTests
             .Where(m => m.GetCustomAttribute<TestAttribute>() != null);
     }
 
-    private readonly record struct AllocationBudget(long BytesAllocated);
+    private readonly record struct AllocationBudget(long TotalBytes, int Operations)
+    {
+        // Per-op, not total: a baseline recorded for 100 iterations must not be compared
+        // against a run with 1000 — normalize before asserting.
+        public long BytesAllocatedPerOperation => Operations > 0 ? TotalBytes / Operations : TotalBytes;
+    }
 }
