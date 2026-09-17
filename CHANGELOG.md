@@ -65,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.github/pull_request_template.md` — pull request template with pre-PR checklist.
 
 ### Removed
+- `tests/patterns/DuplicationGuardTest.cs` (+ both demo copies, DemoProject and MinimalApi) — the only guard built entirely on regex over `.cs` sources. Regex-over-source silently rots: any legitimate refactor of the watched expression turns the guard into a vacuous green test (the exact failure mode this repo flags in `solutions/ai-patterns.md` §2 Roslyn-first). The `code-duplication` trap stays; its solution is now structural: one owner module + architecture test forbidding reimplementation, semantic-duplication check in the `code-review` skill, `BR-###` numbered rules. Skill cross-references (code-review, complexity-audit, tech-debt-audit) and the knowledge map repointed; MinimalApi test-count ratchet baseline adjusted. Owner-approved exception to the "do not remove template examples" agent rule.
 - `docs/TRANSLATION_PLAN.md` — translation is complete; the working plan document was deleted (the bilingual READMEs are the result).
 
 ### Changed

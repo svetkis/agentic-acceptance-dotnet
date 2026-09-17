@@ -67,7 +67,6 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **AnalyzerTests** | Positive / negative tests for custom Roslyn analyzers | [tests/patterns/AnalyzerTests.cs](../tests/patterns/AnalyzerTests.cs) | — |
 | **PiiGuardTest** | `[SensitiveData]` + redaction guard | [tests/patterns/PiiGuardTest.cs](../tests/patterns/PiiGuardTest.cs) | — |
 | **VersionAuditTest** | Audit of SDK/NuGet and frontend dependency versions | [tests/patterns/VersionAuditTest.cs](../tests/patterns/VersionAuditTest.cs) | — |
-| **DuplicationGuardTest** | Business logic is not duplicated between services | [tests/patterns/DuplicationGuardTest.cs](../tests/patterns/DuplicationGuardTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/DuplicationGuardTest.cs` |
 | **DependencyDriftTest** | Cyclic dependencies between projects and layer drift | [tests/patterns/DependencyDriftTest.cs](../tests/patterns/DependencyDriftTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/DependencyDriftTest.cs` |
 | **EntityLeakTest** | Application interfaces do not return Domain Entity (ratchet) | [tests/patterns/EntityLeakTest.cs](../tests/patterns/EntityLeakTest.cs) | `examples/DemoProject/tests/DemoProject.Tests/EntityLeakTest.cs` |
 | **StronglyTypedIds** | Domain entities must use strongly typed IDs, not raw Guid/string/int | [tests/patterns/StronglyTypedIds.cs](../tests/patterns/StronglyTypedIds.cs) | `examples/DemoProject/tests/DemoProject.Tests/StronglyTypedIds.cs` |
@@ -140,7 +139,7 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [agent-circles](traps/agent-behavior.md#agent-circles) | Agents loop on one problem | [task-compliance](../templates/skills/task-compliance/SKILL.md) |
 | [stale-stack](traps/agent-behavior.md#stale-stack) | Agent uses outdated stack due to training cutoff | [VersionAuditTest.cs](../tests/patterns/VersionAuditTest.cs) |
 | [log-leak](traps/runtime.md#log-leak) | PII leaks into logs | [PiiGuardTest.cs](../tests/patterns/PiiGuardTest.cs) |
-| [code-duplication](traps/code-quality.md#code-duplication) | Agent duplicates business logic instead of reuse | [DuplicationGuardTest.cs](../tests/patterns/DuplicationGuardTest.cs) |
+| [code-duplication](traps/code-quality.md#code-duplication) | Agent duplicates business logic instead of reuse | One owner + architecture test — [architecture-tests.md](solutions/architecture-tests.md), semantic check in [code-review](../templates/skills/code-review/SKILL.md) |
 | [dependency-drift](traps/code-quality.md#dependency-drift) | +1 using/#include closes a cycle in the dependency graph | [DependencyDriftTest.cs](../tests/patterns/DependencyDriftTest.cs) |
 | [silent-culture-footguns](traps/code-quality.md#silent-culture-footguns) | Culture-dependent string/parsing defaults and timeout-less regex look idiomatic but break on other locales / ReDoS | Meziantou.Analyzer (MA0002/0006/0009/0011/0074) + BannedSymbols.txt |
 | [over-engineering](traps/agent-behavior.md#over-engineering) | Agent builds an architectural cathedral instead of a simple solution | [simplicity-audit](../templates/skills/simplicity-audit/SKILL.md) |

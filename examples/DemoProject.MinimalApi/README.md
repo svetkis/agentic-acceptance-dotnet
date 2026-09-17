@@ -30,7 +30,6 @@ src/DemoProject.MinimalApi/
 tests/DemoProject.MinimalApi.Tests/
 ├── ArchitectureRules.cs      # Naming, banned APIs (DateTime.Now), CancellationToken
 ├── RatchetTests.cs           # Public types and tests did not decrease
-└── DuplicationGuardTest.cs   # Business logic is not duplicated
 ```
 
 ## How to Run

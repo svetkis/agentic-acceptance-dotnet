@@ -56,8 +56,11 @@ This is the same business rule, but the automated test **will not see it**.
 
 ### Solution
 
-#### 1. Automated test: Literal Duplication Guard
-Regex scanning for literal copying. Catches agent copy-paste. See `tests/patterns/DuplicationGuardTest.cs`.
+#### 1. Structural: one owner + architecture test
+The durable fix: move the rule into a single owner module (domain service,
+shared kernel, `BookingRules`) and forbid it elsewhere with an architecture
+test (namespace of the owner, no reimplementations) — see
+[`solutions/architecture-tests.md`](../solutions/architecture-tests.md).
 
 #### 2. Code Review: Semantic Duplication in diff
 The reviewer agent checks: if validation/calculation was added in the PR — does similar logic already exist in other services? See `templates/skills/code-review/CHECKLIST.md`.
@@ -87,9 +90,11 @@ If an agent encounters `BR-###` in code — it must use the existing method rath
 #### 5. Domain Services
 Move business rules into the domain; prohibit hardcoding in Application/API.
 
-### Pattern
-
-See `tests/patterns/DuplicationGuardTest.cs`
+> **Deprecated approach:** regex scanning of `.cs` sources for duplicated
+> patterns (the former `DuplicationGuardTest`). Regex-over-source silently
+> rots: any legitimate refactor of the expression turns the guard into a
+> vacuous green test. Roslyn-first principle —
+> [`solutions/ai-patterns.md`](../solutions/ai-patterns.md) §2.
 
 
 ## Dependency Drift

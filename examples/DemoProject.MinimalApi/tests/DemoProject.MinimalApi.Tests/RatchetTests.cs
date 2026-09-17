@@ -30,7 +30,7 @@ public class RatchetTests
     public async Task TestCount_ShouldNotDecrease()
     {
         var currentCount = GetTestMethods(TestAssembly).Count();
-        const int baselineCount = 3; // ArchitectureRules + Ratchet + DuplicationGuard
+        const int baselineCount = 2; // ArchitectureRules + Ratchet
 
         await Assert.That(currentCount).IsGreaterThanOrEqualTo(baselineCount)
             .Because($"Test count decreased from baseline {baselineCount} to {currentCount}. Test runner may be broken.");

@@ -82,7 +82,7 @@ description: >
 - Exception handling: no empty `catch { }`. At minimum log + rethrow or throw custom exception.
 - Nullability: respect nullable reference types / optional types.
 - **Duplication (Literal):** if validation/calculation/status check is added, verify it does not already exist in another service. Business rules belong in Domain, not copy-pasted into Application/API.
-  - Automated guardrail: an equivalent `DuplicationGuardTest` catches literal copy-paste.
+  - Automated guardrail: an architecture test can forbid the rule outside its owner module (one owner, no reimplementation).
   - Human guard: CHECKLIST.md "Semantic Duplication" catches `IsConfirmed()` vs `Status == Confirmed` — same rule, different code.
 
 ### Cross-Layer Drift Checks

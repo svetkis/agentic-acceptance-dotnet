@@ -23,7 +23,7 @@
 ## Hotspot Analysis
 - [ ] Methods with cognitive > 25 are reviewed
 - [ ] Methods with cyclomatic > 15 are reviewed
-- [ ] Logic duplication is checked (cross-check `DuplicationGuardTest`)
+- [ ] Logic duplication is checked (code-review semantic-duplication checklist)
 - [ ] Every hotspot has a complexity reason
 
 ## Decision Guards

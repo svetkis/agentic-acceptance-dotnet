@@ -94,7 +94,7 @@ You are a Tech Lead in a .NET project. Your task is to find technical debt accum
 - **Architectural drift:** Domain must not reference Infrastructure; checked by architecture tests.
 - **Documentation drift:** `AGENTS.md` contradicts code; Decision Guards reference deleted code.
 - **Bug-regression tests:** `BUG###_DescriptiveName` tests that no longer reproduce the bug.
-- **Automated guardrails:** `DuplicationGuardTest`, architecture tests, ratchet tests.
+- **Automated guardrails:** architecture tests, ratchet tests.
 
 ## Evidence Requirements
 

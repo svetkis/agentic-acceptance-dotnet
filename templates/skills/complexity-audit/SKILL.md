@@ -49,7 +49,7 @@ description: >
 ### 3. Hotspot analysis
 - [ ] Methods with cognitive complexity > 25 are reviewed manually.
 - [ ] Methods with cyclomatic complexity > 15 are reviewed manually.
-- [ ] Hotspot logic is not duplicated (cross-check with `DuplicationGuardTest`).
+- [ ] Hotspot logic is not duplicated (cross-check with the code-review semantic-duplication checklist).
 - [ ] Every hotspot has a complexity reason: business logic, missing abstraction,
   or over-engineering.
 
