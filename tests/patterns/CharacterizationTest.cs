@@ -108,7 +108,7 @@ public class AvailableSlotsCharacterizationTests
 
         // Fixed seed: the sweep must be IDENTICAL on every machine and every run,
         // otherwise the golden master is unreproducible garbage.
-        var rng = new Random(seed: 42);
+        var rng = new Random(Seed: 42);
         var sweep = Enumerable.Range(0, 200).Select(_ => new DayInput(
             workDay.AddDays(rng.Next(0, 30)),
             RandomBookings(rng)));
@@ -156,7 +156,7 @@ public class SmartSelectionCharacterizationTests
     public void SmartSelection_MustKeepReducingDeadZones()
     {
         const int runs = 30;
-        var rng = new Random(seed: 42);
+        var rng = new Random(Seed: 42);
 
         var reductions = Enumerable.Range(0, runs)
             .Select(_ =>
