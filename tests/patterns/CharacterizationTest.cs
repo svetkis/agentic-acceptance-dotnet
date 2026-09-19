@@ -27,6 +27,7 @@
 // Workflow: (1) generate golden master with REGENERATE=true against the OLD code,
 // commit the JSON; (2) refactor; (3) same suite must stay green against the NEW code.
 
+using System.Globalization;
 using System.Text.Json;
 using TUnit;
 
@@ -64,7 +65,8 @@ public class AvailableSlotsCharacterizationTests
         var inputs = GenerateInputs();
         var actual = inputs
             .Select(i => new RecordedCase(i, string.Join("|",
-                YourSlotSearch.GetFreeWindows(i.Day, i.Bookings).Select(w => w.ToString("t"))))
+                YourSlotSearch.GetFreeWindows(i.Day, i.Bookings)
+                    .Select(w => w.ToString("HH:mm", CultureInfo.InvariantCulture))))
             .ToList();
 
         if (Regenerate)

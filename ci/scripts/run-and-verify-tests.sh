@@ -37,7 +37,9 @@ run_one() {
     local test_output exit_code
     test_output=$(dotnet run --project "$proj" --configuration Release 2>&1)
     exit_code=$?
-    echo "$test_output"
+    # || true: when the caller pipes this script (e.g. `| tail`), the closed pipe
+    # makes echo fail with "write error: Broken pipe" and pollutes CI logs.
+    echo "$test_output" || true
 
     # GUARDRAIL: "0 tests ran" with exit code 0 must not look green.
     if echo "$test_output" | grep -qi "0 tests ran\|no tests found\|discovered: 0"; then

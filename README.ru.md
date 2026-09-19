@@ -51,7 +51,7 @@ AI-агенты (Cursor, Claude, Copilot) ускоряют написание к
 | Control Foundation | `rules/AGENTS_TEMPLATE.md` (+ efcore/dapper add-ons), `rules/CONVENTIONS.md`, Decision Guards (`PERF-###`/`DB-###`) |
 | 1. Change Checks | Banned APIs, Roslyn-анализаторы (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml`, NuGet audit как ошибка сборки ([docs/solutions/nuget-audit-as-error.md](docs/solutions/nuget-audit-as-error.md)), декларирование публичной API-поверхности ([docs/solutions/public-api-surface.md](docs/solutions/public-api-surface.md)) |
 | 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests, PropertyBasedTest), `tests/conventions/`, `templates/skills/code-review/`, `templates/skills/task-compliance/` |
-| 3. System Checks | E2E/smoke паттерны, NBomber (`tests/patterns/LoadTest.cs`) |
+| 3. System Checks | Интеграция на реальной БД (Testcontainers), Characterization (golden master + Monte Carlo), E2E MCP, smoke, нагрузочные NBomber (`tests/patterns/`) |
 | 4. Reality Checks | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, simplicity, complexity, version, test, mutation, spellcheck, business-risk, ux) |
 | Control Maintenance | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
 | Engineering Governance | `docs/solutions/human-audit-bridge.md`, release decision |

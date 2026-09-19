@@ -83,6 +83,15 @@ public void StrongTypedIdAnalyzer_FlagsPrimitiveIdInDomainEntity() { }
 code → dotnet build → tests ([ADAPT]: use `dotnet run --project` for TUnit; for other frameworks, document the command explicitly) → docs → commit
 ```
 
+## Determinism in Tests
+
+- Serialization inside tests/snapshots/golden masters must use a **fixed invariant
+  format**: `value.ToString("HH:mm", CultureInfo.InvariantCulture)`, not
+  culture-sensitive standard formats (`"t"`, `"d"`, `"g"`). A golden master recorded
+  on Windows will not reproduce on a Linux CI runner otherwise.
+- Random inputs: seeded `Random` only. Time: `TimeProvider` fake or fixed constants.
+- See the trap live: `tests/patterns/CharacterizationTest.cs`.
+
 ## Code Review by Agent
 
 Before commit, **always** run a separate agent for review:

@@ -12,6 +12,19 @@
 **Agent:** acceptance-bootstrap  
 **Scanned:** {path to .sln}
 
+<!-- Machine-readable level statuses: keep this block, it makes two reports
+     diffable (re-run the bootstrap later and compare progress level by level).
+     Values: green | yellow | red -->
+```yaml
+# levels:
+#   foundation: green
+#   level1_change_checks: yellow
+#   level2_behavior_checks: red
+#   level3_system_checks: red
+#   level4_reality_checks: red
+#   governance: red
+```
+
 ---
 
 ## 1. Check Structure (What we built for this project)
