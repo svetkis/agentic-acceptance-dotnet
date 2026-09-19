@@ -18,7 +18,9 @@ public class AvailableSlotsCharacterizationTests
 
     // Regenerate: true ONLY against the OLD implementation; commit the JSON, flip back.
     // The golden master is never updated in the same PR as the refactor it judges.
-    private const bool Regenerate = false;
+    // static readonly, not const: a const-false branch is compile-time unreachable
+    // and fails the build under TreatWarningsAsErrors (CS0162).
+    private static readonly bool Regenerate = false;
 
     [Test]
     public async Task AvailableSlots_Refactor_MustReproduceGoldenMaster()

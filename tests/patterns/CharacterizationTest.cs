@@ -49,7 +49,9 @@ public class AvailableSlotsCharacterizationTests
     //       that deletes the only witness of the old behavior.
     // GUARDRAIL: regeneration is a deliberate human action; the golden master is
     //       never updated in the same PR as the refactor it is supposed to judge.
-    private const bool Regenerate = false;
+    // static readonly, not const: a const-false branch is compile-time unreachable
+    // and fails the build under TreatWarningsAsErrors (CS0162).
+    private static readonly bool Regenerate = false;
 
     // TRAP: golden master recorded only on hand-picked happy-path inputs —
     //       the boundary cases are the ones a refactor breaks, and they are
