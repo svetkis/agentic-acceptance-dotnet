@@ -71,7 +71,7 @@
 - [ ] Are there security artifacts?
 - [ ] Is DBA audit applicable to project ORM?
   - [ ] EF Core → ✅ ready skill
-  - [ ] Dapper → ❌ create `dba-audit-dapper`
+  - [ ] Dapper → ✅ adopt `templates/skills/dba-audit-dapper/` + `rules/AGENTS_TEMPLATE.dapper.md`
   - [ ] Mongo → ❌ create `dba-audit-mongo`
 - [ ] Are Perf / UX / i18n audits needed?
   - [ ] Russian only → i18n not needed, document

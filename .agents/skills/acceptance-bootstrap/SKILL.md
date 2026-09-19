@@ -125,12 +125,12 @@ For each level answer the questions:
 
 | What we found | Decision |
 |---------------|----------|
-| `<TreatWarningsAsErrors>true` + `<Nullable>enable` + `.editorconfig` | 🟢 Green, document |
-| Warnings exist but don't break the build | 🟡 Enable in `Directory.Build.props` |
-| .NET Framework 4.8, no nullable | 🟡 Enable `#nullable enable` by file, Roslyn analyzers |
+| `<TreatWarningsAsErrors>true` + `<Nullable>enable` + `.editorconfig` | ✅ Green, document |
+| Warnings exist but don't break the build | ⚠️ Enable in `Directory.Build.props` |
+| .NET Framework 4.8, no nullable | ⚠️ Enable `#nullable enable` by file, Roslyn analyzers |
 | No `.editorconfig` | 🔴 Create with severity=error for critical rules |
-| No complexity checks | 🟡 Add `SonarAnalyzer.CSharp` (`S3776` / `S1541`), see `complexity-audit` |
-| Custom Roslyn analyzers without tests | 🟡 Add `tests/patterns/AnalyzerTests.cs`, see `analyzer-tests-audit` |
+| No complexity checks | ⚠️ Add `SonarAnalyzer.CSharp` (`S3776` / `S1541`), see `templates/skills/complexity-audit/` |
+| Custom Roslyn analyzers without tests | ⚠️ Add `tests/patterns/AnalyzerTests.cs`, see `templates/skills/analyzer-tests-audit/` |
 #### Level 2: Behavior Checks — Architecture Tests
 **Principle:** Architecture violations are caught automatically, before code review.
 
@@ -186,7 +186,7 @@ Systemic properties that degrade over time regardless of any single change. For 
 | Stack | Ready-made artifacts | Decision |
 |-------|----------------------|----------|
 | EF Core + PostgreSQL | `templates/skills/dba-audit/`, `templates/skills/security-audit/` | ✅ Adapt |
-| Dapper + SQL Server | DBA audit is EF-specific | ❌ **Create `dba-audit-dapper`** (raw SQL review, indexes) |
+| Dapper + SQL Server | `templates/skills/dba-audit-dapper/` (raw SQL review, timeouts, indexes) + `rules/AGENTS_TEMPLATE.dapper.md` | ✅ **Adopt** |
 | MongoDB | DBA audit not applicable | ❌ **Create `dba-audit-mongo`** (indexes, queries, schema) |
 | No i18n (Russian only) | `templates/skills/i18n-audit/` | 🔴 Won't do, document |
 | Any .NET project | `templates/skills/complexity-audit/` | ✅ **Adopt**: SonarAnalyzer + thresholds |

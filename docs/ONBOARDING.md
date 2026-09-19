@@ -326,6 +326,21 @@ A: Yes, but a significant part of the value (estimate) is protection FROM agents
 **Q: How much does maintenance cost?**  
 A: Control Foundation + Change Checks + basic architecture tests are "set and forget" (minimal maintenance). Audits — 1–2 hours per sprint. E2E — setup ~1 day, then ~1 hour per run (see EVIDENCE.md).
 
+**Q: What does the mode (fast / standard / high-assurance) change?**  
+A: The scan itself is the same — the mode sets how much of the backlog you implement and in what order: `fast` stops after Control Foundation + Change Checks + basic architecture tests; `standard` continues through Levels 1–2 with one control per sprint; `high-assurance` adds Engineering Governance and Control Maintenance (the grooming skills). Timelines: see "How Long It Takes" above.
+
+**Q: When can we RETIRE a guardrail (a test, an analyzer, a rule)?**  
+A: Never unilaterally, and never by the agent. Proposal → human approval → recorded as `retired` in `DECISION-GUARDS.md` → prefer disable-with-expiry over deletion for high-impact controls. Full policy: [EVIDENCE.md](EVIDENCE.md) §"Retiring a guardrail".
+
+**Q: How do I re-run the bootstrap later to measure progress?**  
+A: Re-run the skill; it writes a dated report (`.backlog/onboarding-{date}.md`). Compare the level statuses (🟢/🟡/🔴) between reports — that diff is the progress metric. Keep old reports; they are cheap and they are the evidence trail.
+
+**Q: We use several AI agents (.kimi + .claude + .cursor). How do we keep their rules in sync?**  
+A: `AGENTS.md` in the repo root is the single source of truth; per-agent formats are generated from it. Review rule changes as changes to `AGENTS.md` only — if the same rule must be edited in several agent-specific files by hand, treat that as drift debt and consolidate.
+
+**Q: On .NET Framework 4.8 (no NetArchTest), what enforces Decision Guard ID uniqueness?**  
+A: A plain artifact-scan test — parse `DECISION-GUARDS.md` with regex and verify unique IDs and resolvable code links (`tests/patterns/DecisionGuardLinkTest.cs` works on any framework: it scans markdown, not assemblies). The architecture-level checks move to Roslyn analyzers; the registry check does not need them.
+
 ---
 
 ## Operating Rhythm (4 rules for Monday)

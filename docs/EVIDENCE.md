@@ -106,3 +106,26 @@ weigh risk severity, likelihood, maintenance cost, false-positive rate, and the
 presence of compensating controls. A guardrail covering a rare high-impact risk
 (security, data loss) may never fire and still be justified. A removal candidate:
 low impact + high maintenance cost + existing compensating checks.
+
+### Retiring a guardrail: policy
+
+Removing a guardrail (a test, analyzer, banned-API rule, CI check) is a
+**governance decision, not an agent decision**. The lifecycle:
+
+1. **Proposal.** Anyone (human or agent) may propose retirement in a PR that
+   answers the review questions above: what risk did it cover, what changed
+   (threat expired / compensating control added / cost outweighs impact),
+   and what is the blast radius if the risk returns.
+2. **Approval.** A human approves. An agent never retires a guardrail on its
+   own — that is exactly the "agent quietly removed the constraint" trap
+   guardrails exist to prevent.
+3. **Record.** The retirement is recorded in the project's `DECISION-GUARDS.md`
+   registry (status `retired`, owner, reason) — so the next agent does not
+   "rediscover" the risk and reinstall the guardrail, or worse, reintroduce
+   the bug it used to catch.
+4. **Grace.** Prefer disabling with a dated expiry comment over deletion for
+   high-impact guardrails: if the risk resurfaces, the control is one revert
+   away instead of one incident away.
+
+The inverse rule holds too: a guardrail nobody can justify ("we've always had
+this analyzer") is retirement debt — run the same four questions against it.

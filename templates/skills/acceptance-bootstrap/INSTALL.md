@@ -12,6 +12,13 @@ This skill is installed into **your** .NET project so that Kimi Code CLI can sca
 
 From the `agentic-acceptance-dotnet` repository, copy the executable skill and supporting templates into your project:
 
+> **Where templates live.** The skill's relative links (`../../../templates/...`,
+> `../../../docs/...`) resolve **inside the methodology repository**. After you copy
+> the skill into your project, the agent must read supporting templates and patterns
+> from the `agentic-acceptance-dotnet` checkout — keep it cloned next to the project
+> (or vendor the needed templates in the same PR that installs the skill). The links
+> do not survive the copy; that is expected.
+
 ```bash
 # From the root of YOUR .NET project
 mkdir -p ./.kimi/skills/acceptance-bootstrap
