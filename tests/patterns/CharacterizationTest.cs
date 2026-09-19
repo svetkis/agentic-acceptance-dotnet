@@ -78,8 +78,11 @@ public class AvailableSlotsCharacterizationTests
         Assert.That(actual.Count).IsEqualTo(golden.Count)
             .Because("A refactor must not change the number of cases produced.");
 
+        // Compare OUTPUT strings only: record value-equality does not extend
+        // through array fields (TimeOnly[] compares by reference), so a full
+        // record compare would flag every case after deserialization.
         var diffs = actual.Zip(golden)
-            .Where(pair => !pair.First.Equals(pair.Second))
+            .Where(pair => pair.First.Output != pair.Second.Output)
             .Select(pair => $"input={pair.First.Input}: old={pair.Second.Output}, new={pair.First.Output}")
             .ToList();
 
@@ -116,7 +119,7 @@ public class AvailableSlotsCharacterizationTests
     private static TimeOnly At(int h, int m) => new(h, m);
 
     private static TimeOnly[] BookedFullDay() =>
-        Enumerable.Range(0, 48).Select(i => new TimeOnly(0, 0).AddMinutes(i * 15)).ToArray();
+        Enumerable.Range(0, 48).Select(i => new TimeOnly(9, 0).AddMinutes(i * 15)).ToArray(); // 9:00-20:45
 
     private static TimeOnly[] RandomBookings(Random rng) =>
         Enumerable.Range(0, rng.Next(1, 8))
@@ -128,7 +131,7 @@ public class AvailableSlotsCharacterizationTests
     private static string Serialize(List<RecordedCase> cases) =>
         JsonSerializer.Serialize(cases, new JsonSerializerOptions { WriteIndented = true });
 
-    // Records with value equality so Zip-compare works without custom comparers.
+    // Input is kept for the failure message only (see the compare note above).
     private readonly record struct RecordedCase(DayInput Input, string Output);
     private readonly record struct DayInput(DateOnly Day, TimeOnly[] Bookings);
 }
