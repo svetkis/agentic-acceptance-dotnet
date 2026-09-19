@@ -3,6 +3,7 @@
 // including the quirks (Sunday empty, sub-30-min gaps dropped, the 20:45 bug).
 // This file is a working adaptation of the template from tests/patterns/CharacterizationTest.cs.
 
+using System.Globalization;
 using System.Text.Json;
 using TUnit;
 
@@ -97,8 +98,10 @@ public class AvailableSlotsCharacterizationTests
             .OrderBy(t => t)
             .ToArray();
 
+    // Invariant, fixed format: ToString("t") is culture-dependent and the golden
+    // master must be byte-identical on every OS/CI runner (the pinned-environment rule).
     private static string Serialize(IEnumerable<TimeOnly> windows) =>
-        string.Join("|", windows.Select(w => w.ToString("t")));
+        string.Join("|", windows.Select(w => w.ToString("HH:mm", CultureInfo.InvariantCulture)));
 
     // Input kept for the failure message only (see the compare note above).
     private readonly record struct RecordedCase(DayInput Input, string Output)
