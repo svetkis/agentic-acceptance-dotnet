@@ -79,7 +79,9 @@ under deadline pressure will happily add `<NoWarn>NU1903</NoWarn>` or a
 A suppressed vulnerability is accepted risk, and accepted risk has an owner
 and a deadline. Same lifecycle discipline as the existing
 [`ci/scripts/check-guardrail-lifecycle.sh`](../../ci/scripts/check-guardrail-lifecycle.sh)
-check for `NuGetAuditSuppress` entries:
+check, which scans every suppression mechanism the same way — `NuGetAuditSuppress`
+entries, `<NoWarn>` in csproj/props, and `#pragma warning disable` in sources —
+each requiring an adjacent comment with an owner and a review date:
 
 ```xml
 <ItemGroup>
@@ -90,8 +92,8 @@ check for `NuGetAuditSuppress` entries:
 ```
 
 Rules: one advisory URL per entry, an expiry date, an owner, and a reason.
-An audit-suppress entry without an expiry comment should fail the
-guardrails-review / lifecycle check.
+Any suppression — audit entry, `NoWarn`, pragma — without an expiry comment
+fails the guardrails-review / lifecycle check.
 
 ## 4. Pinned and Central: Make the Graph Auditable
 

@@ -29,6 +29,7 @@ internal static class TestAssertionHelper
 
     // An assertion or verification call counts as a behavior check.
     // Custom helpers are recognized by convention: Assert*/Verify*/Expect*/Should*.
+    // Owner: svetkis. Review: 2027-09-28. Permanent-by-design, see the rationale on the pragma line.
 #pragma warning disable S1541 // Semantic recognition of many frameworks is inherently branch-heavy.
     public static bool IsAssertionInvocation(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
     {

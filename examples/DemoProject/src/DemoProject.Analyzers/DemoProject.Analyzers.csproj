@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <!-- Owner: svetkis. Review: 2027-09-28. RS2008 ("Analyzer release file missing") fires
+         on every analyzer project without a release-notes additional file; suppressing it is
+         standard practice and carries no risk (see ci/scripts/check-guardrail-lifecycle.sh). -->
     <NoWarn>RS2008</NoWarn>
   </PropertyGroup>
 
