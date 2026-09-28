@@ -111,7 +111,7 @@ required to catch.**
 
 
 ## Non-Validating Tests
-> **Status:** in force — wired into `rules/AGENTS_TEMPLATE.md` (Tests), Test Audit and Mutation Audit skills. Part of the [Self-Checking Tests workstream](../SELF-CHECKING-TESTS-WORKSTREAM.md) (SV-006 analyzer blockers still open).
+> **Status:** in force — wired into `rules/AGENTS_TEMPLATE.md` (Tests), Test Audit, Mutation Audit, and Mutation Verify skills. Part of the [Self-Checking Tests workstream](../SELF-CHECKING-TESTS-WORKSTREAM.md) (SV-006 analyzer blockers still open).
 
 A test can be discovered, executed, and green while proving nothing about the
 behavior named by the test.
@@ -180,6 +180,7 @@ Observed mechanism (no mind-reading required):
    `tests/conventions/AnalyzerDiagnostics.md` for the full diagnostic catalog.
 3. **Deliberate fault injection:** for critical behavior, break the production
    code locally and confirm the test fails. If it doesn't — the test is dead.
+   The per-change discipline for this is `templates/skills/mutation-verify/`.
 4. **Mutation testing** (risk-trigger / release): mutation score on critical
    assemblies measures fault sensitivity of the whole suite. See
    `templates/skills/mutation-audit/`.

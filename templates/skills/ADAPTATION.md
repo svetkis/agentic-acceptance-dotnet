@@ -96,6 +96,7 @@ All audit skills since version 2026-06 mark findings with a confidence level:
 | `backlog-hygiene` | 📋 |
 | `complexity-audit` | 🧠 |
 | `mutation-audit` | 🧬 |
+| `mutation-verify` | 🦠 |
 | `release-readiness-audit` | 📦 |
 | `spellcheck-audit` | 🔤 |
 | `bot-audit` | 🤖 |

@@ -29,6 +29,7 @@ surviving mutants and score regressions for the Programmer Agent to act on.
 - **A lot of legacy code** → start with one critical assembly and fix a baseline.
 - **TUnit / Microsoft Testing Platform** → Stryker.NET may be unsupported.
   Run as a periodic audit or a separate CI job with `dotnet test` (the `dotnet run --project` convention applies to this repo's TUnit examples; Stryker targets the project's own runner).
+  For per-change spot checks without Stryker, use the `mutation-verify` skill (diff-scoped hand-made mutants).
 - **No budget for long runs** → run once per sprint, not on every PR.
 
 ## Required Inputs

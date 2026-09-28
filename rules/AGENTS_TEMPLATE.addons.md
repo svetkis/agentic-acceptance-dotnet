@@ -109,12 +109,13 @@
 
 ## Mutation Testing
 
-> Copy for critical assemblies before release. Skip if Stryker does not support your test framework.
+> Copy for critical assemblies before release. If Stryker does not support your test framework (TUnit / Microsoft Testing Platform), skip the Stryker rules and use the `mutation-verify` fallback below.
 
 - Run Stryker on critical assemblies (e.g., Domain) before release
 - Mutation score must not decrease from baseline
 - Survived mutants in critical code must be analyzed and covered or documented
 - Intentional exceptions use `MUTATION-###` ID
+- No Stryker (TUnit / Microsoft Testing Platform): per-change hand-made mutants via the `mutation-verify` skill — diff-scoped, one at a time, revert and verify a clean worktree
 
 ## Analyzer Tests
 

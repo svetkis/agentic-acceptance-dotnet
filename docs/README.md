@@ -107,6 +107,7 @@ Exception: `templates/skills/acceptance-bootstrap/` contains supporting template
 | [spellcheck-audit](../templates/skills/spellcheck-audit/SKILL.md) | Once per sprint / before public release |
 | [release-readiness-audit](../templates/skills/release-readiness-audit/SKILL.md) | Before release / beta launch |
 | [mutation-audit](../templates/skills/mutation-audit/SKILL.md) | Before release / once per sprint |
+| [mutation-verify](../templates/skills/mutation-verify/SKILL.md) | After writing/changing code + its tests, before task completion (diff-scoped hand-made mutants, no Stryker) |
 | [analyzer-tests-audit](../templates/skills/analyzer-tests-audit/SKILL.md) | When creating / updating Roslyn analyzers |
 | [external-contract-verification](../templates/skills/external-contract-verification/SKILL.md) | Before implementing integrations / on PR with webhooks, provider DTOs, signature checks |
 | [load-test-ops](../templates/skills/load-test-ops/SKILL.md) | Before release / after infrastructure changes (load runs and trend comparison) |
@@ -142,7 +143,7 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [dependency-drift](traps/code-quality.md#dependency-drift) | +1 using/#include closes a cycle in the dependency graph | [DependencyDriftTest.cs](../tests/patterns/DependencyDriftTest.cs) |
 | [silent-culture-footguns](traps/code-quality.md#silent-culture-footguns) | Culture-dependent string/parsing defaults and timeout-less regex look idiomatic but break on other locales / ReDoS | Meziantou.Analyzer (MA0002/0006/0009/0011/0074) + BannedSymbols.txt |
 | [over-engineering](traps/agent-behavior.md#over-engineering) | Agent builds an architectural cathedral instead of a simple solution | [simplicity-audit](../templates/skills/simplicity-audit/SKILL.md) |
-| [non-validating-tests](traps/testing.md#non-validating-tests) | Test is green but cannot fail when behavior breaks | [test-audit](../templates/skills/test-audit/SKILL.md), [mutation-audit](../templates/skills/mutation-audit/SKILL.md) |
+| [non-validating-tests](traps/testing.md#non-validating-tests) | Test is green but cannot fail when behavior breaks | [test-audit](../templates/skills/test-audit/SKILL.md), [mutation-audit](../templates/skills/mutation-audit/SKILL.md), [mutation-verify](../templates/skills/mutation-verify/SKILL.md) |
 | [false-green-gate](traps/testing.md#false-green-gate) | Gate over an external source answers "clean" when the source stopped serving data | canary + tri-state exit codes in audit scripts |
 | [surface-leak](traps/agent-behavior.md#surface-leak) | Agent widens visibility "for convenience", renames or removes public symbols — repo tests stay green, consumers of the contract break | [public-api-surface.md](solutions/public-api-surface.md): PublicApiAnalyzers + internal-by-default + IVT allowlist |
 
