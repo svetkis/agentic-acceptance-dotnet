@@ -96,6 +96,7 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   ├── AGENTS_TEMPLATE.md        # Base constitution for agents (universal)
 │   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-specific rules
 │   ├── AGENTS_TEMPLATE.dapper.md # Add-on: Dapper / Raw SQL-specific rules
+│   ├── AGENTS_TEMPLATE.addons.md # Add-on: optional sections (caching, hot path, complexity, spellcheck, mutation, analyzers)
 │   └── CONVENTIONS.md            # Commits, workflow, tests
 ├── templates/skills/                        # agent-role skills (full catalog: docs/README.md)
 ├── docs/
@@ -161,7 +162,6 @@ dotnet run --project tests/DemoProject.MinimalApi.Tests
 - Naming conventions, banned APIs (`DateTime.Now`)
 - `CancellationToken` guard
 - Ratchet tests for public types
-- Duplication guard for business logic
 
 See also [`examples/DemoProject.MinimalApi/README.md`](examples/DemoProject.MinimalApi/README.md).
 
@@ -173,7 +173,7 @@ Lost? The full knowledge map lives in
 | What you need | Where to go |
 |---------------|-------------|
 | Unfamiliar term | [GLOSSARY.md](GLOSSARY.md) |
-| Agent rules (base) | `rules/AGENTS_TEMPLATE.md` (+ [EF Core](rules/AGENTS_TEMPLATE.efcore.md) / [Dapper](rules/AGENTS_TEMPLATE.dapper.md) add-ons) |
+| Agent rules (base) | `rules/AGENTS_TEMPLATE.md` (+ [EF Core](rules/AGENTS_TEMPLATE.efcore.md) / [Dapper](rules/AGENTS_TEMPLATE.dapper.md) / [optional](rules/AGENTS_TEMPLATE.addons.md) add-ons) |
 | Test patterns | `tests/patterns/` |
 | Agent traps | `docs/traps/` |
 | Project onboarding | [docs/ONBOARDING.md](docs/ONBOARDING.md) |

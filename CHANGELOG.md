@@ -101,6 +101,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `tests/conventions/TUnit_Guide.md` — added note about TUnit 1.x auto-generated entry point (no `Program.cs` required).
 - `README.md` and `README.en.md` (now the English `README.md`) — added badges (.NET 10, License, CI), author section, and community contacts.
 
+### Fixed
+- Stale duplication-guard claims removed — both root READMEs still advertised "Duplication guard for business logic" in DemoProject.MinimalApi after `DuplicationGuardTest` was removed, and the minimal-API case study still listed it under Selected Controls, False Positives, and Costs with a hardcoded "7 tests" (actual: 6). The case-study row moved to Rejected Controls with the owner rationale (keeps the Risk Profile row addressed), and the test count now defers to CI like the sibling case study. Docs-in-Sync catch of the verification pass; check-links/knowledge-map are blind to prose claims — only a claim-vs-artifact review finds these.
+- `rules/AGENTS_TEMPLATE.addons.md` surfaced in both root READMEs (Structure tree + Navigation) — the file existed only in the knowledge map and repo AGENTS.md, so readers entering from the root README never learned the optional add-ons exist. Root cause: `check-knowledge-map.sh` does not scan `rules/`.
+
 ## [0.1.0] - 2026-05-29
 
 ### Added

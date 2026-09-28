@@ -96,6 +96,7 @@ cp -r templates/skills/code-review /your/project/.kimi/skills/
 │   ├── AGENTS_TEMPLATE.md        # Базовая конституция для агентов (универсальная)
 │   ├── AGENTS_TEMPLATE.efcore.md # Add-on: EF Core-специфичные правила
 │   ├── AGENTS_TEMPLATE.dapper.md # Add-on: Dapper / Raw SQL-специфичные правила
+│   ├── AGENTS_TEMPLATE.addons.md # Add-on: опциональные секции (caching, hot path, complexity, spellcheck, mutation, анализаторы)
 │   └── CONVENTIONS.md            # Коммиты, воркфлоу, тесты
 ├── templates/skills/                        # скиллы-роли (полный каталог: docs/README.md)
 ├── docs/
@@ -161,7 +162,6 @@ dotnet run --project tests/DemoProject.MinimalApi.Tests
 - Naming conventions, banned APIs (`DateTime.Now`)
 - `CancellationToken` guard
 - Ratchet-тесты на публичные типы
-- Duplication guard для бизнес-логики
 
 См. также [`examples/DemoProject.MinimalApi/README.md`](examples/DemoProject.MinimalApi/README.md).
 
@@ -173,7 +173,7 @@ dotnet run --project tests/DemoProject.MinimalApi.Tests
 | Что нужно | Куда идти |
 |-----------|-----------|
 | Незнакомый термин | [GLOSSARY.md](GLOSSARY.md) |
-| Правила для агента (базовые) | `rules/AGENTS_TEMPLATE.md` (+ аддоны [EF Core](rules/AGENTS_TEMPLATE.efcore.md) / [Dapper](rules/AGENTS_TEMPLATE.dapper.md)) |
+| Правила для агента (базовые) | `rules/AGENTS_TEMPLATE.md` (+ аддоны [EF Core](rules/AGENTS_TEMPLATE.efcore.md) / [Dapper](rules/AGENTS_TEMPLATE.dapper.md) / [опциональные](rules/AGENTS_TEMPLATE.addons.md)) |
 | Паттерны тестов | `tests/patterns/` |
 | Ловушки агента | `docs/traps/` |
 | Онбординг проекта | [docs/ONBOARDING.md](docs/ONBOARDING.md) |
