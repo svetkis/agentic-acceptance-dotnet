@@ -9,11 +9,12 @@ description: >
 
 # Mutation Verify — Skill
 
-> **[ADAPT] Commands:** filter option names differ across runners and versions —
-> current TUnit / Microsoft Testing Platform uses `--treenode-filter` /
-> `--filter-uid` (there is no `--filter`); xUnit/NUnit/MSTest via `dotnet test`
-> uses `--filter`. Discover yours with `-- --help` before the first mutant.
-> See `ADAPTATION.md`.
+> **[ADAPT] Commands:** filter syntax is runner-specific — current TUnit /
+> Microsoft Testing Platform: `--treenode-filter '/*/*/*Order*/*'` (4-segment
+> tree path `/Assembly/Namespace/Class/Test`, `*` wildcards; there is no
+> `--filter`); xUnit/NUnit/MSTest via `dotnet test`: `--filter
+> 'FullyQualifiedName~Order'`. Discover yours with `-- --help` before the
+> first mutant. See `ADAPTATION.md`.
 
 Optional interaction convention (agent-specific): when this skill is active,
 add `🦠` to your STARTER_CHARACTER stack (example: `🍀 🦠`). The skill is fully
@@ -61,7 +62,7 @@ code matches the spec — only that the tests can fail.
 
 ### 2. Apply and run (one mutant at a time)
 - [ ] Mutant applied as a minimal one-line change from the catalog below.
-- [ ] Narrow test subset run with the project's own runner (current TUnit: `dotnet run --project tests/... -- --treenode-filter 'Order'`); the run must execute > 0 tests before the verdict is read.
+- [ ] Narrow test subset run with the project's own runner (current TUnit: `dotnet run --project tests/... -- --treenode-filter '/*/*/*Order*/*'`); the run must execute > 0 tests before the verdict is read.
 - [ ] Outcome recorded: **killed** (failing test name + assertion message) or **survived**.
 - [ ] Mutant reverted before the next one — never two mutants at once (they mask each other's kills).
 
@@ -129,7 +130,7 @@ Owner / disposition
 
 | # | Mutant | Change | Run | Result |
 |---|--------|--------|-----|--------|
-| 1 | src/.../Order.cs:42 | `>` → `>=` | dotnet run --project tests/... -- --treenode-filter 'Order' | 🟢 killed by OrderTests.Boundary |
+| 1 | src/.../Order.cs:42 | `>` → `>=` | dotnet run --project tests/... -- --treenode-filter '/*/*/*Order*/*' | 🟢 killed by OrderTests.Boundary |
 | 2 | src/.../Order.cs:57 | `throw` → `return` | (same) | 🔴 survived → test strengthened, re-run: killed |
 
 Cleanup: `git status --porcelain` before = after; full suite green without mutants.

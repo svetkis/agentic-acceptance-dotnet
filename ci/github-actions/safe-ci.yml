@@ -89,7 +89,12 @@ jobs:
       # GUARDRAIL: The OpenAPI snapshot must not drift
       # ADAPT REQUIRED: replace the project path, filter and snapshots directory.
       # Or remove this job if the target project has no OpenAPI snapshot yet.
+      # NOTE: filter syntax is runner-specific — TUnit/Microsoft Testing Platform
+      # takes a 4-segment tree path /Assembly/Namespace/Class/Test with `*` wildcards
+      # (no `--filter`/`--filter-class`; verified on TUnit 1.66.27 / MTP 2.4.0);
+      # VSTest runners via `dotnet test` use --filter "FullyQualifiedName~OpenApi".
+      # A filter matching no tests fails the run ("Zero tests ran") — keep it that way.
       - name: Verify OpenAPI Snapshot
         run: |
-          dotnet run --project tests/IntegrationTests/IntegrationTests.csproj -- --filter-class "*OpenApi*"
+          dotnet run --project tests/IntegrationTests/IntegrationTests.csproj -- --treenode-filter '/*/*/*OpenApi*/*'
           git diff --exit-code tests/IntegrationTests/Snapshots/ || (echo "OpenAPI snapshot changed! Update it intentionally." && exit 1)
