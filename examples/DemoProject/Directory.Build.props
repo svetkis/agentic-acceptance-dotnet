@@ -15,4 +15,12 @@
     </PackageReference>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" />
   </ItemGroup>
+
+  <!-- GUARDRAIL: SAE014 (implicit lock in a [HotPath] call chain, HotPathLockAnalyzer)
+       is call-graph analysis — too heavy for every IDE keystroke, so the analyzer reads
+       this MSBuild property and stays off unless CI passes -p:EnableHotPathDeepAnalysis=true.
+       Without CompilerVisibleProperty the property never reaches the analyzer. -->
+  <ItemGroup>
+    <CompilerVisibleProperty Include="EnableHotPathDeepAnalysis" />
+  </ItemGroup>
 </Project>

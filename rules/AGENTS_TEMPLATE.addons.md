@@ -67,6 +67,12 @@
 - Every `[HotPath]` method must have `{MethodName}_AllocationBudget` test;
   regressions > 10% are forbidden. `[HotPath]` is a project-local marker
   attribute — define your own convention (see `tests/patterns/AllocationBudgetTest.cs`)
+- Every `[HotPath]` method must have `{MethodName}_LockContentionBudget` test —
+  a parallel hammer asserts `Monitor.LockContentionCount` stays within the noise
+  floor; this is the only detector for implicit locks hidden in callees and in
+  other assemblies (see `tests/patterns/LockContentionBudgetTest.cs` and
+  `docs/solutions/lock-contention-evidence.md` for the full evidence ladder,
+  including the SAE013/SAE014 Roslyn rules for direct and call-chain locks)
 
 ## Complexity Thresholds
 

@@ -14,8 +14,10 @@ bash ci/scripts/check-links.sh
 bash ci/scripts/check-guardrail-lifecycle.sh
 
 echo "== 2/4 Release build with warnings as errors (CI parity) =="
+# EnableHotPathDeepAnalysis mirrors the CI Build step: SAE014 (implicit locks in
+# [HotPath] call chains) is call-graph analysis and runs only where enabled.
 dotnet build examples/DemoProject/DemoProject.sln \
-    --configuration Release -p:TreatWarningsAsErrors=true --nologo -v q
+    --configuration Release -p:TreatWarningsAsErrors=true -p:EnableHotPathDeepAnalysis=true --nologo -v q
 
 echo "== 3/4 Demo suites (green + expected-red) =="
 bash ci/scripts/run-and-verify-tests.sh \

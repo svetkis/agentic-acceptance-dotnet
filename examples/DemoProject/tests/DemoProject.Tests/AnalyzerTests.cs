@@ -175,6 +175,300 @@ public class AnalyzerTests
     }
 
     [Test]
+    public async Task HotPathLockAnalyzer_FlagsLockStatementInHotPath()
+    {
+        const string code = """
+            using DemoProject.Domain;
+
+            namespace DemoProject.Application;
+
+            public class HotPathService
+            {
+                private readonly object _gate = new();
+
+                [HotPath]
+                public int Process()
+                {
+                    lock (_gate)
+                    {
+                        return 42;
+                    }
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<HotPathLockAnalyzer>(code,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .Contains(d => d.Id == HotPathLockAnalyzer.LockDiagnosticId)
+            .Because("A `lock` statement inside a [HotPath] method must trigger SAE013.");
+
+        // GUARDRAIL: verify the span, not just the ID — the squiggle must sit on `lock`
+        var diagnostic = diagnostics.First(d => d.Id == HotPathLockAnalyzer.LockDiagnosticId);
+        await Assert.That(diagnostic.Location.IsInSource).IsTrue();
+        await Assert.That(diagnostic.Location.GetLineSpan().StartLinePosition.Line).IsEqualTo(11)
+            .Because("SAE013 must point at the `lock` keyword (line 11 of the snippet).");
+    }
+
+    [Test]
+    public async Task HotPathLockAnalyzer_FlagsBlockingMonitorCallInHotPath()
+    {
+        const string code = """
+            using System.Threading;
+            using DemoProject.Domain;
+
+            namespace DemoProject.Application;
+
+            public class HotPathService
+            {
+                private readonly object _gate = new();
+
+                [HotPath]
+                public int Process()
+                {
+                    Monitor.Enter(_gate);
+                    try { return 42; }
+                    finally { Monitor.Exit(_gate); }
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<HotPathLockAnalyzer>(code,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location),
+            MetadataReference.CreateFromFile(GetReferenceAssembly("System.Threading.dll")));
+
+        await Assert.That(diagnostics)
+            .Contains(d => d.Id == HotPathLockAnalyzer.LockDiagnosticId)
+            .Because("Monitor.Enter inside a [HotPath] method is a lock by another name and must trigger SAE013.");
+    }
+
+    [Test]
+    public async Task HotPathLockAnalyzer_IgnoresLockOutsideHotPath()
+    {
+        const string code = """
+            using DemoProject.Domain;
+
+            namespace DemoProject.Application;
+
+            public class ColdPathService
+            {
+                private readonly object _gate = new();
+
+                public int Process()
+                {
+                    lock (_gate)
+                    {
+                        return 42;
+                    }
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<HotPathLockAnalyzer>(code,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .IsEmpty()
+            .Because("Locks outside [HotPath] methods are legitimate synchronization and must not trigger diagnostics.");
+    }
+
+    [Test]
+    public async Task HotPathLockAnalyzer_DeepRule_IsOffByDefault()
+    {
+        const string code = """
+            using DemoProject.Domain;
+
+            namespace DemoProject.Application;
+
+            public class HotPathService
+            {
+                [HotPath]
+                public int Process() => new LockedHelper().GetOrCreate();
+            }
+
+            public class LockedHelper
+            {
+                private readonly object _gate = new();
+
+                public int GetOrCreate()
+                {
+                    lock (_gate)
+                    {
+                        return 42;
+                    }
+                }
+            }
+            """;
+
+        var diagnostics = await RunAnalyzerAsync<HotPathLockAnalyzer>(code,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .IsEmpty()
+            .Because("SAE014 (implicit lock via call graph) is CI-only: without EnableHotPathDeepAnalysis " +
+                     "it must stay silent so the IDE never pays for call-graph work. " +
+                     "The lock here is one call away from the hot path, so SAE013 does not fire either.");
+    }
+
+    [Test]
+    public async Task HotPathLockAnalyzer_DeepRule_FlagsIndirectLockWhenEnabled()
+    {
+        const string code = """
+            using DemoProject.Domain;
+
+            namespace DemoProject.Application;
+
+            public class HotPathService
+            {
+                [HotPath]
+                public int Process() => new LockedHelper().GetOrCreate();
+            }
+
+            public class LockedHelper
+            {
+                private readonly object _gate = new();
+
+                public int GetOrCreate()
+                {
+                    lock (_gate)
+                    {
+                        return 42;
+                    }
+                }
+            }
+            """;
+
+        var options = new Dictionary<string, string>
+        {
+            ["build_property.EnableHotPathDeepAnalysis"] = "true"
+        };
+
+        var diagnostics = await RunAnalyzerAsync<HotPathLockAnalyzer>(code, options,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .Contains(d => d.Id == HotPathLockAnalyzer.TransitiveLockDiagnosticId)
+            .Because("A [HotPath] method calling a lock-holding helper is exactly the implicit-lock trap " +
+                     "SAE014 exists for; with deep analysis enabled it must fire.");
+    }
+
+    [Test]
+    public async Task HotPathLockAnalyzer_DeepRule_FlagsTwoHopChainWhenEnabled()
+    {
+        const string code = """
+            using DemoProject.Domain;
+
+            namespace DemoProject.Application;
+
+            public class HotPathService
+            {
+                [HotPath]
+                public int Process() => new LockedHelper().Wrap();
+            }
+
+            public class LockedHelper
+            {
+                private readonly object _gate = new();
+
+                public int Wrap() => GetOrCreate();
+
+                public int GetOrCreate()
+                {
+                    lock (_gate)
+                    {
+                        return 42;
+                    }
+                }
+            }
+            """;
+
+        var options = new Dictionary<string, string>
+        {
+            ["build_property.EnableHotPathDeepAnalysis"] = "true"
+        };
+
+        var diagnostics = await RunAnalyzerAsync<HotPathLockAnalyzer>(code, options,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .Contains(d => d.Id == HotPathLockAnalyzer.TransitiveLockDiagnosticId)
+            .Because("The lock is two calls away from the hot path; the reverse call graph must walk both hops.");
+    }
+
+    [Test]
+    public async Task HotPathLockAnalyzer_DeepRule_IgnoresCleanCallChainWhenEnabled()
+    {
+        const string code = """
+            using DemoProject.Domain;
+
+            namespace DemoProject.Application;
+
+            public class HotPathService
+            {
+                [HotPath]
+                public int Process() => new PlainHelper().Compute();
+            }
+
+            public class PlainHelper
+            {
+                public int Compute() => 42;
+            }
+            """;
+
+        var options = new Dictionary<string, string>
+        {
+            ["build_property.EnableHotPathDeepAnalysis"] = "true"
+        };
+
+        var diagnostics = await RunAnalyzerAsync<HotPathLockAnalyzer>(code, options,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .IsEmpty()
+            .Because("A lock-free call chain from a [HotPath] method must not trigger SAE014.");
+    }
+
+    [Test]
+    public async Task HotPathLockAnalyzer_DeepRule_DoesNotDoubleReportDirectLock()
+    {
+        const string code = """
+            using DemoProject.Domain;
+
+            namespace DemoProject.Application;
+
+            public class HotPathService
+            {
+                private readonly object _gate = new();
+
+                [HotPath]
+                public int Process()
+                {
+                    lock (_gate)
+                    {
+                        return 42;
+                    }
+                }
+            }
+            """;
+
+        var options = new Dictionary<string, string>
+        {
+            ["build_property.EnableHotPathDeepAnalysis"] = "true"
+        };
+
+        var diagnostics = await RunAnalyzerAsync<HotPathLockAnalyzer>(code, options,
+            MetadataReference.CreateFromFile(typeof(HotPathAttribute).Assembly.Location));
+
+        await Assert.That(diagnostics)
+            .Contains(d => d.Id == HotPathLockAnalyzer.LockDiagnosticId)
+            .Because("A direct lock in a [HotPath] method must trigger SAE013.");
+        await Assert.That(diagnostics)
+            .DoesNotContain(d => d.Id == HotPathLockAnalyzer.TransitiveLockDiagnosticId)
+            .Because("A direct lock is SAE013's report; SAE014 must not double-report the same lock.");
+    }
+
+    [Test]
     public async Task NonValidatingTestAnalyzer_FlagsZeroAssertTest()
     {
         const string code = """
@@ -1185,7 +1479,9 @@ public class AnalyzerTests
         return await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync();
     }
 
-    private static string GetSystemRuntimeReference()
+    private static string GetSystemRuntimeReference() => GetReferenceAssembly("System.Runtime.dll");
+
+    private static string GetReferenceAssembly(string fileName)
     {
         // Reference assemblies live in the .NET SDK packs directory.
         // The runtime assembly (System.Private.CoreLib) points to the shared runtime folder,
@@ -1194,11 +1490,11 @@ public class AnalyzerTests
         var version = Path.GetFileName(runtimeDir); // e.g. "10.0.8"
         var dotnetRoot = Directory.GetParent(Directory.GetParent(runtimeDir)!.Parent!.FullName)!.FullName;
 
-        var refAssemblyPath = Path.Combine(dotnetRoot, "packs", "Microsoft.NETCore.App.Ref", version, "ref", "net10.0", "System.Runtime.dll");
+        var refAssemblyPath = Path.Combine(dotnetRoot, "packs", "Microsoft.NETCore.App.Ref", version, "ref", "net10.0", fileName);
         if (File.Exists(refAssemblyPath))
             return refAssemblyPath;
 
-        throw new InvalidOperationException($"Could not locate System.Runtime.dll reference assembly. Expected: {refAssemblyPath}");
+        throw new InvalidOperationException($"Could not locate {fileName} reference assembly. Expected: {refAssemblyPath}");
     }
 
     private static (int Line, int Character) FindSnippetLocation(string sourceCode, string snippet)

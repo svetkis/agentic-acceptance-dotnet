@@ -28,6 +28,7 @@
 //       `Config.Default.With(Job.ShortRun)`, and treat the exit code as the gate.
 
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Running;
 
 namespace Tests.Patterns;
@@ -35,6 +36,7 @@ namespace Tests.Patterns;
 // Separate console project (Program.cs is one line — see bottom of this file).
 // The benchmark class mirrors the real hot path with production-like input.
 [MemoryDiagnoser]                       // Allocated / Gen0 columns — the cheapest win
+[ThreadingDiagnoser]                    // Lock Contentions column — implicit locks, invisible to the mean
 [SimpleJob(warmupCount: 3, iterationCount: 20)]  // deterministic, CI-friendly
 public class SlotSearchBenchmarks
 {
@@ -64,15 +66,22 @@ public class SlotSearchBenchmarks
 
 // --- Reading the report (the guardrail, not the tool, is the point) ---
 //
-// | Method                    | Mean     | Allocated |
-// | GetAvailableSlots_Current | 812.3 us |   48.5 KB |   ← baseline
-// | GetAvailableSlots_Candidate | 790.1 us |  132.7 KB |
+// | Method                      | Mean     | Allocated | Lock Contentions |
+// | GetAvailableSlots_Current   | 812.3 us |   48.5 KB |                0 | ← baseline
+// | GetAvailableSlots_Candidate | 790.1 us |  132.7 KB |              0.5 |
 //
-// GUARDRAIL: a candidate is accepted only if BOTH hold:
+// GUARDRAIL: a candidate is accepted only if ALL hold:
 //   1. Mean improves beyond noise (> 3% on the same machine, same run);
-//   2. Allocations do not grow more than the agreed budget.
+//   2. Allocations do not grow more than the agreed budget;
+//   3. Lock Contentions stays at the baseline level (0 for a lock-free path).
 // TRAP: "faster but allocates 3x more" — the mean win is eaten by Gen0 pauses
 //       under real load; without [MemoryDiagnoser] the agent never sees it.
+// TRAP: "faster single-threaded" but Lock Contentions > 0 — the candidate took
+//       a lock (or called something that does); single-threaded benchmarks never
+//       pay for it, parallel production load serializes on it. Without
+//       [ThreadingDiagnoser] the column is simply absent. The column counts
+//       parked waiters — a spin-hold may show ~0; for a gate use the parallel
+//       budget test (LockContentionBudgetTest), not this column.
 
 // --- CI gate: ratio, not absolute numbers ---
 //

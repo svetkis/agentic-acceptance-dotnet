@@ -255,6 +255,10 @@ For source-level C# guardrails, the default choice is a Roslyn analyzer. Regex s
 
 **Working example:** `examples/DemoProject/src/DemoProject.Analyzers/HotPathAnalyzer.cs`
 
+**Example 2b — Locks in hot paths:** `SAE013` catches a `lock` / blocking `Monitor` call directly inside a `[HotPath]` method; `SAE014` catches the implicit variant — the lock one or more calls away (a helper with a lock, `Lazy<T>` default mode, a static constructor). SAE014 builds a reverse call graph, which is too heavy for every IDE keystroke: the rule stays off unless CI passes `-p:EnableHotPathDeepAnalysis=true` (a `CompilerVisibleProperty`), so the IDE pays only for SAE013. Static analysis still cannot see through virtual dispatch, delegates or other assemblies, and it cannot say whether a lock actually contends — that half is runtime evidence: [`lock-contention-evidence.md`](lock-contention-evidence.md).
+
+**Working example:** `examples/DemoProject/src/DemoProject.Analyzers/HotPathLockAnalyzer.cs`
+
 **Example 3 — Layers (the "DbContext in a controller" class):** `BannedApiAnalyzers` cannot express layer rules — it is a flat blacklist. `LayerGuardAnalyzer` promotes the classic NetArchTest layer rules to compile time: `SAE010` flags a DbContext created or injected outside `*.Infrastructure`, `SAE011` flags a domain entity referenced from `*.Api` / `*.Controllers` / `*.Endpoints` (return a DTO instead), and `SAE012` flags a `[Query]` method that mutates state (member assignment or `SaveChanges`/`Add`/`Remove`/`Update`) — the CQRS read path must be side-effect free. The feedback loop moves from "run architecture tests" (~minutes) to a red squiggle (~0.5 s).
 
 **Working example:** `examples/DemoProject/src/DemoProject.Analyzers/LayerGuardAnalyzer.cs`, attribute — `examples/DemoProject/src/DemoProject.Domain/QueryAttribute.cs`, diagnostics catalog — `tests/conventions/AnalyzerDiagnostics.md`.
