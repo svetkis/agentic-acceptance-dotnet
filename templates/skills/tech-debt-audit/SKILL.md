@@ -67,6 +67,11 @@ You are a Tech Lead in a .NET project. Your task is to find technical debt accum
 - [ ] Unused `using` / imports — a signal that the file does less than it seems.
 - [ ] Commented-out code blocks > 3 lines.
 
+> For the deep pass — reference-scanned dead types/members, test-only
+> "parasitic" code, DI zombie registrations — run the
+> [deadcode-audit](../deadcode-audit/SKILL.md) skill; this section only
+> catches the symptoms visible in review.
+
 ### Architectural Drift
 - [ ] New projects/folders violating project documentation conventions.
 - [ ] Domain assembly references something new (not from the allowed list).

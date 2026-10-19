@@ -99,6 +99,7 @@ Exception: `templates/skills/acceptance-bootstrap/` contains supporting template
 | [i18n-audit](../templates/skills/i18n-audit/SKILL.md) | Once per sprint |
 | [version-audit](../templates/skills/version-audit/SKILL.md) | Once per sprint |
 | [tech-debt-audit](../templates/skills/tech-debt-audit/SKILL.md) | Once per sprint / before quarterly planning |
+| [deadcode-audit](../templates/skills/deadcode-audit/SKILL.md) | Once per quarter / after feature removal or mass agent refactors (dead types/members, parasitic tests, DI zombies; scanner-driven, verified with rg before deletion, cleanup in waves) |
 | [test-audit](../templates/skills/test-audit/SKILL.md) | After 3-5 features / before release |
 | [simplicity-audit](../templates/skills/simplicity-audit/SKILL.md) | Once per sprint / when code is hard to explain |
 | [ux-audit](../templates/skills/ux-audit/SKILL.md) | During UI rework / before beta |

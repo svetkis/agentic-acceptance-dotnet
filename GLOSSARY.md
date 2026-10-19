@@ -66,6 +66,8 @@
 | **Read-path** | Data read path: read-only queries. `.Select()` + `.AsNoTracking()` are **mandatory**. `.Include()`, `.FindAsync()` are forbidden. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
 | **Write-path** | Data write path: commands that change state. Change tracking is required, `.AsNoTracking()` is forbidden. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
 | **Decision Guard** | methodology-specific: intentional deviation from standard, documented by an ID in a comment (`PERF-###`, `DB-###`, `AUD-###`) plus a short registry entry. **Not a synonym for ADR** — a lightweight reference to a decision; when full ADRs exist, the entry links to them. Checked by an architecture test for uniqueness. | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md), [templates/skills/acceptance-bootstrap/DECISION-GUARDS.md](templates/skills/acceptance-bootstrap/DECISION-GUARDS.md) |
+| **Parasitic test** | A test keeping src code alive that no production path reaches: the feature was removed or changed, but the test still calls the old type/member, so reference-based dead-code detection sees it as "used". Removed together with the dead code it pins. | [templates/skills/deadcode-audit/SKILL.md](templates/skills/deadcode-audit/SKILL.md) |
+| **DI zombie** | A service registered in the composition root but never referenced outside registration files — wired "just in case" (often by an agent) and never resolved. | [templates/skills/deadcode-audit/SKILL.md](templates/skills/deadcode-audit/SKILL.md) |
 | **Semantic Anchors** | Established terms instead of descriptions. Each term activates a specific methodology (e.g., "read-path" = `.Select()` + `.AsNoTracking()`). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
 
 ## Agents and Tools

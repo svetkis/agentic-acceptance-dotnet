@@ -68,6 +68,8 @@ have such hardcoded paths.
 | Not a release / beta | `release-readiness-audit` | Won't do, document it |
 | No custom analyzers / Roslyn diagnostics | `analyzer-tests-audit` | Nothing to test |
 | No mutation testing in CI | `mutation-audit` → CI gate | Run as periodic audit |
+| Single-project repo (no separate test projects, no DI registrations) | `deadcode-audit` → categories C/D/E | Parasitic-test and DI-zombie rules need separate test projects and a composition root |
+| Shipped contract/library assemblies in the solution | `deadcode-audit` → A/B findings in contract projects | Public API is alive by contract regardless of in-repo refs; gate via [public-api-surface.md](../../docs/solutions/public-api-surface.md) instead |
 | Legacy with hundreds of complexity violations | `complexity-audit` → error severity | Use baseline + ratchet, not error |
 | Non-Latin test method names (e.g., Russian `Читаемое_предложение`) + `AnalysisLevel=latest-recommended` | Level 1 setup → CA1707 as error | Naming convention of the team; disable CA1707 for `tests/**.cs` in `.editorconfig`, keep it for production code. Do NOT rename tests to satisfy the analyzer |
 
@@ -102,6 +104,7 @@ All audit skills since version 2026-06 mark findings with a confidence level:
 | `bot-audit` | 🤖 |
 | `business-risk-audit` | 🧩 |
 | `code-review` | 🔍 |
+| `deadcode-audit` | 🧟 |
 | `dba-audit` | 🗄️ |
 | `dba-audit-dapper` | 🧵 |
 | `doc-hygiene` | 📝 |
