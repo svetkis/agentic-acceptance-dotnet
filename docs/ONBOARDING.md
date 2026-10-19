@@ -61,7 +61,7 @@
 
 **Option B — manual assessment:**
 1. Open [README.md "How it works"](../README.md#how-it-works)
-2. For each level (Change Checks → Reality Checks) answer:
+2. For each level (Change Checks → Drift Checks) answer:
    - Is the principle followed? (Yes / Partially / No)
    - What is implemented now?
    - What needs to be added?
@@ -210,7 +210,7 @@
 
 ---
 
-### Step 10. Implement Reality Checks: Audits
+### Step 10. Implement Drift Checks: Audits
 
 **Goal:** Deep checks on schedule.
 
@@ -297,7 +297,7 @@ Go through this list after implementation. If everything is checked — guardrai
 - [ ] Smoke tests pass on every PR
 - [ ] E2E ran at least once and found or confirmed a critical path
 
-### Reality Checks (Could have)
+### Drift Checks (Could have)
 - [ ] Security audit performed, findings recorded in backlog
 - [ ] DBA audit performed, execution plans of new queries checked
 - [ ] Tech debt audit performed, semantic duplication recorded

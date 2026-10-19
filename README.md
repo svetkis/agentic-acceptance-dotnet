@@ -34,7 +34,7 @@ just because it runs in CI.
 | **1. Change Checks** | IDE, build, pre-commit | Compiler, nullable, analyzers, formatting, banned APIs, public API surface declaration, NuGet audit warnings as errors (vulnerable/deprecated packages) | Can the change technically exist? |
 | **2. Behavior Checks** | Local or CI test run | Unit, regression, contract, architecture tests, ratchets; the level ends with **agent code review** (gate before PR) | Are expected properties and behavior preserved? |
 | **3. System Checks** | PR, CI, release pipeline | Integration, characterization, E2E, smoke, Testcontainers, load (NBomber), deployment verification | Does the system work as a whole? |
-| **4. Reality Checks** | On schedule or risk-trigger | LLM audits (security, database, performance, UX, API, i18n, tech-debt), complexity drift (cognitive/cyclomatic via baseline + ratchet), outdated and vulnerable dependencies | Which properties of the codebase drift over time, invisible to any single change? |
+| **4. Drift Checks** | On schedule or risk-trigger | LLM audits (security, database, performance, UX, API, i18n, tech-debt), complexity drift (cognitive/cyclomatic via baseline + ratchet), outdated and vulnerable dependencies | Which properties of the codebase drift over time, invisible to any single change? |
 
 Separate processes, not levels:
 
@@ -52,7 +52,7 @@ Separate processes, not levels:
 | 1. Change Checks | Banned APIs, Roslyn analyzers (`examples/DemoProject/src/DemoProject.Analyzers/`), `ci/github-actions/safe-ci.yml`, NuGet audit as build error ([docs/solutions/nuget-audit-as-error.md](docs/solutions/nuget-audit-as-error.md)), public API surface declaration ([docs/solutions/public-api-surface.md](docs/solutions/public-api-surface.md)) |
 | 2. Behavior Checks | `tests/patterns/` (Ratchet, NetArchTest, Snapshot, Analyzer tests, PropertyBasedTest), `tests/conventions/`, `templates/skills/code-review/`, `templates/skills/task-compliance/` |
 | 3. System Checks | Integration on real DB (Testcontainers), Characterization (golden master + Monte Carlo), E2E MCP, smoke, NBomber load (`tests/patterns/`) |
-| 4. Reality Checks | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, deadcode, simplicity, complexity, version, test, mutation, spellcheck, business-risk, ux) |
+| 4. Drift Checks | `templates/skills/*-audit/` (security, dba, performance, api-design, bot, i18n, tech-debt, deadcode, simplicity, complexity, version, test, mutation, spellcheck, business-risk, ux) |
 | Control Maintenance | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
 | Engineering Governance | `docs/solutions/human-audit-bridge.md`, release decision |
 

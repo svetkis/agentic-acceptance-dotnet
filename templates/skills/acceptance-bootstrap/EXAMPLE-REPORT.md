@@ -23,7 +23,7 @@
 | 2. Behavior — tests | 🟡 | xUnit, 340 tests, no "0 ran" check | **Adapt**: run-and-verify-tests.sh for xUnit |
 | 2. (gate) Code review | 🔴 | Dapper + MediatR — ready-made skill does not fit | **Create skill**: `code-review-dapper` |
 | 3. System Checks | 🔴 | Worker Service, no HTTP. OpenAPI snapshot impossible | **Create skill**: `e2e-worker` |
-| 4. Reality Checks | 🔴 | No audits. Dapper + SQL Server — ready-made DBA does not fit | **Create skill**: `dba-audit-dapper` |
+| 4. Drift Checks | 🔴 | No audits. Dapper + SQL Server — ready-made DBA does not fit | **Create skill**: `dba-audit-dapper` |
 
 ---
 
@@ -234,7 +234,7 @@ The agent designed each new skill fully — not just a name, but role, mechanism
 No ready-made artifact fits (Worker Service, no HTTP) —
 covered by the project-specific `e2e-worker` below.
 
-## 4. Reality Checks
+## 4. Drift Checks
 | Skill | Role | Mechanism | Trigger | Gate | Status |
 |-------|------|-----------|---------|------|--------|
 | security-audit | Security Auditor | AI Agent | Weekly | WARNING | 📋 Backlog |

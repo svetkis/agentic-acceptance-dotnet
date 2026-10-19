@@ -41,7 +41,7 @@ The system works as a whole. Gate: PR / release pipeline.
 | e2e-smoke | Critical Paths | Testcontainers | PR + Nightly | BLOCKER | 🚧 WIP |
 | load-test | Perf Under Load | NBomber | Release | WARNING | 📋 Backlog |
 
-## 4. Reality Checks
+## 4. Drift Checks
 
 Systemic drift invisible to any single change. Trigger: schedule / risk event.
 

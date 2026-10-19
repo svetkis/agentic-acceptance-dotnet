@@ -64,7 +64,7 @@ a reproducible green/trap demonstration.
 - **Done when:** document in the knowledge map, cross-link **from**
   `testing.md#false-safety`. ✅
 
-### SV-003 — Audit checklists (Reality Checks) ✅ done
+### SV-003 — Audit checklists (Drift Checks) ✅ done
 
 - `templates/skills/test-audit/`: "Test Validity" section — zero-assert,
   `IsNotNull()`-only, tautology, assertion reachability (assert-in-`if` is an

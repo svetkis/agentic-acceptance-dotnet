@@ -67,7 +67,7 @@
 - [ ] Are there load tests?
 - [ ] **Decision:** Adapt / Create new skill / Skip
 
-## Level 4 — Reality Checks (principle: systemic drift, invisible to any single change)
+## Level 4 — Drift Checks (principle: systemic drift, invisible to any single change)
 - [ ] Are there security artifacts?
 - [ ] Is DBA audit applicable to project ORM?
   - [ ] EF Core → ✅ ready skill

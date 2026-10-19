@@ -21,7 +21,7 @@
 #   level1_change_checks: yellow
 #   level2_behavior_checks: red
 #   level3_system_checks: red
-#   level4_reality_checks: red
+#   level4_drift_checks: red
 #   governance: red
 ```
 
@@ -37,7 +37,7 @@
 | 2. Behavior — architecture | NetArchTest | `tests/ArchitectureRules.cs` | 🚧 Backlog |
 | 2. (gate) Code review | Agent by diff, before PR | `.kimi/skills/code-review/` | ✅ Adapted |
 | 3. System | E2E / smoke / load | `tests/E2ETests.cs` | ❌ Not applicable |
-| 4. Reality | Batch audits, complexity ratchet, dependency check | `.kimi/skills/security-audit/` | 🚧 Backlog |
+| 4. Drift | Batch audits, complexity ratchet, dependency check | `.kimi/skills/security-audit/` | 🚧 Backlog |
 
 **Legend:** ✅ Implemented / 🚧 Backlog / ❌ Not applicable
 
@@ -91,7 +91,7 @@ For each adapted skill:
 | `code-review` | ✅ Active | Adapted for Minimal API |
 | `task-compliance` | ✅ Active | No changes |
 
-### 4. Reality Checks (schedule / trigger)
+### 4. Drift Checks (schedule / trigger)
 | Skill | Status | Note |
 |-------|--------|------|
 | `security-audit` | 🚧 WIP | Adapted for Minimal API |
@@ -115,7 +115,7 @@ For each adapted skill:
 ### Sprint 1 — Behavior Checks: architecture tests (3 days)
 - [ ] **Adapt** `ArchitectureRules.cs` → custom rules for project architecture
 
-### Sprint 2 — Review gate + Reality Checks (2 days)
+### Sprint 2 — Review gate + Drift Checks (2 days)
 - [ ] **Adapt** `code-review` → remove layer checks, add Minimal API
 - [ ] **Adapt** `security-audit` → `.RequireAuthorization()`, webhook protection
 

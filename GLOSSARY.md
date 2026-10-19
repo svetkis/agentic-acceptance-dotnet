@@ -41,11 +41,12 @@
 | **1. Change Checks** | Change-level checks: compiler, nullable, analyzers, formatting, banned APIs. IDE, build, pre-commit. | [README.md](README.md#how-it-works) |
 | **2. Behavior Checks** | Behavior checks: unit, regression, contract, architecture tests, ratchets; ends with agent code review (gate before PR). Local or CI test run. | [README.md](README.md#how-it-works), [tests/patterns/](tests/patterns/) |
 | **3. System Checks** | Whole-system checks: integration, characterization, E2E, smoke, Testcontainers, load, deployment verification. PR, CI, release pipeline. | [README.md](README.md#how-it-works) |
-| **4. Reality Checks** | Systemic drift, invisible to any single change: LLM audits (security, database, performance, UX, API, i18n, tech-debt), complexity drift (baseline + ratchet), outdated and vulnerable dependencies. Schedule or risk-trigger. | `templates/skills/*-audit/` |
+| **4. Drift Checks** | Systemic drift, invisible to any single change: LLM audits (security, database, performance, UX, API, i18n, tech-debt), complexity drift (baseline + ratchet), outdated and vulnerable dependencies. Schedule or risk-trigger. | `templates/skills/*-audit/` |
 | **Engineering Governance** | Process (not a level): residual risk acceptance, release decision, business and product decisions. | [docs/solutions/human-audit-bridge.md](docs/solutions/human-audit-bridge.md) |
 | **Control Maintenance** | Process (not a level): keeping instructions, agent memory, backlog, baselines, suppressions, and guardrails up to date. | `templates/skills/memory-hygiene/`, `doc-hygiene/`, `backlog-hygiene/` |
 | **AGENTS.md** | File with rules for AI agents. Read by the agent before every task. Can be hierarchical (root + per-module). | [rules/AGENTS_TEMPLATE.md](rules/AGENTS_TEMPLATE.md) |
 | **Layers 0–2 / Inner-Outer loop** | *Legacy:* historical names of the visual metaphor that preceded the levels model. Wherever they appear, read them as the corresponding Engineering Assurance Levels. | [CHANGELOG.md](CHANGELOG.md) (history) |
+| **Reality Checks** | *Legacy:* level 4's name before the rename to Drift Checks. External docs saying "Reality Checks" mean Drift Checks. Note: a single load-test run answering "does this system work as a whole" is Level 3 (System Checks) regardless of how "real" it is — Level 4 starts where runs are compared as trends. | [CHANGELOG.md](CHANGELOG.md) (history) |
 
 ## Test Patterns
 

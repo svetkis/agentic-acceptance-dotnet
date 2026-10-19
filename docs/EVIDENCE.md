@@ -22,7 +22,7 @@
 | Behavior Checks | Code review | 8 commits | 1.8% | XSS, await, data leak |
 | System Checks | Smoke | ~0 commits | — | Prevents critical-path regression before merge |
 | System Checks | E2E MCP | 9 commits | 2.0% | UI flow, stale cache, self-booking |
-| Reality Checks | Audits | 19 commits | 4.2% | Security, i18n, UX, perf |
+| Drift Checks | Audits | 19 commits | 4.2% | Security, i18n, UX, perf |
 | System Checks | Load | ~0 commits | — | Prevents degradation before production |
 | Governance (process, not a level) | Human judgment | ~78 commits | 17% | Business logic, edge cases |
 | — | Gray zone | ~331 commits | 74% | Unknown who found it |

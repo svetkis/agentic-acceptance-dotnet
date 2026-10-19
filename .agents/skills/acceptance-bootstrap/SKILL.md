@@ -70,7 +70,7 @@ An artifact is classified by **what it verifies**, not by where it runs.
 | 1. Change Checks | Compiler, nullable, analyzers, banned APIs | Types, warnings, forbidden APIs | Before commit |
 | 2. Behavior Checks | Unit, contract, architecture tests, ratchets; the level ends with **agent code review** | Silent breakdown, arch regression, vibe-refactoring, XSS, data leak | Review agent — before PR |
 | 3. System Checks | Integration, characterization, E2E, smoke, load | Broken critical flows, tail latency, cache issues | PR / release pipeline |
-| 4. Reality Checks | LLM audits, complexity drift (cognitive/cyclomatic via baseline + ratchet), outdated and vulnerable packages | Drift that accumulates over time, invisible to any single change | Schedule / risk-trigger |
+| 4. Drift Checks | LLM audits, complexity drift (cognitive/cyclomatic via baseline + ratchet), outdated and vulnerable packages | Drift that accumulates over time, invisible to any single change | Schedule / risk-trigger |
 
 **Engineering Governance** (process, not a level): final human validation, business and product decisions.
 
@@ -179,7 +179,7 @@ For each level answer the questions:
 | Microservices | One OpenAPI snapshot is not enough | ❌ **Create `e2e-integration`** (consumer-driven contracts) |
 | External partner API / SDK dependency | `templates/skills/external-contract-verification/` | ✅ **Adopt**: verify external contracts against recorded expectations |
 
-#### Level 4: Reality Checks — Audits and Drift
+#### Level 4: Drift Checks — Audits and Drift
 
 Systemic properties that degrade over time regardless of any single change. For stack-specific audits:
 
@@ -288,7 +288,7 @@ Brief summary (for chat):
 | 1. Change Checks | 🟢/🟡/🔴 | ... |
 | 2. Behavior Checks (+ review gate) | 🟢/🟡/🔴 | ... |
 | 3. System Checks | 🟢/🟡/🔴 | ... |
-| 4. Reality Checks | 🟢/🟡/🔴 | ... |
+| 4. Drift Checks | 🟢/🟡/🔴 | ... |
 
 ## Project Stack
 - .NET: {version}, Type: {Web API / Worker}, ORM: {EF Core / Dapper}, Architecture: {Clean / VSlice / None}

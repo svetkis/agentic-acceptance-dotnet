@@ -95,7 +95,7 @@ All project skills live in `.kimi/skills/`:
     ├── architecture-audit/          # 2. Behavior Checks: build
     │   └── SKILL.md
     │
-    ├── security-audit/              # 4. Reality Checks: once per sprint
+    ├── security-audit/              # 4. Drift Checks: once per sprint
     │   ├── SKILL.md
     │   └── CHECKLIST.md
     │
@@ -356,7 +356,7 @@ The agent must maintain a "skill map" of the project:
 | task-compliance | Scope Guard | PR | BLOCKER | ✅ Active |
 | architecture-audit (VSlice) | Build Guard | NetArchTest custom | Build | BLOCKER | 🚧 WIP |
 
-### 4. Reality Checks (schedule / trigger)
+### 4. Drift Checks (schedule / trigger)
 | Skill | Role | Trigger | Gate | Status |
 |-------|------|---------|------|--------|
 | security-audit | Security Auditor | Weekly | WARNING | ✅ Active |
