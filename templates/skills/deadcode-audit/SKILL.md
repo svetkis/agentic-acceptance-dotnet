@@ -30,9 +30,11 @@ drive their removal in waves — without breaking reflection, DI, or public
 contracts.
 
 The audit is a **candidate generator, not an auto-deleter**. Detection is
-deliberately reference-based and syntax-only: it errs by **undercounting**
-(same-name symbols mask each other), never by overcounting. Every row requires
-the verification protocol below before deletion.
+deliberately reference-based and syntax-only: **name-collision counting errs
+only towards undercounting** — a same-named symbol can mask a candidate, it
+never invents one. False positives still exist (reflection, DI wiring,
+serializer DTOs); the exclusion catalog and the verification protocol below
+are what handle them. Every row requires verification before deletion.
 
 Non-goals:
 
@@ -48,12 +50,12 @@ Non-goals:
 
 - **Any C# solution**; most value in codebases where agents write or refactor
   code. Multi-project solutions get the parasitic-test and DI-zombie categories
-  for free; single-project repos get A/B/F only (C/D/E need separate test
-  projects / DI registrations — strike them out).
-- **Requires a scanner** (see Procedure §1): a ~200-line syntax-only Roslyn
-  console tool built once per repo. One-shot alternative for small repos:
-  generate candidates with IDE "find usages" and run only the verification
-  protocol.
+  for free; single-project repos without separate test projects strike out C/D
+  only — E survives wherever a DI composition root exists (`Program.cs`).
+- **Requires a scanner** (see Procedure §1): a single-file (~700-line)
+  syntax-only Roslyn console tool built once per repo. One-shot alternative for
+  small repos: generate candidates with IDE "find usages" and run only the
+  verification protocol.
 - **Not applicable when:** the codebase is a prototype being actively
   rewritten (the diff is the audit), or a shipped **contract/library assembly**
   is in scope — its public API is alive by contract regardless of in-repo
@@ -104,19 +106,29 @@ If the repo has none, build it from this spec:
 | **E2. Framework-activated** | `AddHostedService` etc. — informational, never a finding | — |
 | **F. Naming residue** | name matches `(V\d+|Old|Legacy|Temp|Backup|Deprecated)$` | hygiene |
 
-**Exclusion catalog** (bake into the scanner; each entry = one false positive
-you already met): reflection roots by base list (`IEntityTypeConfiguration<>`,
-`IDesignTimeDbContextFactory<>`, EF `Migrations/`); framework-invoked members
-(`IHostedService.StartAsync/StopAsync`, Quartz `IJob.Execute`,
-`IHealthCheck.CheckHealthAsync`, `IEndpointFilter`/`IAsync*Filter.InvokeAsync`,
-`Dispose*`/`Equals`/`GetHashCode`/`ToString`); reflection-populated properties —
-config binding (`*Settings`/`*Options`) **and serializer DTOs** (JSON response
-models: the deserializer "uses" every property by name, so member analysis there
-is meaningless while type analysis still works); source-generator marker
-attributes (project's list); convention-dispatched catalogs (namespaces where
-members are resolved by name/[CallerMemberName] — localizers, bot message
-catalogs); compiler-consumed projects (Roslyn analyzers); shipped contract
-assemblies; `Program`.
+**Exclusion catalog** — two layers, so calibration never requires a recompile:
+
+*Compiled defaults* (stack-wide, stable; each entry = one false positive
+somebody already met): reflection roots by base list
+(`IEntityTypeConfiguration<>`, `IDesignTimeDbContextFactory<>`, EF
+`Migrations/`); framework-invoked members (`IHostedService.StartAsync/StopAsync`,
+Quartz `IJob.Execute`, `IHealthCheck.CheckHealthAsync`,
+`IEndpointFilter`/`IAsync*Filter.InvokeAsync`,
+`Dispose*`/`Equals`/`GetHashCode`/`ToString`); config-binding properties on
+`*Settings`/`*Options` types.
+
+*Profile entries* (project-specific, read from a config file at runtime):
+excluded projects (Roslyn analyzers, in-repo tools); convention-dispatched
+catalogs (namespaces where members are resolved by name/[CallerMemberName] —
+localizers, bot message catalogs); source-generator marker attributes;
+**reflection-populated data-holder projects** — EF entity projects and
+serializer/JSON-DTO projects, where EF mapping or the deserializer "uses" every
+property by name: exclude their members, keep type analysis (one such entry
+collapsed a field-trial repo's B from 107 to 15).
+
+**Reportable** = declared in a non-test src project, `public` or `internal`,
+not `override`, not caught by the catalog above. Shipped contract assemblies
+and `Program` are never reportable.
 
 **Attribute fallback:** `[Foo]` counts as a usage of `FooAttribute`.
 
@@ -125,10 +137,15 @@ assemblies; `Program`.
 sibling test/benchmark projects' files, misclassifies tests as src, and poisons
 every category (observed: 49 "dead types" that were test classes).
 
-**Catalog as config, not constants:** keep the exclusion catalog in a config
-file read by the scanner — calibration must not require a recompile. When
-generalizing a calibrated scanner, regression-check it: the generalized tool +
-profile must reproduce the calibrated repo's counts exactly.
+**Test-project detection** without a `tests/` directory: by project name — the
+last dotted segment is a test-kind name (`Tests`, `UnitTests`, `LoadTests`,
+`IntegrationTests`). Load tests count as tests (they keep code alive with no
+production path); benchmark and eval-harness projects do not — they are
+operational tools.
+
+**Regression check:** when generalizing (or upgrading) a calibrated scanner,
+rerun it against the calibrated repo — tool + profile must reproduce the known
+counts exactly.
 
 ### 2. Scan and triage
 

@@ -34,7 +34,7 @@ AI-агенты (Cursor, Claude, Copilot) ускоряют написание к
 | **1. Change Checks** | IDE, build, pre-commit | Компилятор, nullable, анализаторы, formatting, banned APIs, декларирование публичной API-поверхности, предупреждения NuGet audit как ошибки (уязвимые/устаревшие пакеты) | Может ли изменение технически существовать? |
 | **2. Behavior Checks** | Локальный или CI test run | Unit, regression, contract, архитектурные тесты, ratchets; уровень замыкает **ревью агента** (гейт перед PR) | Сохранились ли ожидаемые свойства и поведение? |
 | **3. System Checks** | PR, CI, release pipeline | Integration, характеризующие, E2E, smoke, Testcontainers, нагрузочные (NBomber), deployment verification | Работает ли система целиком? |
-| **4. Drift Checks** | По расписанию или risk-trigger | LLM-аудиты (security, database, performance, UX, API, i18n, tech-debt), дрейф сложности (когнитивная/цикломатическая через baseline + ratchet), устаревшие и уязвимые зависимости | Какие свойства кодовой базы дрейфуют со временем и не видны на уровне отдельного изменения? |
+| **4. Drift Checks** | По расписанию или risk-trigger | LLM-аудиты (security, database, performance, UX, API, i18n, tech-debt, deadcode), дрейф сложности (когнитивная/цикломатическая через baseline + ratchet), устаревшие и уязвимые зависимости | Какие свойства кодовой базы дрейфуют со временем и не видны на уровне отдельного изменения? |
 
 Отдельные процессы, не являющиеся уровнями:
 

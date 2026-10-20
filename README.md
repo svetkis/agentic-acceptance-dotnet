@@ -34,7 +34,7 @@ just because it runs in CI.
 | **1. Change Checks** | IDE, build, pre-commit | Compiler, nullable, analyzers, formatting, banned APIs, public API surface declaration, NuGet audit warnings as errors (vulnerable/deprecated packages) | Can the change technically exist? |
 | **2. Behavior Checks** | Local or CI test run | Unit, regression, contract, architecture tests, ratchets; the level ends with **agent code review** (gate before PR) | Are expected properties and behavior preserved? |
 | **3. System Checks** | PR, CI, release pipeline | Integration, characterization, E2E, smoke, Testcontainers, load (NBomber), deployment verification | Does the system work as a whole? |
-| **4. Drift Checks** | On schedule or risk-trigger | LLM audits (security, database, performance, UX, API, i18n, tech-debt), complexity drift (cognitive/cyclomatic via baseline + ratchet), outdated and vulnerable dependencies | Which properties of the codebase drift over time, invisible to any single change? |
+| **4. Drift Checks** | On schedule or risk-trigger | LLM audits (security, database, performance, UX, API, i18n, tech-debt, deadcode), complexity drift (cognitive/cyclomatic via baseline + ratchet), outdated and vulnerable dependencies | Which properties of the codebase drift over time, invisible to any single change? |
 
 Separate processes, not levels:
 
