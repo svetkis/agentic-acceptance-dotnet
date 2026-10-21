@@ -2,7 +2,7 @@
 // GUARDRAIL: Every [HotPath] method has an allocation budget; regressions are caught in tests.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(...)
+// - TUnit:  [Test] + await Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
@@ -27,7 +27,7 @@ public class AllocationBudgetTests
     // GUARDRAIL: Allocations of a [HotPath] method do not exceed baseline + 10% (per operation).
     // Naming: {HotPathMethodName}_AllocationBudget — required by the meta-test below.
     [Test]
-    public void GetAvailableSlots_AllocationBudget()
+    public async Task GetAvailableSlots_AllocationBudget()
     {
         var budget = MeasureAllocationBudget(
             action: () => YourHotPathService.GetAvailableSlots(DateTime.UtcNow),
@@ -39,7 +39,7 @@ public class AllocationBudgetTests
         const long baselineBytesPerOp = 10;
         var threshold = (long)(baselineBytesPerOp * 1.10);
 
-        Assert.That(budget.BytesAllocatedPerOperation)
+        await Assert.That(budget.BytesAllocatedPerOperation)
             .IsLessThanOrEqualTo(threshold)
             .Because($"Hot path allocations must not exceed baseline + 10% (per op). " +
                      $"Baseline/op={baselineBytesPerOp}, Current/op={budget.BytesAllocatedPerOperation}, Threshold/op={threshold}");
@@ -50,11 +50,11 @@ public class AllocationBudgetTests
     //        Zero [HotPath] methods found = broken scan (wrong assembly, attribute renamed) —
     //        fail instead of passing vacuously.
     [Test]
-    public void AllHotPathMethods_HaveAllocationBudgetTests()
+    public async Task AllHotPathMethods_HaveAllocationBudgetTests()
     {
         var hotPathMethods = GetHotPathMethods(typeof(YourHotPathService).Assembly).ToList();
 
-        Assert.That(hotPathMethods.Count > 0).IsTrue()
+        await Assert.That(hotPathMethods.Count > 0).IsTrue()
             .Because("no [HotPath] methods found — wrong assembly scanned or the attribute was renamed");
 
         var testMethods = GetTestMethods(typeof(AllocationBudgetTests).Assembly)
@@ -66,7 +66,7 @@ public class AllocationBudgetTests
             .Select(m => $"{m.DeclaringType?.FullName}.{m.Name}")
             .ToList();
 
-        Assert.That(missing).IsEmpty()
+        await Assert.That(missing).IsEmpty()
             .Because("Every [HotPath] method must have a matching {MethodName}_AllocationBudget test.");
     }
 

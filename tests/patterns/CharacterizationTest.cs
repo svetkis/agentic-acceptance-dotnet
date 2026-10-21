@@ -19,7 +19,7 @@
 // When it does NOT apply: code with a living spec — write a normal spec test instead.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(...)
+// - TUnit:  [Test] + await Assert.That(...)
 // - xUnit:  [Fact] + Assert.Equal(...)
 // - NUnit:  [Test] + Assert.That(..., Is.EqualTo)
 // - MSTest: [TestMethod] + Assert.AreEqual
@@ -60,13 +60,13 @@ public class AvailableSlotsCharacterizationTests
     // GUARDRAIL: generate inputs systematically — boundaries first, then a
     //       fixed-seed sweep over the realistic domain.
     [Test]
-    public void AvailableSlots_Refactor_MustReproduceGoldenMaster()
+    public async Task AvailableSlots_Refactor_MustReproduceGoldenMaster()
     {
         var inputs = GenerateInputs();
         var actual = inputs
             .Select(i => new RecordedCase(i, string.Join("|",
                 YourSlotSearch.GetFreeWindows(i.Day, i.Bookings)
-                    .Select(w => w.ToString("HH:mm", CultureInfo.InvariantCulture))))
+                    .Select(w => w.ToString("HH:mm", CultureInfo.InvariantCulture)))))
             .ToList();
 
         if (Regenerate)
@@ -79,7 +79,7 @@ public class AvailableSlotsCharacterizationTests
         var golden = JsonSerializer.Deserialize<List<RecordedCase>>(
             File.ReadAllText(GoldenMasterPath))!;
 
-        Assert.That(actual.Count).IsEqualTo(golden.Count)
+        await Assert.That(actual.Count).IsEqualTo(golden.Count)
             .Because("A refactor must not change the number of cases produced.");
 
         // Compare OUTPUT strings only: record value-equality does not extend
@@ -90,7 +90,7 @@ public class AvailableSlotsCharacterizationTests
             .Select(pair => $"input={pair.First.Input}: old={pair.Second.Output}, new={pair.First.Output}")
             .ToList();
 
-        Assert.That(diffs).IsEmpty()
+        await Assert.That(diffs).IsEmpty()
             .Because("Behavior changed during a no-behavior-change refactor:\n" +
                      string.Join("\n", diffs));
     }
@@ -157,7 +157,7 @@ public class SmartSelectionCharacterizationTests
     //       FAR below the observed effect with headroom for run-to-run variance.
     //       Tolerance is justified by MEASURED variance, not chosen to pass.
     [Test]
-    public void SmartSelection_MustKeepReducingDeadZones()
+    public async Task SmartSelection_MustKeepReducingDeadZones()
     {
         const int runs = 30;
         var rng = new Random(Seed: 42);
@@ -176,7 +176,7 @@ public class SmartSelectionCharacterizationTests
         // Observed during recording: ~61% average reduction, spread ~8 points.
         // Threshold 20% keeps a margin wide enough that a REAL regression
         // (algorithm degraded to near-naive) fails loudly, while seed noise passes.
-        Assert.That(avgReduction).IsGreaterThanOrEqualTo(20.0)
+        await Assert.That(avgReduction).IsGreaterThanOrEqualTo(20.0)
             .Because($"Smart selection must keep reducing dead zones. " +
                      $"Avg reduction={avgReduction:F1}%, observed spread={observedSpread:F1} points. " +
                      $"A refactor must not degrade the algorithm to near-naive behavior.");

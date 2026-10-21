@@ -39,7 +39,7 @@ public class PropertyBasedTests
 
     // Seeded: junk characters must be identical on every run — the same FsCheck
     // seed must reproduce the exact same test cases (Random.Shared would break that).
-    private static readonly Random junkRandom = new(seed: 42);
+    private static readonly Random junkRandom = new(Seed: 42);
 
     // Generator: phone-like strings — digits wrapped in separators,
     // the shapes users and bots actually send.
@@ -54,12 +54,12 @@ public class PropertyBasedTests
 
     // Property 1: structural invariant — output is always "+" followed by digits only.
     [Test]
-    public void Normalize_OutputContainsOnlyDigitsAfterPlus()
+    public async Task Normalize_OutputContainsOnlyDigitsAfterPlus()
     {
         foreach (var phone in Gen.Sample(PhoneLike, Samples))
         {
             var result = Normalize(phone);
-            Assert.That(result.Length > 0
+            await Assert.That(result.Length > 0
                 && result[0] == '+'
                 && result[1..].All(char.IsDigit))
                 .IsTrue()
@@ -71,7 +71,7 @@ public class PropertyBasedTests
     // GUARDRAIL: A property stated as "for ALL 11-digit inputs starting with 8"
     // forces the generator to probe the boundary systematically.
     [Test]
-    public void Normalize_ReplacesLeadingEightWithSeven()
+    public async Task Normalize_ReplacesLeadingEightWithSeven()
     {
         FsCheck.Gen<string> elevenDigitsStartingWithEight =
             from rest in Gen.Choose(0, 9).ListOf(10)
@@ -80,7 +80,7 @@ public class PropertyBasedTests
         foreach (var phone in Gen.Sample(elevenDigitsStartingWithEight, Samples))
         {
             var result = Normalize(phone);
-            Assert.That(result.StartsWith("+7"))
+            await Assert.That(result.StartsWith("+7"))
                 .IsTrue()
                 .Because($"input: '{phone}', output: '{result}'");
         }
@@ -90,13 +90,13 @@ public class PropertyBasedTests
     // Critical when the same value passes through two layers (bot + API):
     // if the second pass changes anything, account linking by phone silently breaks.
     [Test]
-    public void Normalize_IsIdempotent()
+    public async Task Normalize_IsIdempotent()
     {
         foreach (var phone in Gen.Sample(PhoneLike, Samples))
         {
             var once = Normalize(phone);
             var twice = Normalize(once);
-            Assert.That(twice).IsEqualTo(once)
+            await Assert.That(twice).IsEqualTo(once)
                 .Because($"double normalization changed result: '{phone}' -> '{once}' -> '{twice}'");
         }
     }

@@ -23,15 +23,18 @@ public class VersionAuditTest
             while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "global.json")))
                 dir = dir.Parent;
 
-            Assert.That(dir is not null).IsTrue(); // marker file not found above the test assembly
-            return dir!.FullName;
+            // marker file not found above the test assembly — fail the test instead
+            // of an async assert: a property getter cannot await (TUnit assertions
+            // are async since 1.x)
+            ArgumentNullException.ThrowIfNull(dir);
+            return dir.FullName;
         }
     }
 
     // TRAP: The agent brought in .NET 10 preview, although the team standard is a stable SDK.
     // GUARDRAIL: global.json must not contain preview/rc/beta in version.
     [Test]
-    public void GlobalJson_ShouldNotReferencePreviewSdk()
+    public async Task GlobalJson_ShouldNotReferencePreviewSdk()
     {
         var violations = ScanFilesForPattern(
             rootDir: RepoRoot,
@@ -39,14 +42,14 @@ public class VersionAuditTest
             pattern: @"""version""\s*:\s*""[^""]*(?:preview|rc|beta)[^""]*""",
             whitelist: Array.Empty<string>());
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("Stable SDK only. Preview versions require explicit whitelist entry");
     }
 
     // TRAP: The agent uses EF Core 8 in a .NET 9 project.
     // GUARDRAIL: Microsoft.* PackageReferences must match the TargetFramework.
     [Test]
-    public void MicrosoftPackages_ShouldMatchTargetFramework()
+    public async Task MicrosoftPackages_ShouldMatchTargetFramework()
     {
         var targetFramework = ExtractTargetFramework(RepoRoot);
         var majorVersion = ExtractMajorVersion(targetFramework);
@@ -73,14 +76,14 @@ public class VersionAuditTest
             }
         }
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because($"Microsoft.* packages major version must match TargetFramework major ({majorVersion})");
     }
 
     // TRAP: The agent added a preview version of a NuGet package.
     // GUARDRAIL: PackageReferences must not contain preview/rc/beta.
     [Test]
-    public void PackageReferences_ShouldNotBePrerelease()
+    public async Task PackageReferences_ShouldNotBePrerelease()
     {
         var violations = ScanFilesForPattern(
             rootDir: RepoRoot,
@@ -88,14 +91,14 @@ public class VersionAuditTest
             pattern: @"<PackageReference[^>]*Version=""[^""]*(?:preview|rc|beta|alpha)[^""]*""",
             whitelist: new[] { "DemoProject.Tests.csproj: explicitly testing preview features" });
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("Pre-release packages require explicit whitelist entry with justification");
     }
 
     // TRAP: The agent left a frontend dependency on alpha/beta.
     // GUARDRAIL: package.json dependencies contain no prereleases.
     [Test]
-    public void PackageJson_ShouldNotContainPrereleaseDependencies()
+    public async Task PackageJson_ShouldNotContainPrereleaseDependencies()
     {
         var violations = new List<string>();
         var packageJsonFiles = Directory.GetFiles(RepoRoot, "package.json", SearchOption.AllDirectories);
@@ -110,14 +113,14 @@ public class VersionAuditTest
             }
         }
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("Frontend dependencies must be stable releases");
     }
 
     // TRAP: The agent uses outdated actions/checkout@v2/v3 in CI.
     // GUARDRAIL: GitHub Actions use modern major versions.
     [Test]
-    public void GitHubActions_ShouldNotUseLegacyActionVersions()
+    public async Task GitHubActions_ShouldNotUseLegacyActionVersions()
     {
         var violations = ScanFilesForPattern(
             rootDir: Path.Combine(RepoRoot, ".github"),
@@ -125,7 +128,7 @@ public class VersionAuditTest
             pattern: @"uses:\s+actions/(checkout|setup-dotnet)@v[123]\b",
             whitelist: Array.Empty<string>());
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("GitHub Actions must use v4+ for checkout and setup-dotnet");
     }
 

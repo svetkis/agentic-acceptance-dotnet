@@ -73,7 +73,7 @@ public class IntegrationDatabaseTest
         await using (var assert = CreateDbContext())
         {
             var reloaded = await assert.Slots.AsNoTracking().SingleAsync(s => s.Id == 42);
-            Assert.That(reloaded.IsBooked).IsFalse()
+            await Assert.That(reloaded.IsBooked).IsFalse()
                 .Because("CancelBooking must persist; a no-op SaveChanges here is the " +
                          "AsNoTracking-in-write-path trap that InMemory tests cannot catch");
         }

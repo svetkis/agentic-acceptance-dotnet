@@ -5,7 +5,7 @@
 // This file is only for projects using Dapper / Raw SQL. For EF Core see EfCoreGuardRules.cs.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(violations).IsEmpty()
+// - TUnit:  [Test] + await Assert.That(violations).IsEmpty()
 // - xUnit:  [Fact] + Assert.Empty(violations)
 // - NUnit:  [Test] + Assert.That(violations, Is.Empty)
 // - MSTest: [TestMethod] + Assert.AreEqual(0, violations.Count())
@@ -20,35 +20,35 @@ public class DapperGuardRules
     // TRAP: The agent used C# string interpolation ($"...") in an SQL query.
     // GUARDRAIL: Any string interpolation in SQL is a potential injection.
     [Test]
-    public void RawSql_ShouldNotUseStringInterpolation()
+    public async Task RawSql_ShouldNotUseStringInterpolation()
     {
         var violations = ScanSourceFiles(
             pattern: @"\$""[^""]*\{[^}]+\}[^""]*""",
             fileGlob: "*.cs",
             whitelist: new[] { "Migration", "SeedData", "Comment" });
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("SQL queries must use parameterized statements (@param), never C# string interpolation");
     }
 
     // TRAP: The agent concatenated user input into an SQL string.
     // GUARDRAIL: Concatenating strings with SQL keywords is forbidden.
     [Test]
-    public void RawSql_ShouldNotUseStringConcatenation()
+    public async Task RawSql_ShouldNotUseStringConcatenation()
     {
         var violations = ScanSourceFiles(
             pattern: @"(SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|JOIN)\s*[^""]*\+\s*",
             fileGlob: "*.cs",
             whitelist: new[] { "Migration", "SeedData" });
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("SQL must be static or parameterized. Concatenation enables injection.");
     }
 
     // TRAP: The agent called QueryAsync / ExecuteAsync without commandTimeout — a risk of waiting forever.
     // GUARDRAIL: Every Dapper call must explicitly pass a timeout or use a global default.
     [Test]
-    public void DapperCalls_ShouldHaveCommandTimeout()
+    public async Task DapperCalls_ShouldHaveCommandTimeout()
     {
         // Look for Dapper calls lacking commandTimeout on the call line.
         // The generic argument is optional: QueryAsync<T>(sql, ...) and QueryAsync(sql, ...) are both covered.
@@ -59,21 +59,21 @@ public class DapperGuardRules
             fileGlob: "*.cs",
             whitelist: new[] { "GlobalCommandTimeout.cs: default timeout configured" });
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("Dapper calls must specify commandTimeout to prevent hanging queries");
     }
 
     // TRAP: The agent built a dynamic IN clause via string.Join without a whitelist.
     // GUARDRAIL: IN with a dynamic list — only via TVP or ORM generation.
     [Test]
-    public void DynamicInClause_ShouldBeParameterized()
+    public async Task DynamicInClause_ShouldBeParameterized()
     {
         var violations = ScanSourceFiles(
             pattern: @"string\.Join\s*\(\s*"",""\s*,\s*\w+\s*\).*?(IN|in)\s*\(",
             fileGlob: "*.cs",
             whitelist: Array.Empty<string>());
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("Dynamic IN clauses must use Table-Valued Parameters (TVP) or parameterized ORM, not string.Join");
     }
 
@@ -81,14 +81,14 @@ public class DapperGuardRules
     // GUARDRAIL: Even in EF, raw SQL must be parameterized (FromSqlInterpolated).
     // NOTE: This is an EF + raw SQL overlap — placed in the Dapper file because it concerns raw SQL hygiene.
     [Test]
-    public void EfRawSql_ShouldNotUseInterpolation()
+    public async Task EfRawSql_ShouldNotUseInterpolation()
     {
         var violations = ScanSourceFiles(
             pattern: @"FromSqlRaw\s*\(\s*\$",
             fileGlob: "*.cs",
             whitelist: Array.Empty<string>());
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("Use FromSqlInterpolated for parameterized raw SQL. FromSqlRaw with $ is injection-prone.");
     }
 

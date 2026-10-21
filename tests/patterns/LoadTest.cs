@@ -14,7 +14,7 @@ public class LoadTests
     // The InMemory test passes, but in production Status is not persisted.
     // GUARDRAIL: Drive read + write under load. The write $Max$ must not grow.
     [Test]
-    public void ReadWriteMix_ShouldNotDegradeWriteLatency()
+    public async Task ReadWriteMix_ShouldNotDegradeWriteLatency()
     {
         var httpClient = new HttpClient();
 
@@ -40,9 +40,9 @@ public class LoadTests
 
         // GUARDRAIL: The $Max$ write-operation latency must not exceed 500ms
         var writeStats = stats.ScenarioStats.First(s => s.ScenarioName == "write_status");
-        Assert.That(writeStats.Ok.Latency.MaxMs).IsLessThanOrEqualTo(500);
+        await Assert.That(writeStats.Ok.Latency.MaxMs).IsLessThanOrEqualTo(500);
 
         // GUARDRAIL: There must be no failed requests (otherwise the state machine is broken)
-        Assert.That(writeStats.Fail.Request.Count).IsEqualTo(0);
+        await Assert.That(writeStats.Fail.Request.Count).IsEqualTo(0);
     }
 }

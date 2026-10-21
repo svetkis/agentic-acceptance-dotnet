@@ -2,7 +2,7 @@
 // GUARDRAIL: We count public types and tests via reflection. If the count decreased, the agent broke something.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(...).IsGreaterThanOrEqualTo(...)
+// - TUnit:  [Test] + await Assert.That(...).IsGreaterThanOrEqualTo(...)
 // - xUnit:  [Fact] + Assert.True(current >= baseline)
 // - NUnit:  [Test] + Assert.That(current, Is.GreaterThanOrEqualTo(baseline))
 // - MSTest: [TestMethod] + Assert.IsTrue(current >= baseline)
@@ -17,7 +17,7 @@ public class RatchetTests
     // TRAP: The agent deleted services or DTOs during "cleanup", thinking they were unused.
     // GUARDRAIL: This test fails if the number of public types in the layer decreased.
     [Test]
-    public void PublicTypeCount_ShouldNotDecrease()
+    public async Task PublicTypeCount_ShouldNotDecrease()
     {
         // Arrange
         var assembly = typeof(YourApplicationAssembly).Assembly;
@@ -27,13 +27,13 @@ public class RatchetTests
         const int baselineCount = 12;
 
         // Assert
-        Assert.That(currentCount).IsGreaterThanOrEqualTo(baselineCount);
+        await Assert.That(currentCount).IsGreaterThanOrEqualTo(baselineCount);
     }
 
     // TRAP: The agent broke the test runner or deleted the test project — "0 tests ran, exit 0".
     // GUARDRAIL: An architectural test verifies that the test count did not decrease.
     [Test]
-    public void TestCount_ShouldNotDecrease()
+    public async Task TestCount_ShouldNotDecrease()
     {
         var testAssembly = typeof(RatchetTests).Assembly;
         var currentCount = GetTestMethods(testAssembly).Count();
@@ -41,7 +41,7 @@ public class RatchetTests
          // Baseline value — recorded during the audit. Update manually after coverage grows.
         const int baselineCount = 10;
 
-        Assert.That(currentCount).IsGreaterThanOrEqualTo(baselineCount)
+        await Assert.That(currentCount).IsGreaterThanOrEqualTo(baselineCount)
             .Because("Test count must not silently decrease. If runner breaks, this catches it.");
     }
 

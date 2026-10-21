@@ -53,7 +53,7 @@ public class LockContentionBudgetTests
     // GUARDRAIL: Contentions of a [HotPath] method per operation stay within the
     //        noise floor (per operation, so the budget is independent of iteration count).
     [Test]
-    public void GetAvailableSlots_LockContentionBudget()
+    public async Task GetAvailableSlots_LockContentionBudget()
     {
         var budget = MeasureLockContentionBudget(
             action: () => YourHotPathService.GetAvailableSlots(DateTime.UtcNow),
@@ -67,7 +67,7 @@ public class LockContentionBudgetTests
         // the floor per project after measuring ambient noise once.
         const double maxContentionsPerOperation = 0.10;
 
-        Assert.That(budget.ContentionsPerOperation)
+        await Assert.That(budget.ContentionsPerOperation)
             .IsLessThanOrEqualTo(maxContentionsPerOperation)
             .Because($"Hot path must not contend on monitor locks. Contentions/op={budget.ContentionsPerOperation} " +
                      $"(of {budget.Operations} ops), Budget/op={maxContentionsPerOperation}");
@@ -78,11 +78,11 @@ public class LockContentionBudgetTests
     //        Zero [HotPath] methods found = broken scan (wrong assembly, attribute renamed) —
     //        fail instead of passing vacuously.
     [Test]
-    public void AllHotPathMethods_HaveLockContentionBudgetTests()
+    public async Task AllHotPathMethods_HaveLockContentionBudgetTests()
     {
         var hotPathMethods = GetHotPathMethods(typeof(YourHotPathService).Assembly).ToList();
 
-        Assert.That(hotPathMethods.Count > 0).IsTrue()
+        await Assert.That(hotPathMethods.Count > 0).IsTrue()
             .Because("no [HotPath] methods found — wrong assembly scanned or the attribute was renamed");
 
         var testMethods = GetTestMethods(typeof(LockContentionBudgetTests).Assembly)
@@ -94,7 +94,7 @@ public class LockContentionBudgetTests
             .Select(m => $"{m.DeclaringType?.FullName}.{m.Name}")
             .ToList();
 
-        Assert.That(missing).IsEmpty()
+        await Assert.That(missing).IsEmpty()
             .Because("Every [HotPath] method must have a matching {MethodName}_LockContentionBudget test.");
     }
 

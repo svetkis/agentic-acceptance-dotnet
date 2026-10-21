@@ -5,7 +5,7 @@
 // This file is only for projects using EF Core. For Dapper see DapperGuardRules.cs.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(result.IsSuccessful).IsTrue()
+// - TUnit:  [Test] + await Assert.That(result.IsSuccessful).IsTrue()
 // - xUnit:  [Fact] + Assert.True(result.IsSuccessful)
 // - NUnit:  [Test] + Assert.That(result.IsSuccessful, Is.True)
 // - MSTest: [TestMethod] + Assert.IsTrue(result.IsSuccessful)
@@ -23,41 +23,41 @@ public class EfCoreGuardRules
     // NOTE: It is also caught at compile time via BannedApiAnalyzers (RS0030) in BannedSymbols.txt.
     //       Regex here is a fallback / double-check.
     [Test]
-    public void FindAsync_ShouldNotBeUsedInReadPath()
+    public async Task FindAsync_ShouldNotBeUsedInReadPath()
     {
         var violations = ScanSourceFiles(
             pattern: @"\.FindAsync\(",
             fileGlob: "*Query*.cs",
             whitelist: Array.Empty<string>());
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("FindAsync is only allowed in write-path / command handlers.");
     }
 
     // TRAP: The agent added a DbContext to the Application layer.
     // GUARDRAIL: Application only knows about Ports (interfaces).
     [Test]
-    public void Application_ShouldNotReferenceEfCore()
+    public async Task Application_ShouldNotReferenceEfCore()
     {
         var result = Types.InCurrentDomain()
             .That().ResideInNamespace(".*Application.*")
             .Should().NotHaveDependencyOnAny("Microsoft.EntityFrameworkCore")
             .GetResult();
 
-        Assert.That(result.IsSuccessful).IsTrue();
+        await Assert.That(result.IsSuccessful).IsTrue();
     }
 
     // TRAP: The agent used .Include() in a QueryService — N+1 and extra data.
     // GUARDRAIL: Regex scanning catches what reflection cannot see.
     [Test]
-    public void QueryServices_ShouldNotUse_Include()
+    public async Task QueryServices_ShouldNotUse_Include()
     {
         var violations = ScanSourceFiles(
             pattern: @"\.Include\(",
             fileGlob: "*QueryService*.cs",
             whitelist: Array.Empty<string>());
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("QueryService must use .Select() projections, not .Include()");
     }
 

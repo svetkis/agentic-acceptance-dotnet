@@ -2,7 +2,7 @@
 // GUARDRAIL: The number of methods violating S3776 (cognitive) / S1541 (cyclomatic) does not grow.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(...)
+// - TUnit:  [Test] + await Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
@@ -25,12 +25,12 @@ public class ComplexityRatchetTests
     // TRAP: The agent wrote a method with 5 levels of if/switch/foreach nesting.
     // GUARDRAIL: We pin the violation baseline and do not let it grow.
     [Test]
-    public void SonarComplexityViolations_ShouldNotIncrease()
+    public async Task SonarComplexityViolations_ShouldNotIncrease()
     {
         var violationCount = CountSonarComplexityViolations(RepoRoot);
         var baseline = GetBaselineOrSet(violationCount, "complexity-baseline.txt");
 
-        Assert.That(violationCount)
+        await Assert.That(violationCount)
             .IsLessThanOrEqualTo(baseline)
             .Because($"Cognitive/cyclomatic complexity violations must not increase. " +
                      $"Current={violationCount}, Baseline={baseline}. Refactor the new method or update the baseline consciously.");
@@ -39,16 +39,16 @@ public class ComplexityRatchetTests
     // TRAP: In a legacy project there are too many violations, and the ratchet does not work.
     // GUARDRAIL: We verify that the worst methods did not get more complex (top-10 hotspots ratchet).
     [Test]
-    public void TopHotspotComplexity_ShouldNotIncrease()
+    public async Task TopHotspotComplexity_ShouldNotIncrease()
     {
         var hotspots = GetTopComplexityHotspots(RepoRoot, topN: 10);
         var currentMax = hotspots.Any() ? hotspots.Max(h => h.Complexity) : 0;
         var baselineMax = GetBaselineOrSet(currentMax, "complexity-hotspot-baseline.txt");
 
-        Assert.That(currentMax)
+        await Assert.That(currentMax)
             .IsLessThanOrEqualTo(baselineMax)
-            .Because("Max complexity of top hotspots must not increase. " +
-                     "CurrentMax={0}, BaselineMax={1}", currentMax, baselineMax);
+            .Because($"Max complexity of top hotspots must not increase. " +
+                     $"CurrentMax={currentMax}, BaselineMax={baselineMax}");
     }
 
     // --- Helpers ---

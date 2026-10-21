@@ -25,15 +25,18 @@ public class PiiGuardTest
             while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "global.json")))
                 dir = dir.Parent;
 
-            Assert.That(dir is not null).IsTrue(); // marker file not found above the test assembly
-            return dir!.FullName;
+            // marker file not found above the test assembly — fail the test instead
+            // of an async assert: a property getter cannot await (TUnit assertions
+            // are async since 1.x)
+            ArgumentNullException.ThrowIfNull(dir);
+            return dir.FullName;
         }
     }
 
     // TRAP: The agent created an Email/Phone/Password property without [SensitiveData].
     // GUARDRAIL: All PII fields must have [SensitiveData].
     [Test]
-    public void AllPiiProperties_ShouldHaveSensitiveDataAttribute()
+    public async Task AllPiiProperties_ShouldHaveSensitiveDataAttribute()
     {
         var piiPatterns = new[] { @"Email", @"Phone", @"Password", @"Token", @"Secret", @"Card" };
         var violations = new List<string>();
@@ -57,14 +60,14 @@ public class PiiGuardTest
             }
         }
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("Properties matching PII patterns must have [SensitiveData] attribute");
     }
 
     // TRAP: The agent uses string interpolation in Log* — data ends up in the log.
     // GUARDRAIL: Log* calls must not contain $"..." (interpolated strings).
     [Test]
-    public void LogCalls_ShouldNotUseInterpolatedStrings()
+    public async Task LogCalls_ShouldNotUseInterpolatedStrings()
     {
         var violations = ScanSourceFiles(
             rootDir: RepoRoot,
@@ -72,7 +75,7 @@ public class PiiGuardTest
             pattern: @"\b(_logger|logger|Log)\.(LogInformation|LogDebug|LogWarning|LogError|LogTrace)\s*\(\s*\$""",
             whitelist: new[] { "PiiGuardTest.cs: test itself uses interpolation" });
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("Logging must use structured templates, not interpolated strings. " +
                      "Use _logger.LogInformation(\"User {UserId} logged in\", user.Id) instead");
     }
@@ -80,7 +83,7 @@ public class PiiGuardTest
     // TRAP: The agent passes email/phone/password to Log* as an argument.
     // GUARDRAIL: Log* calls must not contain variables with PII names.
     [Test]
-    public void LogCalls_ShouldNotContainPiiVariables()
+    public async Task LogCalls_ShouldNotContainPiiVariables()
     {
         var piiVariables = new[] { @"email", @"phone", @"password", @"token", @"secret", @"cardLast4", @"ssn" };
         var pattern = $@"\b(_logger|logger|Log)\.(LogInformation|LogDebug|LogWarning|LogError|LogTrace)\s*\([^)]*\b({string.Join("|", piiVariables)})\b";
@@ -91,7 +94,7 @@ public class PiiGuardTest
             pattern: pattern,
             whitelist: new[] { "PiiGuardTest.cs: test scans for patterns" });
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("PII variables must not be passed to logging methods. " +
                      "Log identifiers (UserId) instead of sensitive data");
     }
@@ -99,15 +102,14 @@ public class PiiGuardTest
     // TRAP: The agent added a PII field but did not grow the [SensitiveData] inventory.
     // GUARDRAIL: The number of [SensitiveData] properties does not decrease (ratchet).
     [Test]
-    public void SensitiveDataAttributes_ShouldNotDecrease()
+    public async Task SensitiveDataAttributes_ShouldNotDecrease()
     {
         var currentCount = CountSensitiveDataAttributes(RepoRoot);
         var baseline = GetBaselineOrSet(currentCount);
 
-        Assert.That(currentCount).IsGreaterThanOrEqualTo(baseline)
-            .Because("[SensitiveData] attributes must not decrease. " +
-                     "Every new PII field requires the attribute. Current={0}, Baseline={1}",
-                     currentCount, baseline);
+        await Assert.That(currentCount).IsGreaterThanOrEqualTo(baseline)
+            .Because($"[SensitiveData] attributes must not decrease. " +
+                     $"Every new PII field requires the attribute. Current={currentCount}, Baseline={baseline}");
     }
 
     // --- Helpers ---

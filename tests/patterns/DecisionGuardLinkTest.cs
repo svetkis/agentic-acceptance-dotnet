@@ -11,7 +11,7 @@
 // It runs as a normal test — the registry is verified on every `dotnet run --project` (TUnit), not in an audit.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(condition).IsTrue()
+// - TUnit:  [Test] + await Assert.That(condition).IsTrue()
 // - xUnit:  [Fact] + Assert.True(condition, message)
 // - NUnit:  [Test] + Assert.That(condition, Is.True, message)
 // - MSTest: [TestMethod] + Assert.IsTrue(condition, message)
@@ -37,8 +37,11 @@ public class DecisionGuardLinkTests
                 dir = dir.Parent;
             }
 
-            Assert.That(dir is not null).IsTrue(); // marker file not found above the test assembly
-            return dir!.FullName;
+            // marker file not found above the test assembly — fail the test instead
+            // of an async assert: a property getter cannot await (TUnit assertions
+            // are async since 1.x)
+            ArgumentNullException.ThrowIfNull(dir);
+            return dir.FullName;
         }
     }
 
@@ -59,21 +62,21 @@ public class DecisionGuardLinkTests
     // GUARDRAIL: IDs parsed from headings must be unique, and at least one entry must parse
     //        (a registry whose format broke parses as zero entries and would otherwise pass vacuously).
     [Test]
-    public void DecisionIds_ShouldBeUnique()
+    public async Task DecisionIds_ShouldBeUnique()
     {
         var ids = Entries().Select(e => e.Id).ToList();
 
-        Assert.That(ids.Count > 0).IsTrue(); // zero entries = broken heading format, not a clean registry
+        await Assert.That(ids.Count > 0).IsTrue(); // zero entries = broken heading format, not a clean registry
 
         var duplicates = ids.GroupBy(id => id).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
-        Assert.That(duplicates.Count == 0).IsTrue(); // duplicate decision IDs
+        await Assert.That(duplicates.Count == 0).IsTrue(); // duplicate decision IDs
     }
 
     // TRAP: The agent renames/deletes a file referenced by the registry. The entry survives
     //        as a plausible-looking but dead link.
     // GUARDRAIL: Every "Where in code" path must resolve to an existing file.
     [Test]
-    public void RegistryCodeLinks_ShouldPointToExistingFiles()
+    public async Task RegistryCodeLinks_ShouldPointToExistingFiles()
     {
         // "**Where in code:** `src/.../File.cs:12-34`" — take the path before the line numbers.
         var missing = Entries()
@@ -84,7 +87,7 @@ public class DecisionGuardLinkTests
             .Where(relative => !File.Exists(Path.Combine(RepoRoot, relative)))
             .ToList();
 
-        Assert.That(missing.Count == 0).IsTrue(); // registry links to non-existent files
+        await Assert.That(missing.Count == 0).IsTrue(); // registry links to non-existent files
     }
 
     // TRAP: The registry entry exists, the file exists, but the ID itself is gone from the code.
@@ -94,7 +97,7 @@ public class DecisionGuardLinkTests
     //        deviation). Checks both directions of the link; a non-existent file is reported by
     //        the test above and skipped here.
     [Test]
-    public void DecisionId_ShouldAppearInLinkedFile()
+    public async Task DecisionId_ShouldAppearInLinkedFile()
     {
         var broken = new List<string>();
         var checkedLinks = 0;
@@ -121,7 +124,7 @@ public class DecisionGuardLinkTests
             }
         }
 
-        Assert.That(checkedLinks > 0).IsTrue(); // zero parsed links = broken registry format
-        Assert.That(broken.Count == 0).IsTrue(); // IDs missing from their linked files — nothing stops the agent at the point of change
+        await Assert.That(checkedLinks > 0).IsTrue(); // zero parsed links = broken registry format
+        await Assert.That(broken.Count == 0).IsTrue(); // IDs missing from their linked files — nothing stops the agent at the point of change
     }
 }

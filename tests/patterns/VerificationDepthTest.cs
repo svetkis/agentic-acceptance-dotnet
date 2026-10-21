@@ -88,7 +88,7 @@ public class VerificationDepthTest
             Assert.Fail("Solution root not found");
 
         var projects = Directory.GetFiles(solutionRoot!, "*.csproj", SearchOption.AllDirectories)
-            .ToDictionary(Path.GetFileNameWithoutExtension, StringComparer.OrdinalIgnoreCase);
+            .ToDictionary(p => Path.GetFileNameWithoutExtension(p)!, StringComparer.OrdinalIgnoreCase);
         var configs = Directory.GetFiles(solutionRoot!, "stryker-config.json", SearchOption.AllDirectories);
         var offenders = new List<string>();
 

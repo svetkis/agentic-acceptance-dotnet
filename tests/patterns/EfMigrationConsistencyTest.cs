@@ -12,7 +12,7 @@
 //   2. migrate-empty-database    — the migration chain actually runs on a real DB engine.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(...).IsTrue()
+// - TUnit:  [Test] + await Assert.That(...).IsTrue()
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(..., Is.True)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
@@ -41,7 +41,7 @@ public class EfMigrationConsistencyTests
         var (exitCode, output) = await RunDotnetEf(
             "migrations has-pending-model-changes --project src/YourApp.Infrastructure");
 
-        Assert.That(exitCode)
+        await Assert.That(exitCode)
             .IsEqualTo(0)
             .Because($"EF model has changes not covered by a migration. " +
                      $"Run `dotnet ef migrations add <Name>`. dotnet-ef said: {output}");
@@ -65,7 +65,7 @@ public class EfMigrationConsistencyTests
         var (exitCode, output) = await RunDotnetEf(
             $"database update --project src/YourApp.Infrastructure --connection \"{postgres.GetConnectionString()}\"");
 
-        Assert.That(exitCode)
+        await Assert.That(exitCode)
             .IsEqualTo(0)
             .Because($"The migration chain must apply cleanly to an empty database. " +
                      $"dotnet-ef said: {output}");

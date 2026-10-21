@@ -2,7 +2,7 @@
 // GUARDRAIL: CSpell checks markdown, comments, and public symbols; there must be no new misspellings.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(...)
+// - TUnit:  [Test] + await Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
@@ -22,16 +22,15 @@ public class SpellcheckGuardTests
     // TRAP: The agent added a typo to a public API name.
     // GUARDRAIL: CSpell finds no new errors in the checked files.
     [Test]
-    public void CSpell_ShouldNotFindNewMisspellings()
+    public async Task CSpell_ShouldNotFindNewMisspellings()
     {
         var misspellingCount = RunCSpell(RepoRoot);
         var baseline = GetBaselineOrSet(misspellingCount, "spellcheck-baseline.txt");
 
-        Assert.That(misspellingCount)
+        await Assert.That(misspellingCount)
             .IsLessThanOrEqualTo(baseline)
-            .Because("Spellcheck violations must not increase. " +
-                     "Current={0}, Baseline={1}. Add exceptions to project dictionary if needed.",
-                     misspellingCount, baseline);
+            .Because($"Spellcheck violations must not increase. " +
+                     $"Current={misspellingCount}, Baseline={baseline}. Add exceptions to project dictionary if needed.");
     }
 
     // --- Helpers ---

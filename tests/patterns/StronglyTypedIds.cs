@@ -15,7 +15,7 @@ public class StronglyTypedIds
     // GUARDRAIL: All *Id properties in Domain entities must have a type
     // ending with Id (not Guid/string/int/long).
     [Test]
-    public void DomainEntities_ShouldNotUseRawPrimitivesForIds()
+    public async Task DomainEntities_ShouldNotUseRawPrimitivesForIds()
     {
         // Adaptation: replace with your assembly and convention.
         // var domainAssembly = typeof(YourDomainEntity).Assembly;
@@ -24,7 +24,7 @@ public class StronglyTypedIds
         // Assert.That(violations).IsEmpty()
         //     .Because($"Domain entities must use strongly typed IDs. Violations: {string.Join(", ", violations)}");
 
-        Assert.That(true).IsTrue()
+        await Assert.That(true).IsTrue()
             .Because("Template: adapt this test to your assembly. See commented code and helper below.");
     }
 
@@ -32,7 +32,7 @@ public class StronglyTypedIds
     // GUARDRAIL: Ratchet — count the current number of entities with strongly typed IDs
     // and verify it does not decrease (or that the number of violations does not grow).
     [Test]
-    public void StronglyTypedIdUsage_ShouldNotDecrease()
+    public async Task StronglyTypedIdUsage_ShouldNotDecrease()
     {
         // Adaptation:
         // var domainAssembly = typeof(YourDomainEntity).Assembly;
@@ -42,7 +42,7 @@ public class StronglyTypedIds
         // Assert.That(stronglyTypedCount).IsGreaterThanOrEqualTo(baseline)
         //     .Because($"Strongly typed IDs must not decrease. Current: {stronglyTypedCount}, baseline: {baseline}");
 
-        Assert.That(true).IsTrue()
+        await Assert.That(true).IsTrue()
             .Because("Template: adapt this test to count strongly typed IDs. See commented code.");
     }
 

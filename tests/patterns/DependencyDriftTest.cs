@@ -15,7 +15,7 @@ public class DependencyDriftTest
     // TRAP: The agent added a project reference "for the sake of one extension method".
     // GUARDRAIL: The ProjectReference graph contains no cycles.
     [Test]
-    public void ProjectReferences_ShouldNotHaveCycles()
+    public async Task ProjectReferences_ShouldNotHaveCycles()
     {
         var solutionRoot = FindSolutionRoot();
         if (solutionRoot is null)
@@ -25,7 +25,7 @@ public class DependencyDriftTest
         var graph = BuildProjectGraph(projects);
         var cycles = FindCycles(graph);
 
-        Assert.That(cycles).IsEmpty()
+        await Assert.That(cycles).IsEmpty()
             .Because($"Circular project references detected: {string.Join(" | ", cycles)}");
     }
 
@@ -34,7 +34,7 @@ public class DependencyDriftTest
     // NOTE: Replace "MyProject.Domain" and "MyProject.Infrastructure" with your assemblies.
     //       For pure reflection see DomainAssembly_ShouldNotReference_InfrastructureRuntime below.
     [Test]
-    public void Domain_ShouldNotDependOn_Infrastructure()
+    public async Task Domain_ShouldNotDependOn_Infrastructure()
     {
         // Adaptation: load your assemblies via typeof(DomainType).Assembly
         // var domain = typeof(YourDomainEntity).Assembly;
@@ -47,7 +47,7 @@ public class DependencyDriftTest
         //
         // Assert.That(result.IsSuccessful).IsTrue();
 
-        Assert.That(true).IsTrue()
+        await Assert.That(true).IsTrue()
             .Because("Template: adapt this test to your assembly names. See commented code.");
     }
 
@@ -55,7 +55,7 @@ public class DependencyDriftTest
     // GUARDRAIL: Assembly.GetReferencedAssemblies() shows the runtime graph, not the text.
     // NOTE: Replace with your assemblies.
     [Test]
-    public void DomainAssembly_ShouldNotReference_InfrastructureRuntime()
+    public async Task DomainAssembly_ShouldNotReference_InfrastructureRuntime()
     {
         // Adaptation:
         // var domainRefs = typeof(YourDomainEntity).Assembly
@@ -66,7 +66,7 @@ public class DependencyDriftTest
         // var infraName = typeof(YourInfrastructureService).Assembly.GetName().Name;
         // Assert.That(domainRefs).DoesNotContain(infraName!);
 
-        Assert.That(true).IsTrue()
+        await Assert.That(true).IsTrue()
             .Because("Template: adapt this test to your assembly names. See commented code.");
     }
 

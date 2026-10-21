@@ -6,7 +6,7 @@
 //       For Dapper-specific rules see DapperGuardRules.cs.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(result.IsSuccessful).IsTrue()
+// - TUnit:  [Test] + await Assert.That(result.IsSuccessful).IsTrue()
 // - xUnit:  [Fact] + Assert.True(result.IsSuccessful)
 // - NUnit:  [Test] + Assert.That(result.IsSuccessful, Is.True)
 // - MSTest: [TestMethod] + Assert.IsTrue(result.IsSuccessful)
@@ -30,22 +30,22 @@ public class ArchitectureRules
     // NOTE: Always include failing type names in the assertion message — without it,
     // a red test tells you nothing about WHERE the boundary broke.
     [Test]
-    public void Api_ShouldNotReferenceInfrastructureDirectly()
+    public async Task Api_ShouldNotReferenceInfrastructureDirectly()
     {
         var result = Types.InCurrentDomain()
             .That().ResideInNamespace(".*Api.*")
             .Should().NotHaveDependencyOnAny(".*Infrastructure.*")
             .GetResult();
 
-        Assert.That(result.IsSuccessful).IsTrue(
-            "Boundary violated by: " + string.Join(", ", result.FailingTypes?.Select(t => t.FullName) ?? []));
+        await Assert.That(result.IsSuccessful).IsTrue()
+            .Because("Boundary violated by: " + string.Join(", ", result.FailingTypes?.Select(t => t.FullName) ?? []));
     }
 
     // TRAP: The project has an empty placeholder assembly (e.g. Data layer not started yet).
     // GUARDRAIL: Anchor it by name — there is no type to anchor on yet.
     // NOTE: A rule over an empty assembly passes trivially; add real rules when types appear.
     [Test]
-    public void DataAssembly_CanBeAnchoredWithoutTypes()
+    public async Task DataAssembly_CanBeAnchoredWithoutTypes()
     {
         var dataAssembly = System.Reflection.Assembly.Load("MyApp.Data");
         var result = Types.InAssembly(dataAssembly)
@@ -53,14 +53,14 @@ public class ArchitectureRules
             .HaveDependencyOnAny("MyApp.Api", "MyApp.Worker")
             .GetResult();
 
-        Assert.That(result.IsSuccessful).IsTrue(
-            "Boundary violated by: " + string.Join(", ", result.FailingTypes?.Select(t => t.FullName) ?? []));
+        await Assert.That(result.IsSuccessful).IsTrue()
+            .Because("Boundary violated by: " + string.Join(", ", result.FailingTypes?.Select(t => t.FullName) ?? []));
     }
 
     // TRAP: The agent created a service without an interface in Application.
     // GUARDRAIL: All services must have an interface (Port).
     [Test]
-    public void Services_ShouldHaveInterfaces()
+    public async Task Services_ShouldHaveInterfaces()
     {
         var result = Types.InCurrentDomain()
             .That().ResideInNamespace(".*Infrastructure.*")
@@ -68,14 +68,14 @@ public class ArchitectureRules
             .Should().ImplementInterface(typeof(IService))
             .GetResult();
 
-        Assert.That(result.IsSuccessful).IsTrue();
+        await Assert.That(result.IsSuccessful).IsTrue();
     }
 
     // TRAP: The agent added mutable state to Domain via a public field/setter.
     // GUARDRAIL: BeImmutableExternally catches mutable public API (eNhancedEdition 1.4.5+).
     // NOTE: Auto-properties may not be detected — use Roslyn analyzers for precise checking.
     [Test]
-    public void DomainTypes_ShouldBeImmutableExternally()
+    public async Task DomainTypes_ShouldBeImmutableExternally()
     {
         var result = Types.InCurrentDomain()
             .That().ResideInNamespace(".*Domain.*")
@@ -83,21 +83,21 @@ public class ArchitectureRules
             .Should().BeImmutableExternally()
             .GetResult();
 
-        Assert.That(result.IsSuccessful).IsTrue();
+        await Assert.That(result.IsSuccessful).IsTrue();
     }
 
     // TRAP: The agent added caching without specifying a size — OOM in production.
     // GUARDRAIL: Every bare cache.Set() is caught by scanning.
     // NOTE: A universal rule, independent of the ORM.
     [Test]
-    public void CacheSet_ShouldAlwaysSpecifySize()
+    public async Task CacheSet_ShouldAlwaysSpecifySize()
     {
         var violations = ScanSourceFiles(
             pattern: @"(?<!Sized)\b_cache\.Set\(",
             fileGlob: "*.cs",
             whitelist: new[] { "CacheSetup.cs: explicit SizeLimit config" });
 
-        Assert.That(violations).IsEmpty()
+        await Assert.That(violations).IsEmpty()
             .Because("MemoryCache SizeLimit requires every entry to specify .Size");
     }
 
@@ -105,12 +105,12 @@ public class ArchitectureRules
     // GUARDRAIL: decision IDs (PERF/DB/AUD/COMPLEXITY/SPELL/MUTATION, see rules/CONVENTIONS.md)
     //        must be unique across the entire codebase.
     [Test]
-    public void DecisionGuardIds_ShouldBeUnique()
+    public async Task DecisionGuardIds_ShouldBeUnique()
     {
         var ids = ExtractDecisionIds("src", @"(PERF|DB|AUD|COMPLEXITY|SPELL|MUTATION)-\d{3}");
         var duplicates = ids.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key);
 
-        Assert.That(duplicates).IsEmpty()
+        await Assert.That(duplicates).IsEmpty()
             .Because("Decision guards must be unique to prevent collision in documentation");
     }
 

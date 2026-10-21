@@ -2,7 +2,7 @@
 // GUARDRAIL: Stryker.NET runs before release; the mutation score does not drop.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(...)
+// - TUnit:  [Test] + await Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)
@@ -24,15 +24,15 @@ public class MutationGuardTests
     // TRAP: Line coverage is high, but asserts are weak — mutants survive.
     // GUARDRAIL: The mutation score for a critical assembly is >= baseline (e.g., 70%).
     [Test]
-    public void StrykerMutationScore_ShouldMeetBaseline()
+    public async Task StrykerMutationScore_ShouldMeetBaseline()
     {
         var score = RunStrykerAndGetScore(RepoRoot, targetProject: "src/YourProject.Domain/YourProject.Domain.csproj");
         var baseline = GetBaselineOrSet((int)(score * 100), "mutation-score-baseline.txt");
         var current = (int)(score * 100);
 
-        Assert.That(current)
+        await Assert.That(current)
             .IsGreaterThanOrEqualTo(baseline)
-            .Because("Mutation score must not decrease. Current={0}%, Baseline={1}%", current, baseline);
+            .Because($"Mutation score must not decrease. Current={current}%, Baseline={baseline}%");
     }
 
     // --- Helpers ---

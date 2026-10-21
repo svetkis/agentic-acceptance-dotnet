@@ -10,7 +10,7 @@
 // A test is the only thing that catches it — the value never executes in a test run.
 //
 // Framework adaptation:
-// - TUnit:  [Test], [Arguments(...)] + Assert.That(...).Contains / DoesNotContain
+// - TUnit:  [Test], [Arguments(...)] + await Assert.That(...).Contains / DoesNotContain
 // - xUnit:  [Theory], [InlineData(...)] + Assert.Contains / Assert.DoesNotContain
 // - NUnit:  [Test], [TestCase(...)] + Assert.Contains / Assert.DoesNotContain
 // - MSTest: [TestMethod], [DataRow(...)] + StringAssert.Contains
@@ -26,16 +26,16 @@ public class ProductionConfigurationTest
     [Test]
     [Arguments("src/MyApp.Api/Dockerfile")]
     [Arguments("src/MyApp.Worker/Dockerfile")]
-    public void BUG_CONFIG001_GcPercentEnvironmentVariables_ShouldUseHexadecimal75Percent(
+    public async Task BUG_CONFIG001_GcPercentEnvironmentVariables_ShouldUseHexadecimal75Percent(
         string relativePath)
     {
         var repositoryRoot = FindRepositoryRoot();
         var dockerfile = File.ReadAllText(Path.Combine(repositoryRoot, relativePath));
 
-        Assert.That(dockerfile).Contains("ENV DOTNET_GCHeapHardLimitPercent=0x4B");
-        Assert.That(dockerfile).Contains("ENV DOTNET_GCHighMemPercent=0x4B");
-        Assert.That(dockerfile).DoesNotContain("ENV DOTNET_GCHeapHardLimitPercent=75");
-        Assert.That(dockerfile).DoesNotContain("ENV DOTNET_GCHighMemPercent=75");
+        await Assert.That(dockerfile).Contains("ENV DOTNET_GCHeapHardLimitPercent=0x4B");
+        await Assert.That(dockerfile).Contains("ENV DOTNET_GCHighMemPercent=0x4B");
+        await Assert.That(dockerfile).DoesNotContain("ENV DOTNET_GCHeapHardLimitPercent=75");
+        await Assert.That(dockerfile).DoesNotContain("ENV DOTNET_GCHighMemPercent=75");
     }
 
     // TRAP: An env var was added to code but not to the deployment manifest (or vice versa).
@@ -46,7 +46,7 @@ public class ProductionConfigurationTest
     //       The simple list-parsing below misses compose map syntax (`KEY: value`) and
     //       catches non-env list items (volumes) — for real projects use a YAML parser.
     [Test]
-    public void BUG_CONFIG002_EnvVars_ShouldMatchBetweenCodeAndDeployment()
+    public async Task BUG_CONFIG002_EnvVars_ShouldMatchBetweenCodeAndDeployment()
     {
         var repositoryRoot = FindRepositoryRoot();
         var manifestVars = ExtractEnvVarNames(
@@ -56,22 +56,22 @@ public class ProductionConfigurationTest
         var unreadByCode = manifestVars.Except(codeVars).ToList();
         var unsetByDeployment = codeVars.Except(manifestVars).ToList();
 
-        Assert.That(unreadByCode).IsEmpty()
+        await Assert.That(unreadByCode).IsEmpty()
             .Because("env vars present in the manifest but read by no code " +
                      "rot the deployment config: " + string.Join(", ", unreadByCode));
-        Assert.That(unsetByDeployment).IsEmpty()
+        await Assert.That(unsetByDeployment).IsEmpty()
             .Because("env vars the code reads but deployment never sets " +
                      "fail only in production: " + string.Join(", ", unsetByDeployment));
     }
 
     // --- Helpers ---
 
-    private static DirectoryInfo FindRepositoryRoot()
+    private static string FindRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
         while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "global.json")))
-            directory = directory.Parent!;
-        return directory;
+            directory = directory.Parent;
+        return directory is not null ? directory.FullName : AppContext.BaseDirectory;
     }
 
     private static IEnumerable<string> ExtractEnvVarNames(string composePath) =>

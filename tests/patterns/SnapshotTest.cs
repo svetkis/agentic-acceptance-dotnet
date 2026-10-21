@@ -35,7 +35,7 @@ public class SnapshotTests
         var currentNormalized = NormalizeJson(currentOpenApi);
         var snapshotNormalized = NormalizeJson(snapshot);
 
-        Assert.That(currentNormalized).IsEqualTo(snapshotNormalized);
+        await Assert.That(currentNormalized).IsEqualTo(snapshotNormalized);
     }
 
     private static string NormalizeJson(string json)

@@ -14,7 +14,7 @@ public class EntityLeakTest
     // TRAP: The agent wrote Task<Booking> instead of Task<BookingDto>.
     // GUARDRAIL: Application interfaces must not return Domain Entities.
     [Test]
-    public void ApplicationInterfaces_ShouldNotReturnDomainEntities()
+    public async Task ApplicationInterfaces_ShouldNotReturnDomainEntities()
     {
         // Adaptation: replace with your assemblies and Entity naming convention.
         // var appAssembly = typeof(YourApplicationService).Assembly;
@@ -28,14 +28,14 @@ public class EntityLeakTest
         //
         // Assert.That(result.IsSuccessful).IsTrue();
 
-        Assert.That(true).IsTrue()
+        await Assert.That(true).IsTrue()
             .Because("Template: adapt this test to your assembly and entity naming convention. See commented code.");
     }
 
     // TRAP: The agent added an Entity leak, but the test passes because the baseline was not updated.
     // GUARDRAIL: Ratchet — count the current number of violations and verify it does not grow.
     [Test]
-    public void ApplicationInterfaces_EntityLeakCount_ShouldNotGrow()
+    public async Task ApplicationInterfaces_EntityLeakCount_ShouldNotGrow()
     {
         // Adaptation:
         // var appAssembly = typeof(YourApplicationService).Assembly;
@@ -46,7 +46,7 @@ public class EntityLeakTest
         // Assert.That(violations).IsLessThanOrEqualTo(baseline)
         //     .Because($"Entity leaks must not grow. Current: {violations}, baseline: {baseline}");
 
-        Assert.That(true).IsTrue()
+        await Assert.That(true).IsTrue()
             .Because("Template: adapt this test to count violations. See commented code.");
     }
 
