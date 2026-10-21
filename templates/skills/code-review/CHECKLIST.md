@@ -33,6 +33,7 @@
 - [ ] Every `fix:` commit has a regression test per project convention
 - [ ] New functionality covered by tests
 - [ ] No empty placeholder tests
+- [ ] No test whose subject is another test or a gate — verification recursion needs a documented incident at the level below (Gates for Gates trap)
 
 ## Code Quality
 - [ ] No `async void` (if applicable)

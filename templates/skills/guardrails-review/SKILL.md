@@ -94,6 +94,12 @@ Example matrix for a baseline parser:
 - [ ] **Check evidence chains.** "Baseline is valid" must prove all required
   keys exist, values non-empty, entries fingerprinted, no unknown data — not
   "has header, assume the rest".
+- [ ] **Justify the meta-level.** If the change adds a layer over an existing
+  control (verifier of a verifier, tests for a gate, mutation runs over gate
+  tests), require the incident at the level below it answers for — an observed
+  false green, not a hypothetical. No incident → the layer is dead on arrival:
+  report as MAJOR (unjustified control), recommend removal. See
+  `docs/traps/agent-behavior.md#gates-for-gates`.
 - [ ] **Adversarial self-test:** "If I hand-crafted a malicious input, would
   this code block it?"
 
@@ -127,7 +133,7 @@ Owner / disposition
 |----------|---------|
 | **BLOCKER** | Any default-to-ALLOWED path; swallowed exception that could hide a safety violation; missing negative input class; implicit well-formedness assumption |
 | **CRITICAL** | Test matrix covers < 80% of input classes; unanchored pattern matching; partial validation (some keys checked, others assumed) |
-| **MAJOR** | Single negative example where a class needs a matrix; BLOCKED reason not machine-readable; error messages leak internal state |
+| **MAJOR** | Single negative example where a class needs a matrix; BLOCKED reason not machine-readable; error messages leak internal state; an added meta-level with no incident behind it |
 | **MINOR** | Naming inconsistency in test cases; redundant validation |
 
 | Confidence | Meaning |

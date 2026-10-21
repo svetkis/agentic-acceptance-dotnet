@@ -176,6 +176,7 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 - ✅ Regression test for every reproducible, automatable defect — **REQUIRED** (for configuration/documentation/operational/process defects, another regression control is allowed with an explicit rationale)
 - ⚠️ Zero triggers is **not** sufficient grounds for removal — weigh risk severity, likelihood, maintenance cost, false-positive rate, and compensating controls
 - ❌ Guardrail with no risk justification at all ("just in case") — **FORBIDDEN** (unjustified guardrail = over-engineering)
+- ❌ Verification of verification without an incident at the level below — **FORBIDDEN** (the [Gates for Gates](https://github.com/svetkis/agentic-acceptance-dotnet/blob/main/docs/traps/agent-behavior.md#gates-for-gates) trap): a control over a control ("verifier of the verifier", tests for a gate, mutation runs over such tests) is justified only by an observed failure of the level below — a real false green. Maximum **one** meta-level, approved by a human; mutation testing targets product test suites, never tests of gates. Detection: `tests/patterns/VerificationDepthTest.cs`
 
 ## Hard Prohibitions
 
@@ -183,6 +184,7 @@ When I tell you're a committer, add ✅ to STARTER_CHARACTER emojis. Make sure t
 - ❌ New env var without updating deployment docs
 - ❌ Raw SQL without explanatory comment
 - ❌ Guardrail without a risk justification (see section above)
+- ❌ Meta-gate without an incident at the level below (gates for gates)
 
 > Optional prohibitions (hot path, complexity, spellcheck, analyzers) live in
 > `AGENTS_TEMPLATE.addons.md` — copy them only with the matching section.

@@ -1,6 +1,6 @@
 # Agent Behavior Traps
 
-> How agents fail when left unsupervised: loops, scope blindness, hallucinated scale, silent cleanups, stale training data.
+> How agents fail when left unsupervised: loops, scope blindness, hallucinated scale, silent cleanups, stale training data, verification recursion.
 
 
 ## Agent Circles
@@ -230,6 +230,9 @@ Automated tests catch measurable complexity **only if that pattern actually occu
 > ```
 >
 > **Rule:** keep a guardrail only if it has caught at least one real bug. Otherwise — delete it.
+>
+> The control-plane sibling of this trap: [Gates for Gates](#gates-for-gates) —
+> a verification stack where no level has caught anything.
 
 #### 6. "No Abstraction Without Pain" Rule
 The project adopts the principle: an abstraction is introduced only when there is **already** pain from its absence (tests break, code duplicates, implementation replacement is needed).
@@ -239,6 +242,124 @@ Not: "might come in handy". Only: "already hurts without it".
 ### Pattern
 
 See `templates/skills/simplicity-audit/SKILL.md` and `templates/skills/simplicity-audit/CHECKLIST.md`
+
+
+## Gates for Gates
+### Scenario
+
+The agent is asked to "verify the guardrails" (or derives that goal from a
+Zero Trust instruction) — and applies the verification to itself, recursively:
+
+```
+Level 0: product code                                           ← what earns money
+Level 1: gate over the product (architecture test, CI check)    ✅ the methodology
+Level 2: gate over the gate ("verifier of the verifier")        ⚠️ needs an incident
+Level 3: unit tests over the level-2 gates                      ❌
+Level 4: mutation runs over the level-3 tests                   ❌
+Level 5: …                                                      never built — human interrupted
+```
+
+#### Examples from Practice
+
+> Observed case (agent team on a production project, 2026-10): levels 2–4
+> built in sequence, each review round returning the previous level
+> "hardened". Caught by the human reviewer at **round 29** — by which point
+> the diff contained zero product-code changes, only control-plane artifacts
+> verifying other control-plane artifacts.
+
+Every level is locally impeccable: who objects to "tests for our own gates"?
+The trap is that **no level is backed by an incident**. Level 2 was built not
+because a gate had ever passed a broken build (a real false green), but
+because a false green is *possible*. Levels 3–4 exist only because level 2
+exists.
+
+### Why Agents Enter the Recursion
+
+1. **Meta-work is always green.** Writing tests for your own gate succeeds instantly; product work is ambiguous and can fail. The agent drifts to where it can demonstrate perfection.
+2. **"Never trust, always verify" is infinite regress when taken literally.** Some verifier at the base must simply be trusted, with its residual risk accepted by a human (Engineering Governance) — otherwise the stack never terminates.
+3. **Each level is locally plausible.** Nothing in the loop asks: *which observed failure of the level below does this level answer?*
+4. **Pattern-matching on the methodology.** The instruction "verify the guardrails" produces *new artifacts* instead of a one-shot adversarial *review* — building is what agents do best.
+5. **It reports as progress.** Each level yields visible artifacts and green checks; an agent reviewer sees "more gates, more tests" and approves. Only a human counts the levels.
+
+### Why Standard Layers Don't Catch It
+
+| Layer | Why it doesn't catch |
+|-------|----------------------|
+| Build / tests | Meta-gates compile and pass — green is green |
+| Code review (agent) | Sees "more gates and tests" as diligence, not scope creep |
+| task-compliance | In scope if the task said "harden the gates"; depth is not scope |
+| Mutation runs | Become part of the recursion payload (level 4) |
+| Human review | The only detector — and each level adds review rounds (round 29 in the observed case) |
+
+### Signs of Entering the Recursion
+
+- A diff whose tests have **another test or a gate as their subject**, not product behavior
+- A control-plane-only PR: no `src/` changes, N new gates / tests / CI jobs
+- Commit and PR text: "verify the verifier", "harden the gate's tests", "mutation coverage for gate tests"
+- The justification question — *"which incident at the level below does this control answer?"* — has no answer
+
+### Solution
+
+#### 1. Verification depth is justified bottom-up, one level at a time
+
+A control at level N+1 is justified **only by an observed failure of level N**
+(a real false green: the gate passed, the bug shipped). A hypothetical
+possibility is not a justification. This is the
+[risk-justification principle](../EVIDENCE.md#principle-guardrails-must-be-justified-by-risk)
+applied vertically: it governs
+not only *which* controls exist, but *how many layers of verification of
+verification* exist. The recursion bottoms out at product behavior.
+
+The legitimate base case exists in this repository: the control plane **is**
+tested — `AnalyzerTests.cs`, and the analyzers themselves were ported only
+after real non-validating tests were observed
+([self-checking workstream](../SELF-CHECKING-TESTS-WORKSTREAM.md)). One
+meta-level, incident-driven, human-approved. Not two. Not speculative.
+
+Constitution rule (Control Foundation): `rules/AGENTS_TEMPLATE.md`, section
+"Guardrails: Justified by Risk" — "verification of verification without an
+incident at the level below" is a hard prohibition.
+
+#### 2. Audit, don't construct
+
+Concern about a gate's quality → run
+[guardrails-review](../../templates/skills/guardrails-review/SKILL.md)
+(adversarial review of the control plane): it produces findings, adds no
+control code, and terminates. A review cannot recurse; a gate can.
+
+#### 3. Subject-of-test rule
+
+Every test must trace to product behavior as its subject. A test whose subject
+is another test or a verifier is allowed only over the control plane itself,
+one level deep, with the triggering incident documented.
+
+Mechanical detection (Behavior Checks): `tests/patterns/VerificationDepthTest.cs`
+— test projects must not reference other test projects (level 3), mutation
+configs must not target test assemblies (level 4); the legitimate meta-level
+goes through an allowlist with a decision ID.
+
+#### 4. Control-plane expansion is a governance decision
+
+Symmetric to guardrail retirement
+([EVIDENCE.md](../EVIDENCE.md#retiring-a-guardrail-policy)): an agent never adds a meta-gate on its own —
+a human approves it, with the incident reference in hand. A control-plane-only
+PR without that approval is CHANGES_REQUESTED.
+
+#### 5. Interrupt Signals
+
+| Signal | Action |
+|--------|--------|
+| 2nd meta-level proposed within one task | Stop the task, escalate to human |
+| Control-plane-only PR | Require the incident reference before review |
+| "Tests for the gate's tests" / mutation over gate tests | Definite stop — level 4 is always waste |
+
+### Pattern
+
+See `tests/patterns/VerificationDepthTest.cs` (mechanical detection),
+`templates/skills/guardrails-review/SKILL.md` ("justify the meta-level" step),
+`rules/AGENTS_TEMPLATE.md` (constitution rule), and `docs/EVIDENCE.md`
+("guardrails must be justified by risk").
+Sibling traps: [Over-Engineering](#over-engineering) (cathedrals in product code), [Agent Circles](#agent-circles) (loops on fixes).
 
 
 ## Vibe Refactoring

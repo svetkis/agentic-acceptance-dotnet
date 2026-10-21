@@ -65,6 +65,7 @@ All templates are `copy-paste friendly`. Each contains comments `// TRAP:` and `
 | **SpellcheckGuardTest** | No new typos appear in public symbols / docs | [tests/patterns/SpellcheckGuardTest.cs](../tests/patterns/SpellcheckGuardTest.cs) | — |
 | **ReleaseReadinessTest** | Critical artifacts and runtime guardrails exist before release | [tests/patterns/ReleaseReadinessTest.cs](../tests/patterns/ReleaseReadinessTest.cs) | — |
 | **MutationGuardTest** | Mutation score does not drop (Stryker.NET) | [tests/patterns/MutationGuardTest.cs](../tests/patterns/MutationGuardTest.cs) | — |
+| **VerificationDepthTest** | Gates for gates (verification recursion): no test project references another test project, mutation configs target product assemblies only; the one legitimate meta-level goes through an allowlist with a decision ID | [tests/patterns/VerificationDepthTest.cs](../tests/patterns/VerificationDepthTest.cs) | — |
 | **AnalyzerTests** | Positive / negative tests for custom Roslyn analyzers | [tests/patterns/AnalyzerTests.cs](../tests/patterns/AnalyzerTests.cs) | — |
 | **PiiGuardTest** | `[SensitiveData]` + redaction guard | [tests/patterns/PiiGuardTest.cs](../tests/patterns/PiiGuardTest.cs) | — |
 | **VersionAuditTest** | Audit of SDK/NuGet and frontend dependency versions | [tests/patterns/VersionAuditTest.cs](../tests/patterns/VersionAuditTest.cs) | — |
@@ -148,6 +149,7 @@ Read before implementation — each trap explains **why** a guardrail exists.
 | [non-validating-tests](traps/testing.md#non-validating-tests) | Test is green but cannot fail when behavior breaks | [test-audit](../templates/skills/test-audit/SKILL.md), [mutation-audit](../templates/skills/mutation-audit/SKILL.md), [mutation-verify](../templates/skills/mutation-verify/SKILL.md) |
 | [false-green-gate](traps/testing.md#false-green-gate) | Gate over an external source answers "clean" when the source stopped serving data | canary + tri-state exit codes in audit scripts |
 | [surface-leak](traps/agent-behavior.md#surface-leak) | Agent widens visibility "for convenience", renames or removes public symbols — repo tests stay green, consumers of the contract break | [public-api-surface.md](solutions/public-api-surface.md): PublicApiAnalyzers + internal-by-default + IVT allowlist |
+| [gates-for-gates](traps/agent-behavior.md#gates-for-gates) | Agents build gates for gates, then tests for those gates, then mutation runs over those tests — verification recursion where no level is backed by an observed failure | [VerificationDepthTest.cs](../tests/patterns/VerificationDepthTest.cs) + [guardrails-review](../templates/skills/guardrails-review/SKILL.md) (audit, don't construct) + risk justification ([EVIDENCE.md](EVIDENCE.md)) |
 
 ---
 

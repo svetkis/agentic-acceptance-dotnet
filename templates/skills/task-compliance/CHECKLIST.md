@@ -19,6 +19,7 @@
 - [ ] No code outside the spec scope
 - [ ] No new public methods outside use cases
 - [ ] No changes in unrelated layers
+- [ ] No verification-of-verification artifacts (gates over gates, tests over gates or tests) without a documented incident at the level below (Gates for Gates trap)
 
 ## Phase 5: Evidence
 - [ ] Every finding includes: file, line, code quote, spec quote
