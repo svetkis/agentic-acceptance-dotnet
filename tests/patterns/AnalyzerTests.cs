@@ -2,7 +2,7 @@
 // GUARDRAIL: Unit tests for the analyzer with positive/negative cases.
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(...)
+// - TUnit:  [Test] + await Assert.That(...)
 // - xUnit:  [Fact] + Assert.True(...)
 // - NUnit:  [Test] + Assert.That(...)
 // - MSTest: [TestMethod] + Assert.IsTrue(...)

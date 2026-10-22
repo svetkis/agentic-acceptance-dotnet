@@ -13,7 +13,7 @@
 //           dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 //
 // Framework adaptation:
-// - TUnit:  [Test] + Assert.That(...), IAsyncInitializer for container startup
+// - TUnit:  [Test] + await Assert.That(...), IAsyncInitializer for container startup
 // - xUnit:  [Fact] + IClassFixture<PostgresFixture>
 // - NUnit:  [Test] + [OneTimeSetUp]
 // - MSTest: [TestMethod] + [ClassInitialize]

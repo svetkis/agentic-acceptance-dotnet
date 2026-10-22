@@ -71,7 +71,13 @@ public class ProductionConfigurationTest
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
         while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "global.json")))
             directory = directory.Parent;
-        return directory is not null ? directory.FullName : AppContext.BaseDirectory;
+
+        // Fail loudly, never fall back to the CWD: a wrong root makes the scan
+        // return nothing and the config checks pass vacuously.
+        return directory is not null
+            ? directory.FullName
+            : throw new InvalidOperationException(
+                "Repository root not found: no global.json above the test assembly.");
     }
 
     private static IEnumerable<string> ExtractEnvVarNames(string composePath) =>
